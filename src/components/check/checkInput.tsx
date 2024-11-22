@@ -1,5 +1,6 @@
 'use client';
 
+import { postChecks } from '@/app/services/checks';
 import { FormEvent, useRef, useState } from 'react';
 
 // NOTE: 체크 가능 항목을 신규 추가하는 컴포넌트
@@ -19,7 +20,7 @@ export default function CheckInput() {
 
   const onHandleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log(task);
+    postChecks({ task });
   };
 
   return (
