@@ -9,6 +9,12 @@ const checkSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// type: mongoose.Schema.Types.ObjectId,
+// ref: 'Tag',
+
+// delete mongoose.models['Check'];
+// delete mongoose.modelSchemas['Check'];
+
 const Check = mongoose.models['Check'] || mongoose.model('Check', checkSchema);
 
 export default Check;
