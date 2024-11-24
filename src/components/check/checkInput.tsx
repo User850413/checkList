@@ -1,12 +1,21 @@
 'use client';
 
 import { postChecks } from '@/app/services/checks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormEvent, useRef, useState } from 'react';
 
 // NOTE: 체크 가능 항목을 신규 추가하는 컴포넌트
 
 export default function CheckInput() {
+  const queryClient = useQueryClient();
+
   const [task, setTask] = useState('');
+  const { mutate } = useMutation({
+    mutationFn: ({ task }: Partial<Check>) => postChecks({ task }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['checks'] });
+    },
+  });
 
   const inputRef = useRef<null | HTMLInputElement>(null);
 
@@ -20,7 +29,9 @@ export default function CheckInput() {
 
   const onHandleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    postChecks({ task });
+    setTask('');
+    // postChecks({ task });
+    mutate({ task });
   };
 
   return (
