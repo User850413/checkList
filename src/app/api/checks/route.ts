@@ -8,6 +8,10 @@ export async function GET() {
   //   const query = searchParams.get('test')  -> query는 test(key)의 value값 string
 
   await dbConnect();
+  await Check.updateMany(
+    { isCompleted: { $exists: false } },
+    { $set: { isCompleted: false } }
+  );
   const checks = await Check.find();
 
   return NextResponse.json(checks);
@@ -27,10 +31,8 @@ export async function POST(req: Request) {
     const newCheck = await Check.create(data);
     return NextResponse.json(newCheck);
   } catch (err) {
-    console.log(err);
-    return NextResponse.json(
-      { err: '서버 오류가 발생했습니다' },
-      { status: 500 }
-    );
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
   }
 }

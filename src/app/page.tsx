@@ -1,10 +1,9 @@
-import CheckInput from '@/components/check/checkInput';
+import CheckList from '@/components/check/checkList';
 
 export default function Home() {
   return (
     <main>
-      <div>안녕</div>
-      <CheckInput />
+      <CheckList />
     </main>
   );
 }
