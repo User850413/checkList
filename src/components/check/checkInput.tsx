@@ -15,6 +15,9 @@ export default function CheckInput() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['checks'] });
     },
+    onError: (err) => {
+      console.log(`항목 추가 실패 : ${err}`);
+    },
   });
 
   const inputRef = useRef<null | HTMLInputElement>(null);
@@ -29,9 +32,9 @@ export default function CheckInput() {
 
   const onHandleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setTask('');
-    // postChecks({ task });
+    if (!task) return;
     mutate({ task });
+    setTask('');
   };
 
   return (
