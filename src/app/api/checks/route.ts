@@ -8,10 +8,7 @@ export async function GET() {
   //   const query = searchParams.get('test')  -> query는 test(key)의 value값 string
 
   await dbConnect();
-  await Check.updateMany(
-    { isCompleted: { $exists: false } },
-    { $set: { isCompleted: false } }
-  );
+
   const checks = await Check.find();
 
   return NextResponse.json(checks);
@@ -22,9 +19,15 @@ export async function POST(req: Request) {
 
   try {
     const data = await req.json();
+
     if (data.task === '') {
       return NextResponse.json(
         { error: '내용 입력은 필수사항입니다' },
+        { status: 400 }
+      );
+    } else if (data.tag === '') {
+      return NextResponse.json(
+        { error: '태그명은 필수입니다' },
         { status: 400 }
       );
     }

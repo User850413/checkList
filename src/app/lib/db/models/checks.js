@@ -2,8 +2,9 @@ import mongoose from 'mongoose';
 
 const checkSchema = new mongoose.Schema(
   {
-    task: { type: String, default: '', require: true },
+    task: { type: String, default: '', required: true },
     isCompleted: { type: Boolean, default: false },
+    tag: { type: String, default: 'DEFAULT', required: true },
   },
   { timestamps: true }
 );

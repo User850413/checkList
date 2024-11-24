@@ -4,6 +4,7 @@ type Check = {
   isCompleted: boolean;
   createdAt: Date;
   updatedAt: Date;
+  tag: string;
 };
 
 type CheckList = Check[];

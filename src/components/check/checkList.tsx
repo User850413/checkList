@@ -11,10 +11,14 @@ export default function CheckList() {
     queryFn: () => getChecks(),
   });
 
+  const tag = 'DEFAULT';
+  // console.log(list);
+
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <>
+      <h1></h1>
       <ul>
         {list?.map((check, index) => (
           <li key={check.id || index}>
@@ -22,7 +26,7 @@ export default function CheckList() {
           </li>
         ))}
       </ul>
-      <CheckInput />
+      <CheckInput tag={tag} />
     </>
   );
 }
