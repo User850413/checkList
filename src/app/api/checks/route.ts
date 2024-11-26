@@ -53,7 +53,7 @@ export async function PATCH(req: NextRequest) {
   await dbConnect();
 
   if (!id) {
-    return NextResponse.json({ error: 'id는 필수 값입니다' }, { status: 404 });
+    return NextResponse.json({ error: 'id는 필수 값입니다' }, { status: 400 });
   }
 
   const updatedCheck = await Check.findByIdAndUpdate(id, body, {
@@ -74,5 +74,5 @@ export async function DELETE(req: NextRequest) {
   }
   await Check.findByIdAndDelete(id);
 
-  return new Response('삭제되었습니다,', { status: 204 });
+  return new Response('삭제되었습니다,', { status: 200 });
 }
