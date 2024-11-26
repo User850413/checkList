@@ -43,3 +43,35 @@ export async function POST(req: Request) {
     }
   }
 }
+
+export async function PATCH(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const body = await req.json();
+  const id = searchParams.get('id');
+
+  await dbConnect();
+
+  if (!id) {
+    return NextResponse.json({ error: 'id는 필수 값입니다' }, { status: 404 });
+  }
+
+  const updatedCheck = await Check.findByIdAndUpdate(id, body, {
+    new: true,
+  });
+
+  return NextResponse.json(updatedCheck);
+}
+
+export async function DELETE(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const id = searchParams.get('id');
+
+  await dbConnect();
+
+  if (!id) {
+    return NextResponse.json({ error: 'id는 필수 값입니다' }, { status: 404 });
+  }
+  await Check.findByIdAndDelete(id);
+
+  return new Response('삭제되었습니다,', { status: 204 });
+}
