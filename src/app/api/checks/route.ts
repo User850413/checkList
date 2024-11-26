@@ -1,16 +1,20 @@
 import dbConnect from '@/app/lib/db/dbConnect';
 import Check from '@/app/lib/db/models/checks';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   // NOTE: 쿼리값 가져오기
-  //   const searchParams = req.nextUrl.searchParams
-  //   const query = searchParams.get('test')  -> query는 test(key)의 value값 string
+  const searchParams = req.nextUrl.searchParams;
+  const tag = searchParams.get('tag');
 
   await dbConnect();
 
-  const checks = await Check.find();
+  if (!!tag) {
+    const check = await Check.find({ tag }).lean();
+    return new Response(JSON.stringify(check), { status: 200 });
+  }
 
+  const checks = await Check.find();
   return NextResponse.json(checks);
 }
 
