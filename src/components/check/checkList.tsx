@@ -1,6 +1,6 @@
 'use client';
 
-import { getChecks } from '@/app/services/checks';
+import { getAllChecks } from '@/app/services/checks';
 import CheckListCard from './checkListCard';
 import CheckInput from './checkInput';
 import { useQuery } from '@tanstack/react-query';
@@ -8,13 +8,17 @@ import { useQuery } from '@tanstack/react-query';
 export default function CheckList() {
   const { isLoading, data: list } = useQuery<CheckList>({
     queryKey: ['checks'],
-    queryFn: () => getChecks(),
+    queryFn: () => getAllChecks(),
   });
+
+  const tag = 'DEFAULT';
+  // console.log(list);
 
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <>
+      <h1></h1>
       <ul>
         {list?.map((check, index) => (
           <li key={check.id || index}>
@@ -22,7 +26,7 @@ export default function CheckList() {
           </li>
         ))}
       </ul>
-      <CheckInput />
+      <CheckInput tag={tag} />
     </>
   );
 }
