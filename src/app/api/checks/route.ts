@@ -1,5 +1,6 @@
 import dbConnect from '@/app/lib/db/dbConnect';
 import Check from '@/app/lib/db/models/checks';
+import { createCheck } from '@/app/services/checkService';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const newCheck = await Check.create(data);
+    const newCheck = await createCheck(data);
     return NextResponse.json(newCheck);
   } catch (err) {
     if (err instanceof Error) {
