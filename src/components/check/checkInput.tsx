@@ -6,12 +6,16 @@ import { FormEvent, useRef, useState } from 'react';
 
 // NOTE: 체크 가능 항목을 신규 추가하는 컴포넌트
 
-export default function CheckInput() {
+interface CheckInputProps {
+  tag: string;
+}
+
+export default function CheckInput({ tag }: CheckInputProps) {
   const queryClient = useQueryClient();
 
   const [task, setTask] = useState('');
   const { mutate } = useMutation({
-    mutationFn: ({ task }: Partial<Check>) => postChecks({ task }),
+    mutationFn: ({ task }: Partial<Check>) => postChecks({ tag, task }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['checks'] });
     },
