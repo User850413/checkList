@@ -7,7 +7,7 @@ export async function getAllTags() {
 }
 
 export async function postTag({ name }: Pick<Tag, 'name'>) {
-  if (!name?.trim()) throw new Error('task는 필수 입력값입니다');
+  if (!name?.trim()) throw new Error('1자 이상 필수 입력입니다!');
 
   try {
     const res = await axios.post('/api/tags', {
@@ -15,7 +15,20 @@ export async function postTag({ name }: Pick<Tag, 'name'>) {
     });
     return res.data;
   } catch (error) {
-    console.error(`체크 항목 생성 중 오류 발생 : ${error}`);
+    console.error(`태그 생성 중 오류 발생 : ${error}`);
+    throw error;
+  }
+}
+
+export async function patchTag({ _id, name }: Partial<Tag>) {
+  if (!_id?.trim()) throw new Error('id는 필수입니다!');
+  if (!name?.trim()) throw new Error('1자 이상 필수 입력입니다!');
+
+  try {
+    const res = await axios.patch(`/api/tags?id=${_id}`, { name: name.trim() });
+    return res.data;
+  } catch (error) {
+    console.error(`태그 항목 수정 중 오류 발생 : ${error}`);
     throw error;
   }
 }
