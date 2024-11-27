@@ -4,14 +4,13 @@ import { useQuery } from '@tanstack/react-query';
 import CheckList from './checkList';
 import { Tag } from '@/types/tag';
 import { getAllTags } from '@/app/services/api/tags';
+import { TagInPut } from './tagInput';
 
 export default function CheckListWrapper() {
   const { isLoading, data: tags } = useQuery<Tag[]>({
     queryKey: ['tags'],
     queryFn: () => getAllTags(),
   });
-
-  console.log(tags);
 
   if (isLoading) return <div> loading...</div>;
 
@@ -23,6 +22,9 @@ export default function CheckListWrapper() {
             <CheckList tag={tag.name} />
           </li>
         ))}
+        <li>
+          <TagInPut />
+        </li>
         <li className="bg-slate-200 rounded-lg cursor-pointer flex items-center justify-center py-4 text-slate-400 text-4xl">
           <span role="button">+</span>
         </li>
