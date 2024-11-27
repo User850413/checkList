@@ -4,9 +4,10 @@ import { getAllChecks } from '@/app/services/api/checks';
 import CheckListCard from './checkListCard';
 import CheckInput from './checkInput';
 import { useQuery } from '@tanstack/react-query';
+import { Check } from '@/types/check';
 
 export default function CheckList() {
-  const { isLoading, data: list } = useQuery<CheckList>({
+  const { isLoading, data: list } = useQuery<Check[]>({
     queryKey: ['checks'],
     queryFn: () => getAllChecks(),
   });

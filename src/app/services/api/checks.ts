@@ -1,3 +1,4 @@
+import { Check } from '@/types/check';
 import axios from 'axios';
 
 export async function getAllChecks() {
@@ -6,9 +7,6 @@ export async function getAllChecks() {
 }
 
 export async function getChecks({ tag }: { tag: string }) {
-  // const res = await axios.get(`/api/checks?tag=${tag}`);
-  // return res.data;
-
   try {
     const encodedTag = encodeURIComponent(tag);
     if (!encodedTag.trim()) throw new Error('태그 값이 유효하지 않습니다');
