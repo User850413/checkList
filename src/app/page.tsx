@@ -1,9 +1,9 @@
-import CheckList from '@/components/check/checkList';
+import CheckListWrapper from '@/components/check/checkListWrapper';
 
 export default function Home() {
   return (
     <main>
-      <CheckList />
+      <CheckListWrapper />
     </main>
   );
 }
