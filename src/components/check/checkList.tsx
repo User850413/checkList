@@ -19,16 +19,20 @@ export default function CheckList({ tag }: CheckListProp) {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="bg-red-200 w-full">
-      <h1>{tag}</h1>
-      <ul>
+    <div className="bg-white rounded-lg w-full px-3 h-full py-2">
+      <h1 className="border-b-slate-200 border-b-2 font-medium text-2xl py-1">
+        {tag}
+      </h1>
+      <ul className="my-3">
         {list?.map((check, index) => (
           <li key={check.id || index}>
             <CheckListCard task={check.task} isCompleted={check.isCompleted} />
           </li>
         ))}
       </ul>
-      <CheckInput tag={tag} />
+      <div>
+        <CheckInput tag={tag} />
+      </div>
     </div>
   );
 }
