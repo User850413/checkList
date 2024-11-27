@@ -4,6 +4,7 @@ import { postChecks } from '@/app/services/api/checks';
 import { Check } from '@/types/check';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormEvent, useRef, useState } from 'react';
+import Button from '../common/Button';
 
 // NOTE: 체크 가능 항목을 신규 추가하는 컴포넌트
 
@@ -15,7 +16,7 @@ export default function CheckInput({ tag }: CheckInputProps) {
   const queryClient = useQueryClient();
 
   const [task, setTask] = useState('');
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: ({ task }: Partial<Check>) => postChecks({ tag, task }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['checks', tag] });
@@ -52,15 +53,12 @@ export default function CheckInput({ tag }: CheckInputProps) {
         value={task}
       />
 
-      <input
-        type="button"
-        value="x"
-        className="py-1 px-3 relative items-center flex justify-center bg-slate-200 rounded-md cursor-pointer"
-        onClick={onClickDelete}
-      />
-      <button className="px-2 py-1 relative items-center flex justify-center bg-slate-200 rounded-md shrink-0">
+      <Button type="button" onClick={onClickDelete} disabled={isPending}>
+        x
+      </Button>
+      <Button type="submit" disabled={isPending}>
         확인
-      </button>
+      </Button>
     </form>
   );
 }
