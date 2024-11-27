@@ -39,3 +39,15 @@ export async function postChecks({ task, tag }: Partial<Check>) {
     throw error;
   }
 }
+
+export async function deleteCheck({ _id }: Pick<Check, '_id'>) {
+  if (!_id?.trim()) throw new Error('id가 필요합니다');
+
+  try {
+    const res = await axios.delete(`/api/checks?id=${_id}`);
+    return res.status;
+  } catch (error) {
+    console.error(`체크 항목 생성 중 오류 발생 : ${error}`);
+    throw error;
+  }
+}

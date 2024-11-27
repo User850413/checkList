@@ -25,8 +25,13 @@ export default function CheckList({ tag }: CheckListProp) {
       </h1>
       <ul className="my-3">
         {list?.map((check, index) => (
-          <li key={check.id || index}>
-            <CheckListCard task={check.task} isCompleted={check.isCompleted} />
+          <li key={check._id || index}>
+            <CheckListCard
+              id={check._id}
+              task={check.task}
+              isCompleted={check.isCompleted}
+              tag={check.tag}
+            />
           </li>
         ))}
       </ul>
