@@ -1,6 +1,7 @@
 'use client';
 
 import { postChecks } from '@/app/services/api/checks';
+import { Check } from '@/types/check';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormEvent, useRef, useState } from 'react';
 
@@ -45,7 +46,7 @@ export default function CheckInput({ tag }: CheckInputProps) {
     <form onSubmit={onHandleSubmit} className="flex items-center gap-2">
       <input
         type="text"
-        className="border-2 border-gray-500"
+        className="border-2 border-slate-200 rounded-md w-full"
         ref={inputRef}
         onChange={onChangeInput}
         value={task}
@@ -54,10 +55,10 @@ export default function CheckInput({ tag }: CheckInputProps) {
       <input
         type="button"
         value="x"
-        className="py-1 px-3 relative items-center flex justify-center bg-gray-400 cursor-pointer"
+        className="py-1 px-3 relative items-center flex justify-center bg-slate-200 rounded-md cursor-pointer"
         onClick={onClickDelete}
       />
-      <button className="px-2 py-1 relative items-center flex justify-center bg-gray-400">
+      <button className="px-2 py-1 relative items-center flex justify-center bg-slate-200 rounded-md shrink-0">
         확인
       </button>
     </form>

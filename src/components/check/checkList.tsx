@@ -1,33 +1,38 @@
 'use client';
 
-import { getAllChecks } from '@/app/services/api/checks';
+import { getChecks } from '@/app/services/api/checks';
 import CheckListCard from './checkListCard';
 import CheckInput from './checkInput';
 import { useQuery } from '@tanstack/react-query';
 import { Check } from '@/types/check';
 
-export default function CheckList() {
-  const { isLoading, data: list } = useQuery<Check[]>({
-    queryKey: ['checks'],
-    queryFn: () => getAllChecks(),
-  });
+interface CheckListProp {
+  tag: string;
+}
 
-  const tag = 'DEFAULT';
-  // console.log(list);
+export default function CheckList({ tag }: CheckListProp) {
+  const { isLoading, data: list } = useQuery<Check[]>({
+    queryKey: ['checks', tag],
+    queryFn: () => getChecks({ tag }),
+  });
 
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <>
-      <h1></h1>
-      <ul>
+    <div className="bg-white rounded-lg w-full px-3 h-full py-2">
+      <h1 className="border-b-slate-200 border-b-2 font-medium text-2xl py-1">
+        {tag}
+      </h1>
+      <ul className="my-3">
         {list?.map((check, index) => (
           <li key={check.id || index}>
             <CheckListCard task={check.task} isCompleted={check.isCompleted} />
           </li>
         ))}
       </ul>
-      <CheckInput tag={tag} />
-    </>
+      <div>
+        <CheckInput tag={tag} />
+      </div>
+    </div>
   );
 }
