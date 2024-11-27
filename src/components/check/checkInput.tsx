@@ -1,6 +1,6 @@
 'use client';
 
-import { postChecks } from '@/app/services/checks';
+import { postChecks } from '@/app/services/api/checks';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormEvent, useRef, useState } from 'react';
 

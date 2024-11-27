@@ -1,6 +1,6 @@
 'use client';
 
-import { getAllChecks } from '@/app/services/checks';
+import { getAllChecks } from '@/app/services/api/checks';
 import CheckListCard from './checkListCard';
 import CheckInput from './checkInput';
 import { useQuery } from '@tanstack/react-query';
