@@ -6,7 +6,7 @@ export async function getAllChecks() {
 }
 
 export async function getChecks({ tag }: { tag: string }) {
-  const res = await axios.get(`/api/checks/${tag}`);
+  const res = await axios.get(`/api/checks?tag=${tag}`);
   return res.data;
 }
 
