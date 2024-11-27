@@ -18,7 +18,7 @@ export default function CheckInput({ tag }: CheckInputProps) {
   const { mutate } = useMutation({
     mutationFn: ({ task }: Partial<Check>) => postChecks({ tag, task }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['checks'] });
+      queryClient.invalidateQueries({ queryKey: ['checks', tag] });
     },
     onError: (err) => {
       console.log(`항목 추가 실패 : ${err}`);

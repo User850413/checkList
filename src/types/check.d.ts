@@ -1,5 +1,5 @@
 export interface Check {
-  id: string;
+  _id: string;
   task: string;
   isCompleted: boolean;
   createdAt: Date;
