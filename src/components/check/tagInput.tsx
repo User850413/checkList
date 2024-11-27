@@ -4,6 +4,7 @@ import { postTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormEvent, useRef, useState } from 'react';
+import Button from '../common/Button';
 
 export function TagInPut() {
   const queryClient = useQueryClient();
@@ -33,14 +34,15 @@ export function TagInPut() {
   };
 
   return (
-    <form onSubmit={onHandleSubmit}>
+    <form onSubmit={onHandleSubmit} className="flex items-center gap-2">
       <input
         type="text"
         ref={inputRef}
         value={tagName}
         onChange={onChangeInput}
+        className="w-full border-slate-200 border-2 rounded-md"
       />
-      <button>추가</button>
+      <Button>추가</Button>
     </form>
   );
 }

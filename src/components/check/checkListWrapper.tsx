@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import CheckList from './checkList';
 import { Tag } from '@/types/tag';
 import { getAllTags } from '@/app/services/api/tags';
-import { TagInPut } from './tagInput';
+import TagCard from './tagCard';
+import Button from '../common/Button';
 
 export default function CheckListWrapper() {
   const { isLoading, data: tags } = useQuery<Tag[]>({
@@ -19,14 +20,16 @@ export default function CheckListWrapper() {
       <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {tags?.map((tag) => (
           <li key={tag._id}>
-            <CheckList tag={tag.name} />
+            <CheckList tag={tag.name} id={tag._id} />
           </li>
         ))}
         <li>
-          <TagInPut />
+          <TagCard />
         </li>
-        <li className="bg-slate-200 rounded-lg cursor-pointer flex items-center justify-center py-4 text-slate-400 text-4xl">
-          <span role="button">+</span>
+        <li className="text-4xl">
+          <Button disabled={isLoading} className="w-full h-full">
+            +
+          </Button>
         </li>
       </ul>
     </div>
