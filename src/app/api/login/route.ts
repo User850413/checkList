@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
+if (!JWT_SECRET) throw new Error('JWT 환경 변수가 설정되지 않았습니다');
 
 export async function POST(req: Request) {
   try {
@@ -38,7 +39,16 @@ export async function POST(req: Request) {
       );
     }
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        iat: Math.floor(Date.now()),
+        iss: 'checkList-app',
+      },
+      JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
     return NextResponse.json(
       { message: '로그인되었습니다', token },

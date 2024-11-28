@@ -1,6 +1,7 @@
 import dbConnect from '@/app/lib/db/dbConnect';
 import { NextResponse } from 'next/server';
 import User from '@/app/lib/db/models/users';
+import mongoose from 'mongoose';
 
 export async function POST(req: Request) {
   try {
@@ -30,21 +31,28 @@ export async function POST(req: Request) {
 
     await dbConnect();
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return NextResponse.json(
-        { error: '이미 사용중인 email입니다' },
-        { status: 400 }
-      );
+    const session = await mongoose.startSession();
+
+    try {
+      await session.withTransaction(async () => {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+          return NextResponse.json(
+            { error: '이미 사용중인 email입니다' },
+            { status: 400 }
+          );
+        }
+
+        const newUser = new User({ username, email, password });
+        await newUser.save({ session });
+        return NextResponse.json(
+          { username, email, id: newUser._id },
+          { status: 201 }
+        );
+      });
+    } finally {
+      await session.endSession();
     }
-
-    const newUser = new User({ username, email, password });
-    await newUser.save();
-
-    return NextResponse.json(
-      { username, email, id: newUser._id },
-      { status: 201 }
-    );
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
   }
