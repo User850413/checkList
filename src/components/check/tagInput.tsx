@@ -6,7 +6,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormEvent, useRef, useState } from 'react';
 import Button from '../common/Button';
 
-export function TagInPut() {
+interface TagInPutProps {
+  Undo?: () => void;
+}
+
+export function TagInPut({ Undo }: TagInPutProps) {
   const queryClient = useQueryClient();
 
   const [tagName, setTagName] = useState('');
@@ -31,6 +35,7 @@ export function TagInPut() {
     if (!tagName) return;
     mutate({ name: tagName });
     setTagName('');
+    if (Undo) Undo();
   };
 
   return (

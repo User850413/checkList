@@ -6,8 +6,11 @@ import { Tag } from '@/types/tag';
 import { getAllTags } from '@/app/services/api/tags';
 import TagCard from './tagCard';
 import Button from '../common/Button';
+import { useState } from 'react';
 
 export default function CheckListWrapper() {
+  const [addList, setAddList] = useState<boolean>(false);
+
   const { isLoading, data: tags } = useQuery<Tag[]>({
     queryKey: ['tags'],
     queryFn: () => getAllTags(),
@@ -23,11 +26,16 @@ export default function CheckListWrapper() {
             <CheckList tagName={tag.name} tagId={tag._id} />
           </li>
         ))}
-        <li>
-          <TagCard />
-        </li>
-        <li className="text-4xl">
-          <Button disabled={isLoading} className="w-full h-full">
+        <li className="flex flex-col">
+          <TagCard
+            className={`${addList ? '' : 'hidden'}`}
+            onUndo={() => setAddList(false)}
+          />
+          <Button
+            disabled={isLoading}
+            className={`w-full h-full ${addList ? 'hidden' : ''}`}
+            onClick={() => setAddList(true)}
+          >
             +
           </Button>
         </li>
