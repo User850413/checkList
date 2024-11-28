@@ -61,9 +61,12 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
-  const updatedTag = await updateTagAndChecks(tagId, body.name.trim());
-
-  return NextResponse.json(updatedTag);
+  try {
+    const updatedTag = await updateTagAndChecks(tagId, body.name.trim());
+    return NextResponse.json(updatedTag);
+  } catch (err) {
+    if (err instanceof Error) return NextResponse.json({ error: err.message });
+  }
 }
 
 export async function DELETE(req: NextRequest) {
@@ -75,6 +78,22 @@ export async function DELETE(req: NextRequest) {
   if (!id) {
     return NextResponse.json({ error: 'id는 필수 값입니다.' }, { status: 400 });
   }
-  await deleteTagAndChecks(id);
-  return new Response('삭제되었습니다', { status: 200 });
+  try {
+    const deletedTag = await deleteTagAndChecks(id);
+    return NextResponse.json(
+      {
+        message: '삭제되었습니다',
+        deletedTag,
+      },
+      { status: 200 }
+    );
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: '알 수 없는 오류가 발생했습니다' },
+      { status: 500 }
+    );
+  }
 }
