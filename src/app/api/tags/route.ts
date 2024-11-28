@@ -2,6 +2,7 @@ import dbConnect from '@/app/lib/db/dbConnect';
 import { NextRequest, NextResponse } from 'next/server';
 import Tag from '@/app/lib/db/models/tags';
 import { updateTagAndChecks } from '@/app/services/database/updateTagAndChecks';
+import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
 
 export async function GET() {
   try {
@@ -42,12 +43,15 @@ export async function POST(req: Request) {
 export async function PATCH(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const body = await req.json();
-  const id = searchParams.get('id');
+  const tagId = searchParams.get('id');
 
   await dbConnect();
 
-  if (!id) {
-    return NextResponse.json({ error: 'id는 필수 값입니다' }, { status: 400 });
+  if (!tagId) {
+    return NextResponse.json(
+      { error: 'tag id는 필수 값입니다' },
+      { status: 400 }
+    );
   }
 
   if (!body.name) {
@@ -57,7 +61,7 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
-  const updatedTag = await updateTagAndChecks(id, body.name);
+  const updatedTag = await updateTagAndChecks(tagId, body.name.trim());
 
   return NextResponse.json(updatedTag);
 }
@@ -71,6 +75,6 @@ export async function DELETE(req: NextRequest) {
   if (!id) {
     return NextResponse.json({ error: 'id는 필수 값입니다.' }, { status: 400 });
   }
-  await Tag.findByIdAndDelete(id);
+  await deleteTagAndChecks(id);
   return new Response('삭제되었습니다', { status: 200 });
 }

@@ -8,7 +8,7 @@ export const deleteTagAndChecks = async (tagId: string) => {
 
   try {
     // 관련 Checks 삭제
-    await Check.deleteMany({ tag: tagId }, { session });
+    await Check.deleteMany({ tagId }, { session });
 
     // 태그 삭제
     await Tag.findByIdAndDelete(tagId, { session });
