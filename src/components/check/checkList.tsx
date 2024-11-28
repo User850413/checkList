@@ -9,16 +9,16 @@ import { deleteTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
 
 interface CheckListProp {
-  tag: string;
-  id: string;
+  tagName: string;
+  tagId: string;
 }
 
-export default function CheckList({ tag, id }: CheckListProp) {
+export default function CheckList({ tagName, tagId }: CheckListProp) {
   const queryClient = useQueryClient();
 
   const { isLoading, data: list } = useQuery<Check[]>({
-    queryKey: ['checks', tag],
-    queryFn: () => getChecks({ tag }),
+    queryKey: ['checks', tagName],
+    queryFn: () => getChecks({ tagId }),
   });
 
   const { mutate } = useMutation({
@@ -40,9 +40,9 @@ export default function CheckList({ tag, id }: CheckListProp) {
   return (
     <div className="bg-white rounded-lg w-full px-3 h-full py-2">
       <div className="border-b-slate-200 border-b-2 flex justify-between items-center">
-        <h1 className="w-full font-medium text-2xl py-1">{tag}</h1>
+        <h1 className="w-full font-medium text-2xl py-1">{tagName}</h1>
         <button
-          onClick={() => onClickDelete(id)}
+          onClick={() => onClickDelete(tagId)}
           className="inline-block p-1 text-slate-400"
         >
           x
@@ -55,13 +55,13 @@ export default function CheckList({ tag, id }: CheckListProp) {
               id={check._id}
               task={check.task}
               isCompleted={check.isCompleted}
-              tag={check.tag}
+              tag={tagName}
             />
           </li>
         ))}
       </ul>
       <div>
-        <CheckInput tag={tag} />
+        <CheckInput tag={tagName} />
       </div>
     </div>
   );

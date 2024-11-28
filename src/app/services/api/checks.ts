@@ -16,7 +16,7 @@ export async function getChecks({ tagId }: { tagId: string }) {
     const encodedTag = encodeURIComponent(tagId);
     if (!encodedTag.trim()) throw new Error('태그 id값이 유효하지 않습니다');
 
-    const res = await axios.get(`/api/checks?tag=${encodedTag}`);
+    const res = await axios.get(`/api/checks?tagId=${encodedTag}`);
     return res.data;
   } catch (error) {
     console.error(`체크 목록 조회 중 오류 발생 : ${error}`);

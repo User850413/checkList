@@ -20,7 +20,7 @@ export default function CheckListWrapper() {
       <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {tags?.map((tag) => (
           <li key={tag._id}>
-            <CheckList tag={tag.name} id={tag._id} />
+            <CheckList tagName={tag.name} tagId={tag._id} />
           </li>
         ))}
         <li>
