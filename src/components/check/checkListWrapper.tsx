@@ -23,7 +23,7 @@ export default function CheckListWrapper() {
           </li>
         ))}
         <li>
-          <AddNewTag isLoading={isLoading} />
+          <AddNewTag />
         </li>
       </ul>
     </div>

@@ -18,7 +18,7 @@ function TagNameInput({ tagName, tagId }: TagNameInputProps) {
   const [tagNameEditing, setTagNameEditing] = useState<boolean>(false);
   const [tagValue, setTagValue] = useState<string>(tagName);
 
-  const InputRef = useRef(null);
+  const InputRef = useRef<HTMLInputElement | null>(null);
 
   const { mutate } = useMutation({
     mutationFn: ({ _id, name }: Partial<Tag>) => patchTag({ _id, name }),
@@ -37,7 +37,12 @@ function TagNameInput({ tagName, tagId }: TagNameInputProps) {
 
   const onClickEditTagName = (e: FormEvent) => {
     e.preventDefault();
-    if (tagValue === '') return;
+    const trimmedValue = tagValue.trim();
+    if (trimmedValue === '') return;
+    if (trimmedValue === tagName) {
+      setTagNameEditing(false);
+      return;
+    }
     mutate({ _id: tagId, name: tagValue });
   };
 
@@ -72,6 +77,9 @@ function TagNameInput({ tagName, tagId }: TagNameInputProps) {
           ref={InputRef}
           onChange={onTagNameValueChange}
           value={tagValue}
+          aria-label="리스트명 입력"
+          placeholder="리스트명은 1자 이상이어야 합니다"
+          maxLength={50}
         />
         <Button type="submit">수정</Button>
         <Button type="button" onClick={() => onClickCancel()}>

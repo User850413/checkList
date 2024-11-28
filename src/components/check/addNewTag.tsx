@@ -5,12 +5,7 @@ import { TagInput } from './tagInput';
 import { useState } from 'react';
 import Button from '../common/Button';
 
-interface TagCardProps {
-  isLoading: boolean;
-  className?: string;
-}
-
-export default function AddNewTag({ isLoading }: TagCardProps) {
+export default function AddNewTag() {
   const [addTag, setAddTag] = useState<boolean>(false);
 
   const onCancelEdit = () => {
@@ -30,6 +25,7 @@ export default function AddNewTag({ isLoading }: TagCardProps) {
           <button
             className="text-sm px-3 py-1 text-red-400"
             onClick={onCancelEdit}
+            aria-label="태그 추가 취소"
           >
             취소
           </button>
@@ -37,9 +33,9 @@ export default function AddNewTag({ isLoading }: TagCardProps) {
         <TagInput Undo={onCancelEdit} />
       </div>
       <Button
-        disabled={isLoading}
         className={clsx('w-full h-full', { hidden: addTag })}
         onClick={() => setAddTag(true)}
+        aria-label="새 리스트 추가"
       >
         +
       </Button>

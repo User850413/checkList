@@ -1,14 +1,16 @@
 import React, { PropsWithChildren } from 'react';
 import clsx from 'clsx';
 
-interface ButtonProps extends PropsWithChildren {
+interface ButtonProps
+  extends PropsWithChildren,
+    React.ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: () => void;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
 }
 
-function Button({
+export default function Button({
   children,
   onClick,
   className,
@@ -32,5 +34,3 @@ function Button({
     </button>
   );
 }
-
-export default React.memo(Button);

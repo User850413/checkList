@@ -19,7 +19,7 @@ function CheckList({ tagName, tagId }: CheckListProp) {
   const queryClient = useQueryClient();
 
   const { isLoading, data: list } = useQuery<Check[]>({
-    queryKey: ['checks', tagName],
+    queryKey: ['checks', tagId],
     queryFn: () => getChecks({ tagId }),
   });
 
