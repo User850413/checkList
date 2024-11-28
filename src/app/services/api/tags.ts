@@ -40,7 +40,7 @@ export async function deleteTag({ _id }: Pick<Tag, '_id'>) {
     const res = await axios.delete(`/api/tags?id=${_id}`);
     return res.status;
   } catch (error) {
-    console.error(`체크 항목 생성 중 오류 발생 : ${error}`);
+    console.error(`태그 항목 삭제 중 오류 발생 : ${error}`);
     throw error;
   }
 }

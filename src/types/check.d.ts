@@ -4,7 +4,7 @@ export interface Check {
   isCompleted: boolean;
   createdAt: Date;
   updatedAt: Date;
-  tag: string;
+  tagId: string;
 }
 
 export interface CheckResponse {

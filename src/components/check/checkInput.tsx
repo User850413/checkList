@@ -3,22 +3,25 @@
 import { postChecks } from '@/app/services/api/checks';
 import { Check } from '@/types/check';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { FormEvent, useRef, useState } from 'react';
+import React, { FormEvent, useRef, useState } from 'react';
+import Button from '../common/Button';
 
 // NOTE: 체크 가능 항목을 신규 추가하는 컴포넌트
 
 interface CheckInputProps {
-  tag: string;
+  tagId: string;
+  tagName: string;
 }
 
-export default function CheckInput({ tag }: CheckInputProps) {
+function CheckInput({ tagId, tagName }: CheckInputProps) {
   const queryClient = useQueryClient();
-
   const [task, setTask] = useState('');
-  const { mutate } = useMutation({
-    mutationFn: ({ task }: Partial<Check>) => postChecks({ tag, task }),
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: ({ task, tagId }: Partial<Check>) =>
+      postChecks({ task, tagId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['checks', tag] });
+      queryClient.invalidateQueries({ queryKey: ['checks', tagName] });
     },
     onError: (err) => {
       console.log(`항목 추가 실패 : ${err}`);
@@ -38,7 +41,7 @@ export default function CheckInput({ tag }: CheckInputProps) {
   const onHandleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!task) return;
-    mutate({ task });
+    mutate({ task, tagId });
     setTask('');
   };
 
@@ -52,15 +55,14 @@ export default function CheckInput({ tag }: CheckInputProps) {
         value={task}
       />
 
-      <input
-        type="button"
-        value="x"
-        className="py-1 px-3 relative items-center flex justify-center bg-slate-200 rounded-md cursor-pointer"
-        onClick={onClickDelete}
-      />
-      <button className="px-2 py-1 relative items-center flex justify-center bg-slate-200 rounded-md shrink-0">
+      <Button type="button" onClick={onClickDelete} disabled={isPending}>
+        x
+      </Button>
+      <Button type="submit" disabled={isPending}>
         확인
-      </button>
+      </Button>
     </form>
   );
 }
+
+export default React.memo(CheckInput);

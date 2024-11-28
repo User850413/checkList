@@ -4,14 +4,13 @@ import { useQuery } from '@tanstack/react-query';
 import CheckList from './checkList';
 import { Tag } from '@/types/tag';
 import { getAllTags } from '@/app/services/api/tags';
+import AddNewTag from './addNewTag';
 
 export default function CheckListWrapper() {
   const { isLoading, data: tags } = useQuery<Tag[]>({
     queryKey: ['tags'],
     queryFn: () => getAllTags(),
   });
-
-  console.log(tags);
 
   if (isLoading) return <div> loading...</div>;
 
@@ -20,11 +19,11 @@ export default function CheckListWrapper() {
       <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {tags?.map((tag) => (
           <li key={tag._id}>
-            <CheckList tag={tag.name} />
+            <CheckList tagName={tag.name} tagId={tag._id} />
           </li>
         ))}
-        <li className="bg-slate-200 rounded-lg cursor-pointer flex items-center justify-center py-4 text-slate-400 text-4xl">
-          <span role="button">+</span>
+        <li>
+          <AddNewTag />
         </li>
       </ul>
     </div>
