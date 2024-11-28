@@ -18,10 +18,8 @@ export const deleteTagAndChecks = async (tagId: string) => {
     // 태그 삭제
     await Tag.findByIdAndDelete(tagId, { session });
 
-    await session.commitTransaction();
     session.endSession();
   } catch (error) {
-    await session.abortTransaction();
     session.endSession();
     if (error instanceof mongoose.Error.ValidationError) {
       throw new Error('유효하지 않은 태그 ID입니다.');
@@ -30,5 +28,7 @@ export const deleteTagAndChecks = async (tagId: string) => {
     } else {
       throw new Error('태그 삭제 중 오류가 발생했습니다.');
     }
+  } finally {
+    await session.abortTransaction();
   }
 };

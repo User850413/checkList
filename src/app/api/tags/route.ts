@@ -65,7 +65,13 @@ export async function PATCH(req: NextRequest) {
     const updatedTag = await updateTagAndChecks(tagId, body.name.trim());
     return NextResponse.json(updatedTag);
   } catch (err) {
-    if (err instanceof Error) return NextResponse.json({ error: err.message });
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: '알 수 없는 오류가 발생했습니다' },
+      { status: 500 }
+    );
   }
 }
 

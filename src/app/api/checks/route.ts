@@ -69,5 +69,5 @@ export async function DELETE(req: NextRequest) {
   }
   await Check.findByIdAndDelete(id);
 
-  return new Response('삭제되었습니다.', { status: 200 });
+  return NextResponse.json({ message: '삭제되었습니다' }, { status: 200 });
 }

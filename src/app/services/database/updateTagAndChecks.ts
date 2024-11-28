@@ -29,15 +29,15 @@ export const updateTagAndChecks = async (tagId: string, newTagName: string) => {
     }
 
     await session.commitTransaction();
-    session.endSession();
 
     return updatedTag;
   } catch (error: unknown) {
     await session.abortTransaction();
-    session.endSession();
     if (error instanceof Error) {
       throw new Error(`태그 업데이트 실패: ${error.message}`);
     }
     throw new Error('알 수 없는 오류가 발생했습니다.');
+  } finally {
+    session.endSession();
   }
 };
