@@ -4,7 +4,7 @@ const checkSchema = new mongoose.Schema(
   {
     task: { type: String, default: '', required: true },
     isCompleted: { type: Boolean, default: false },
-    tag: { type: String, default: 'DEFAULT', required: true },
+    tagId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true },
   },
   { timestamps: true }
 );

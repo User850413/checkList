@@ -1,17 +1,17 @@
 import dbConnect from '@/app/lib/db/dbConnect';
 import Check from '@/app/lib/db/models/checks';
-import { createCheck } from '@/app/services/checkService';
+import { createCheck } from '@/app/services/database/createCheck';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   // NOTE: 쿼리값 가져오기
   const searchParams = req.nextUrl.searchParams;
-  const tag = searchParams.get('tag');
+  const tagId = searchParams.get('tagId');
 
   await dbConnect();
 
-  if (!!tag) {
-    const check = await Check.find({ tag }).lean();
+  if (tagId) {
+    const check = await Check.find({ tagId }).lean();
     return new Response(JSON.stringify(check), { status: 200 });
   }
 
@@ -28,11 +28,6 @@ export async function POST(req: Request) {
     if (data.task === '') {
       return NextResponse.json(
         { error: '내용 입력은 필수사항입니다' },
-        { status: 400 }
-      );
-    } else if (data.tag === '') {
-      return NextResponse.json(
-        { error: '태그명은 필수입니다' },
         { status: 400 }
       );
     }
@@ -74,5 +69,5 @@ export async function DELETE(req: NextRequest) {
   }
   await Check.findByIdAndDelete(id);
 
-  return new Response('삭제되었습니다,', { status: 200 });
+  return NextResponse.json({ message: '삭제되었습니다' }, { status: 200 });
 }
