@@ -9,17 +9,19 @@ import Button from '../common/Button';
 // NOTE: 체크 가능 항목을 신규 추가하는 컴포넌트
 
 interface CheckInputProps {
-  tag: string;
+  tagId: string;
+  tagName: string;
 }
 
-export default function CheckInput({ tag }: CheckInputProps) {
+export default function CheckInput({ tagId, tagName }: CheckInputProps) {
   const queryClient = useQueryClient();
 
   const [task, setTask] = useState('');
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ task }: Partial<Check>) => postChecks({ tag, task }),
+    mutationFn: ({ task, tagId }: Partial<Check>) =>
+      postChecks({ task, tagId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['checks', tag] });
+      queryClient.invalidateQueries({ queryKey: ['checks', tagName] });
     },
     onError: (err) => {
       console.log(`항목 추가 실패 : ${err}`);
@@ -39,7 +41,7 @@ export default function CheckInput({ tag }: CheckInputProps) {
   const onHandleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!task) return;
-    mutate({ task });
+    mutate({ task, tagId });
     setTask('');
   };
 

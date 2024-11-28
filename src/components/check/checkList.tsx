@@ -61,7 +61,7 @@ export default function CheckList({ tagName, tagId }: CheckListProp) {
         ))}
       </ul>
       <div>
-        <CheckInput tag={tagName} />
+        <CheckInput tagId={tagId} tagName={tagName} />
       </div>
     </div>
   );
