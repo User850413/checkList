@@ -1,6 +1,6 @@
+import Check from '@/app/lib/db/models/checks';
+import Tag from '@/app/lib/db/models/tags';
 import mongoose from 'mongoose';
-import Tag from '../lib/db/models/tags';
-import Check from '../lib/db/models/checks';
 
 export const createCheck = async (checkData: {
   task: string;

@@ -1,6 +1,6 @@
 import dbConnect from '@/app/lib/db/dbConnect';
 import Check from '@/app/lib/db/models/checks';
-import { createCheck } from '@/app/services/checkService';
+import { createCheck } from '@/app/services/database/createCheck';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
