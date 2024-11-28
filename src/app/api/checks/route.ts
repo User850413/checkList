@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
 
   await dbConnect();
 
-  if (!!tag) {
+  if (tag) {
     const check = await Check.find({ tag }).lean();
     return new Response(JSON.stringify(check), { status: 200 });
   }
@@ -28,11 +28,6 @@ export async function POST(req: Request) {
     if (data.task === '') {
       return NextResponse.json(
         { error: '내용 입력은 필수사항입니다' },
-        { status: 400 }
-      );
-    } else if (data.tag === '') {
-      return NextResponse.json(
-        { error: '태그명은 필수입니다' },
         { status: 400 }
       );
     }

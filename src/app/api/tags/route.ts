@@ -1,6 +1,7 @@
 import dbConnect from '@/app/lib/db/dbConnect';
 import { NextRequest, NextResponse } from 'next/server';
 import Tag from '@/app/lib/db/models/tags';
+import { updateTagAndChecks } from '@/app/services/database/updateTagAndChecks';
 
 export async function GET() {
   try {
@@ -49,11 +50,16 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'id는 필수 값입니다' }, { status: 400 });
   }
 
-  const updatedCheck = await Tag.findByIdAndUpdate(id, body, {
-    new: true,
-  });
+  if (!body.name) {
+    return NextResponse.json(
+      { error: '태그명은 1자 이상이어야 합니다' },
+      { status: 400 }
+    );
+  }
 
-  return NextResponse.json(updatedCheck);
+  const updatedTag = await updateTagAndChecks(id, body.name);
+
+  return NextResponse.json(updatedTag);
 }
 
 export async function DELETE(req: NextRequest) {
