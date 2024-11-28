@@ -7,9 +7,10 @@ export const deleteTagAndChecks = async (tagId: string) => {
   session.startTransaction();
 
   try {
+    // 태그 존재 여부 확인
     const existingTag = await Tag.findById(tagId);
     if (!existingTag) {
-      throw new Error('존재하지 않는 태그입니다');
+      throw new Error('존재하지 않는 태그입니다.');
     }
 
     // 관련 Checks 삭제
@@ -18,17 +19,25 @@ export const deleteTagAndChecks = async (tagId: string) => {
     // 태그 삭제
     await Tag.findByIdAndDelete(tagId, { session });
 
-    session.endSession();
+    // 트랜잭션 커밋
+    await session.commitTransaction();
   } catch (error) {
-    session.endSession();
-    if (error instanceof mongoose.Error.ValidationError) {
-      throw new Error('유효하지 않은 태그 ID입니다.');
-    } else if (error instanceof mongoose.Error.CastError) {
-      throw new Error('잘못된 형식의 태그 ID입니다.');
-    } else {
-      throw new Error('태그 삭제 중 오류가 발생했습니다.');
+    // 에러 핸들링 및 트랜잭션 중단
+    if (session.inTransaction()) {
+      await session.abortTransaction();
     }
+
+    // 오류 메시지 출력 또는 로깅
+    console.error('태그 삭제 중 오류 발생:', error);
+    throw new Error(
+      error instanceof mongoose.Error.ValidationError
+        ? '유효하지 않은 태그 ID입니다.'
+        : error instanceof mongoose.Error.CastError
+        ? '잘못된 형식의 태그 ID입니다.'
+        : '태그 삭제 중 문제가 발생했습니다.'
+    );
   } finally {
-    await session.abortTransaction();
+    // 세션 종료
+    session.endSession();
   }
 };
