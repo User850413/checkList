@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check } from '@/types/check';
 import { deleteTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
+import TagNameInput from './tagNameInput';
 
 interface CheckListProp {
   tagName: string;
@@ -40,7 +41,7 @@ export default function CheckList({ tagName, tagId }: CheckListProp) {
   return (
     <div className="bg-white rounded-lg w-full px-3 h-full py-2">
       <div className="border-b-slate-200 border-b-2 flex justify-between items-center">
-        <h1 className="w-full font-medium text-2xl py-1">{tagName}</h1>
+        <TagNameInput tagName={tagName} tagId={tagId} />
         <button
           onClick={() => onClickDelete(tagId)}
           className="inline-block p-1 text-slate-400"
