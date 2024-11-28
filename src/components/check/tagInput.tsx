@@ -42,7 +42,7 @@ export function TagInPut() {
         onChange={onChangeInput}
         className="w-full border-slate-200 border-2 rounded-md"
       />
-      <Button>추가</Button>
+      <Button type="submit">추가</Button>
     </form>
   );
 }

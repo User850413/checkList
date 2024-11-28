@@ -21,7 +21,7 @@ export default function CheckList({ tagName, tagId }: CheckListProp) {
     queryFn: () => getChecks({ tagId }),
   });
 
-  const { mutate } = useMutation({
+  const { mutate: deleteMutate } = useMutation({
     mutationFn: ({ _id }: Pick<Tag, '_id'>) => deleteTag({ _id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tags'] });
@@ -32,7 +32,7 @@ export default function CheckList({ tagName, tagId }: CheckListProp) {
   });
 
   const onClickDelete = (_id: string) => {
-    mutate({ _id });
+    deleteMutate({ _id });
   };
 
   if (isLoading) return <div>Loading...</div>;
