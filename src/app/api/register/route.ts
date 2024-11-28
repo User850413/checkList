@@ -2,8 +2,14 @@ import dbConnect from '@/app/lib/db/dbConnect';
 import { NextResponse } from 'next/server';
 import User from '@/app/lib/db/models/users';
 import mongoose from 'mongoose';
+import { verifyAuthToken } from '@/app/services/token/verifyToken';
 
 export async function POST(req: Request) {
+  const { error } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
+
   try {
     const { username, email, password } = await req.json();
 
