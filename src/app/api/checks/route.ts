@@ -6,12 +6,12 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest) {
   // NOTE: 쿼리값 가져오기
   const searchParams = req.nextUrl.searchParams;
-  const tag = searchParams.get('tag');
+  const tagId = searchParams.get('tagId');
 
   await dbConnect();
 
-  if (tag) {
-    const check = await Check.find({ tag }).lean();
+  if (tagId) {
+    const check = await Check.find({ tagId }).lean();
     return new Response(JSON.stringify(check), { status: 200 });
   }
 
