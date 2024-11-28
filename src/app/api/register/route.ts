@@ -11,14 +11,19 @@ export async function POST(req: Request) {
         { error: 'username은 필수 입력사항입니다' },
         { status: 400 }
       );
-    } else if (!email) {
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
       return NextResponse.json(
-        { error: 'email은 필수 입력사항입니다' },
+        { error: '유효한 email 형식을 입력해주세요.' },
         { status: 400 }
       );
-    } else if (!password) {
+    }
+
+    if (!password || password.length < 8) {
       return NextResponse.json(
-        { error: 'password는 필수 입력사항입니다' },
+        { error: 'password는 최소 8자 이상이어야 합니다.' },
         { status: 400 }
       );
     }
@@ -36,7 +41,10 @@ export async function POST(req: Request) {
     const newUser = new User({ username, email, password });
     await newUser.save();
 
-    return NextResponse.json(newUser, { status: 201 });
+    return NextResponse.json(
+      { username, email, id: newUser._id },
+      { status: 201 }
+    );
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
   }
