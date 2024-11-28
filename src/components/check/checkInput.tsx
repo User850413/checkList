@@ -3,7 +3,7 @@
 import { postChecks } from '@/app/services/api/checks';
 import { Check } from '@/types/check';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { FormEvent, useRef, useState } from 'react';
+import React, { FormEvent, useRef, useState } from 'react';
 import Button from '../common/Button';
 
 // NOTE: 체크 가능 항목을 신규 추가하는 컴포넌트
@@ -13,10 +13,10 @@ interface CheckInputProps {
   tagName: string;
 }
 
-export default function CheckInput({ tagId, tagName }: CheckInputProps) {
+function CheckInput({ tagId, tagName }: CheckInputProps) {
   const queryClient = useQueryClient();
-
   const [task, setTask] = useState('');
+
   const { mutate, isPending } = useMutation({
     mutationFn: ({ task, tagId }: Partial<Check>) =>
       postChecks({ task, tagId }),
@@ -64,3 +64,5 @@ export default function CheckInput({ tagId, tagName }: CheckInputProps) {
     </form>
   );
 }
+
+export default React.memo(CheckInput);

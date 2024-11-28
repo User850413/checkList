@@ -10,7 +10,7 @@ interface TagInPutProps {
   Undo?: () => void;
 }
 
-export function TagInPut({ Undo }: TagInPutProps) {
+export function TagInput({ Undo }: TagInPutProps) {
   const queryClient = useQueryClient();
 
   const [tagName, setTagName] = useState('');

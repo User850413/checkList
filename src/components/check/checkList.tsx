@@ -8,13 +8,14 @@ import { Check } from '@/types/check';
 import { deleteTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
 import TagNameInput from './tagNameInput';
+import React from 'react';
 
 interface CheckListProp {
   tagName: string;
   tagId: string;
 }
 
-export default function CheckList({ tagName, tagId }: CheckListProp) {
+function CheckList({ tagName, tagId }: CheckListProp) {
   const queryClient = useQueryClient();
 
   const { isLoading, data: list } = useQuery<Check[]>({
@@ -67,3 +68,5 @@ export default function CheckList({ tagName, tagId }: CheckListProp) {
     </div>
   );
 }
+
+export default React.memo(CheckList);

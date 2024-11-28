@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import React, { PropsWithChildren } from 'react';
 import clsx from 'clsx';
 
 interface ButtonProps extends PropsWithChildren {
@@ -8,7 +8,7 @@ interface ButtonProps extends PropsWithChildren {
   disabled?: boolean;
 }
 
-export default function Button({
+function Button({
   children,
   onClick,
   className,
@@ -32,3 +32,5 @@ export default function Button({
     </button>
   );
 }
+
+export default React.memo(Button);

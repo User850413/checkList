@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { FormEvent, useRef, useState } from 'react';
+import React, { FormEvent, useRef, useState } from 'react';
 import Button from '../common/Button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { patchTag } from '@/app/services/api/tags';
@@ -12,7 +12,7 @@ interface TagNameInputProps {
   tagId: string;
 }
 
-export default function TagNameInput({ tagName, tagId }: TagNameInputProps) {
+function TagNameInput({ tagName, tagId }: TagNameInputProps) {
   const queryClient = useQueryClient();
 
   const [tagNameEditing, setTagNameEditing] = useState<boolean>(false);
@@ -24,6 +24,7 @@ export default function TagNameInput({ tagName, tagId }: TagNameInputProps) {
     mutationFn: ({ _id, name }: Partial<Tag>) => patchTag({ _id, name }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tags'] });
+      setTagNameEditing(false);
     },
     onError: (error) => {
       console.error(`태그 수정 실패 : ${error}`);
@@ -36,8 +37,8 @@ export default function TagNameInput({ tagName, tagId }: TagNameInputProps) {
 
   const onClickEditTagName = (e: FormEvent) => {
     e.preventDefault();
+    if (tagValue === '') return;
     mutate({ _id: tagId, name: tagValue });
-    setTagNameEditing(false);
   };
 
   const onClickCancel = () => {
@@ -80,3 +81,5 @@ export default function TagNameInput({ tagName, tagId }: TagNameInputProps) {
     </>
   );
 }
+
+export default React.memo(TagNameInput);
