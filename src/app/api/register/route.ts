@@ -34,22 +34,26 @@ export async function POST(req: Request) {
     const session = await mongoose.startSession();
 
     try {
-      await session.withTransaction(async () => {
+      const result = await session.withTransaction(async () => {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-          return NextResponse.json(
-            { error: '이미 사용중인 email입니다' },
-            { status: 400 }
-          );
+          throw new Error('이미 사용중인 email입니다');
         }
 
         const newUser = new User({ username, email, password });
         await newUser.save({ session });
-        return NextResponse.json(
-          { username, email, id: newUser._id },
-          { status: 201 }
-        );
+
+        return { username, email, id: newUser._id };
       });
+
+      return NextResponse.json(result, { status: 201 });
+    } catch (transactionError) {
+      const errorMessage =
+        transactionError instanceof Error
+          ? transactionError.message
+          : '트랜잭션 중 알 수 없는 오류 발생';
+
+      return NextResponse.json({ error: errorMessage }, { status: 400 });
     } finally {
       await session.endSession();
     }
@@ -57,5 +61,9 @@ export async function POST(req: Request) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+    return NextResponse.json(
+      { error: '서버 오류가 발생했습니다.' },
+      { status: 500 }
+    );
   }
 }
