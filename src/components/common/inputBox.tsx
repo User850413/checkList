@@ -13,7 +13,7 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
 
     return (
       <>
-        <Field label={label} required helperText={helperText}>
+        <Field label={label} required={rest.required} helperText={helperText}>
           <Input
             {...rest}
             ref={ref}
