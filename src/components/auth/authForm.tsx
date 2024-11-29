@@ -3,6 +3,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import InputBox from '../common/inputBox';
 import StyledButton from '../common/styledButton';
 import { emailCheck } from '@/app/utils/emailCheck';
+import { useMutation } from '@tanstack/react-query';
+import { userLogin } from '@/app/services/api/user';
+import { UserInput } from '@/types/user';
 
 export default function AuthForm() {
   const [email, setEmail] = useState<string | undefined>('');
@@ -10,6 +13,14 @@ export default function AuthForm() {
 
   const emailRef = useRef<null | HTMLInputElement>(null);
   const pwdRef = useRef<null | HTMLInputElement>(null);
+
+  const { mutate } = useMutation({
+    mutationFn: ({ email, password }: Partial<UserInput>) =>
+      userLogin({ email, password }),
+    onError: (err) => {
+      console.error(`로그인 실패 : ${err}`);
+    },
+  });
 
   // 리렌더 방지 목적으로 참조할 value값
   const emailValue = useRef(email);
@@ -35,7 +46,9 @@ export default function AuthForm() {
       pwdRef.current?.focus();
       return;
     }
-  }, [emailValue, pwdValue]);
+
+    mutate({ email: emailValue.current, password: pwdValue.current });
+  }, [mutate, emailValue, pwdValue]);
 
   const handleEnterDown = useCallback(
     (e: React.KeyboardEvent) => {
