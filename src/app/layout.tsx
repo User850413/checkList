@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import QueryProviders from './lib/react-query-client';
+import { Provider as ChakraProvider } from '@/components/ui/provider';
 import Container from '@/components/common/Container';
 
 export const metadata: Metadata = {
@@ -14,10 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body>
         <QueryProviders>
-          <Container>{children}</Container>
+          <ChakraProvider>
+            <Container>{children}</Container>
+          </ChakraProvider>
         </QueryProviders>
       </body>
     </html>

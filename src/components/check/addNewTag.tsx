@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { TagInput } from './tagInput';
 import { useState } from 'react';
-import Button from '../common/Button';
+import StyledButton from '../common/styledButton';
 
 export default function AddNewTag() {
   const [addTag, setAddTag] = useState<boolean>(false);
@@ -32,13 +32,13 @@ export default function AddNewTag() {
         </div>
         <TagInput Undo={onCancelEdit} />
       </div>
-      <Button
+      <StyledButton
         className={clsx('w-full h-full', { hidden: addTag })}
         onClick={() => setAddTag(true)}
         aria-label="새 리스트 추가"
       >
         +
-      </Button>
+      </StyledButton>
     </>
   );
 }

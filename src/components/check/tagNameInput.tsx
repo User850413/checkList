@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import React, { FormEvent, useRef, useState } from 'react';
-import Button from '../common/Button';
+import StyledButton from '../common/styledButton';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { patchTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
@@ -81,10 +81,10 @@ function TagNameInput({ tagName, tagId }: TagNameInputProps) {
           placeholder="리스트명은 1자 이상이어야 합니다"
           maxLength={50}
         />
-        <Button type="submit">수정</Button>
-        <Button type="button" onClick={() => onClickCancel()}>
+        <StyledButton type="submit">수정</StyledButton>
+        <StyledButton type="button" onClick={() => onClickCancel()}>
           취소
-        </Button>
+        </StyledButton>
       </form>
     </>
   );

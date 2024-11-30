@@ -15,7 +15,7 @@ export default function CheckListWrapper() {
   if (isLoading) return <div> loading...</div>;
 
   return (
-    <div className="bg-slate-50 w-full px-6 py-10">
+    <div className="w-full px-6 py-10">
       <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {tags?.map((tag) => (
           <li key={tag._id}>

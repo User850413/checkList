@@ -4,7 +4,7 @@ import { postTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormEvent, useRef, useState } from 'react';
-import Button from '../common/Button';
+import StyledButton from '../common/styledButton';
 
 interface TagInPutProps {
   Undo?: () => void;
@@ -47,7 +47,7 @@ export function TagInput({ Undo }: TagInPutProps) {
         onChange={onChangeInput}
         className="w-full border-slate-200 border-2 rounded-md"
       />
-      <Button type="submit">추가</Button>
+      <StyledButton type="submit">추가</StyledButton>
     </form>
   );
 }
