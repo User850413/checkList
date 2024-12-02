@@ -16,6 +16,12 @@ const labels = {
     ko: '비밀번호',
     ariaLabel: '비밀번호 입력',
   },
+  passwordCheck: {
+    type: 'password',
+    en: 'password check',
+    ko: '비밀번호 확인',
+    ariaLabel: '비밀번호 확인 입력',
+  },
   username: {
     type: 'text',
     en: 'username',

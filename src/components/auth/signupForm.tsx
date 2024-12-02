@@ -13,6 +13,7 @@ interface SignupFormState {
   username: string;
   email: string;
   password: string;
+  passwordCheck: string;
 }
 
 export default function SignupForm() {
@@ -20,10 +21,12 @@ export default function SignupForm() {
     username: '',
     email: '',
     password: '',
+    passwordCheck: '',
   });
   const [error, setError] = useState({
     email: false,
     password: false,
+    passwordCheck: false,
     username: false,
   });
   const [errorMessage, setErrorMessage] = useState('');
@@ -45,41 +48,87 @@ export default function SignupForm() {
   });
 
   const handleSubmit = () => {
-    setIsLoading(true);
+    console.log(errorMessage);
 
     if (!inputValue.email) {
-      setError({ email: true, password: false, username: false });
+      setError({
+        email: true,
+        password: false,
+        passwordCheck: false,
+        username: false,
+      });
       setErrorMessage(ERROR_MESSAGES.EMPTY_EMAIL.ko);
       return;
     }
 
     if (!emailCheck(inputValue.email)) {
-      setError({ email: true, password: false, username: false });
+      setError({
+        email: true,
+        password: false,
+        passwordCheck: false,
+        username: false,
+      });
       setErrorMessage(ERROR_MESSAGES.INVALID_EMAIL.ko);
       return;
     }
 
     if (!inputValue.password) {
-      setError({ email: false, password: true, username: false });
+      setError({
+        email: false,
+        password: true,
+        passwordCheck: false,
+        username: false,
+      });
       setErrorMessage(ERROR_MESSAGES.EMPTY_PWD.ko);
       return;
     }
 
     if (inputValue.password.length < 8) {
-      setError({ email: false, password: true, username: false });
+      setError({
+        email: false,
+        password: true,
+        passwordCheck: false,
+        username: false,
+      });
       setErrorMessage(ERROR_MESSAGES.SHORT_PWD.ko);
       return;
     }
 
+    if (inputValue.password !== inputValue.passwordCheck) {
+      setError({
+        email: false,
+        password: false,
+        passwordCheck: true,
+        username: false,
+      });
+      setErrorMessage(ERROR_MESSAGES.PWD_CHECK_ERROR.ko);
+      return;
+    }
+
     if (!inputValue.username) {
-      setError({ email: false, password: false, username: true });
+      setError({
+        email: false,
+        password: false,
+        passwordCheck: false,
+        username: true,
+      });
       setErrorMessage(ERROR_MESSAGES.EMPTY_USERNAME.ko);
       return;
     }
 
-    setError({ email: false, password: false, username: false });
+    setError({
+      email: false,
+      password: false,
+      passwordCheck: false,
+      username: false,
+    });
 
-    mutate(inputValue);
+    setIsLoading(true);
+    mutate({
+      email: inputValue.email,
+      password: inputValue.password,
+      username: inputValue.username,
+    });
   };
 
   return (
@@ -109,11 +158,23 @@ export default function SignupForm() {
           inputValue={inputValue.password}
         />
         <InputBox
+          fieldType="passwordCheck"
+          setKeyValue={(passwordCheck) =>
+            setKeyValue('passwordCheck', passwordCheck)
+          }
+          required
+          isError={error.passwordCheck}
+          errorText={errorMessage}
+          inputValue={inputValue.passwordCheck}
+        />
+        <InputBox
           fieldType="username"
           setKeyValue={(username) => setKeyValue('username', username)}
           required
           maxLength={10}
           inputValue={inputValue.username}
+          errorText={errorMessage}
+          isError={error.username}
         />
         <StyledButton className="w-full" type="submit" disabled={isLoading}>
           회원가입

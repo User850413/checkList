@@ -50,7 +50,6 @@ export default function LoginForm() {
 
   // 제출 로직
   const handleSubmit = () => {
-    setIsLoading(true);
     if (!inputValue.email) {
       setError({ email: true, password: false });
       setEmailMessage(ERROR_MESSAGES.EMPTY_EMAIL.ko);
@@ -78,6 +77,7 @@ export default function LoginForm() {
 
     setError({ email: false, password: false });
 
+    setIsLoading(true);
     mutate(inputValue);
   };
 
