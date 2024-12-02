@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import InputBox from '../common/inputBox';
+import InputBox from './inputBox';
 import StyledButton from '../common/styledButton';
 import { emailCheck } from '@/app/utils/emailCheck';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
