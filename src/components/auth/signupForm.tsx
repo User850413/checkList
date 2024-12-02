@@ -5,6 +5,9 @@ import InputBox from './inputBox';
 import StyledButton from '../common/styledButton';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { emailCheck } from '@/app/utils/emailCheck';
+import { useMutation } from '@tanstack/react-query';
+import { userRegister } from '@/app/services/api/user';
+import { UserInput } from '@/types/user';
 
 interface SignupFormState {
   username: string;
@@ -24,6 +27,7 @@ export default function SignupForm() {
     username: false,
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const setKeyValue = <K extends keyof SignupFormState>(
     key: K,
@@ -32,7 +36,17 @@ export default function SignupForm() {
     setInputValue((prev) => ({ ...prev, [key]: newValue }));
   };
 
+  const { mutate } = useMutation({
+    mutationFn: ({ email, password, username }: Partial<UserInput>) =>
+      userRegister({ email, password, username }),
+    onSuccess: () => {
+      setIsLoading(false);
+    },
+  });
+
   const handleSubmit = () => {
+    setIsLoading(true);
+
     if (!inputValue.email) {
       setError({ email: true, password: false, username: false });
       setErrorMessage(ERROR_MESSAGES.EMPTY_EMAIL.ko);
@@ -62,6 +76,10 @@ export default function SignupForm() {
       setErrorMessage(ERROR_MESSAGES.EMPTY_USERNAME.ko);
       return;
     }
+
+    setError({ email: false, password: false, username: false });
+
+    mutate(inputValue);
   };
 
   return (
@@ -97,7 +115,7 @@ export default function SignupForm() {
           maxLength={10}
           inputValue={inputValue.username}
         />
-        <StyledButton className="w-full" type="submit">
+        <StyledButton className="w-full" type="submit" disabled={isLoading}>
           회원가입
         </StyledButton>
       </form>
