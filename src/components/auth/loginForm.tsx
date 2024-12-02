@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { userLogin } from '@/app/services/api/user';
 import { UserInput } from '@/types/user';
 import { useRouter } from 'next/navigation';
+import { Toaster, toaster } from '../ui/toaster';
 
 interface LoginFormState {
   email: string;
@@ -35,9 +36,11 @@ export default function LoginForm() {
   const { mutate } = useMutation({
     mutationFn: ({ email, password }: Partial<UserInput>) =>
       userLogin({ email, password }),
-    onError: () => {
-      setInputValue({ email: '', password: '' });
-    },
+    onError: () =>
+      toaster.create({
+        title: ERROR_MESSAGES.INVALID_USER.ko,
+        type: 'error',
+      }),
     onSuccess: () => {
       router.push('/');
     },
@@ -75,12 +78,9 @@ export default function LoginForm() {
     mutate(inputValue);
   };
 
-  const handleEnterDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleSubmit();
-  };
-
   return (
     <>
+      <Toaster />
       <form
         className="w-[480px] mx-auto bg-white shadow-card rounded-xl p-10 flex flex-col items-center gap-5"
         onSubmit={(e: React.FormEvent) => {
@@ -93,7 +93,6 @@ export default function LoginForm() {
           fieldType="email"
           setKeyValue={(email) => setKeyValue('email', email)}
           required
-          onKeyDown={handleEnterDown}
           isError={error.email}
           errorText={emailMessage}
           inputValue={inputValue.email}
@@ -102,7 +101,6 @@ export default function LoginForm() {
           fieldType="password"
           setKeyValue={(password) => setKeyValue('password', password)}
           required
-          onKeyDown={handleEnterDown}
           isError={error.password}
           errorText={pwdMessage}
           inputValue={inputValue.password}

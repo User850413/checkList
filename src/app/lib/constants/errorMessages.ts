@@ -11,6 +11,9 @@ const ERROR_MESSAGES = {
   SHORT_PWD: {
     ko: '비밀번호는 8자 이상이어야 합니다',
   },
+  INVALID_USER: {
+    ko: '아이디 또는 비밀번호가 올바르지 않습니다.',
+  },
 };
 
 export default ERROR_MESSAGES;
