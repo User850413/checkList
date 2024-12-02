@@ -1,16 +1,52 @@
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { emailCheck } from '@/app/utils/emailCheck';
 import { UserInput } from '@/types/user';
 import axios from 'axios';
 
+export async function userRegister({
+  email,
+  password,
+  username,
+}: Partial<UserInput>) {
+  const trimmedEmail = email?.trim();
+  const trimmedPassword = password?.trim();
+  const trimmedUsername = username?.trim();
+
+  if (!trimmedEmail) throw new Error(ERROR_MESSAGES.EMPTY_EMAIL.ko);
+  if (!trimmedPassword) throw new Error(ERROR_MESSAGES.EMPTY_PWD.ko);
+  if (!trimmedUsername) throw new Error(ERROR_MESSAGES.EMPTY_USERNAME.ko);
+  if (!emailCheck(trimmedEmail))
+    throw new Error(ERROR_MESSAGES.INVALID_EMAIL.ko);
+  if (trimmedPassword.length < 8) throw new Error(ERROR_MESSAGES.SHORT_PWD.ko);
+
+  try {
+    const res = await axios.post(
+      '/api/register',
+      {
+        email: trimmedEmail,
+        password: trimmedPassword,
+        username: trimmedUsername,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return res.data;
+  } catch {
+    throw new Error('회원가입 중 오류가 발생했습니다');
+  }
+}
+
 export async function userLogin({ email, password }: Partial<UserInput>) {
   const trimmedEmail = email?.trim();
   const trimmedPassword = password?.trim();
-  if (!trimmedEmail) throw new Error('이메일을 입력해 주세요');
-  if (!trimmedPassword) throw new Error('비밀번호를 입력해 주세요');
+  if (!trimmedEmail) throw new Error(ERROR_MESSAGES.EMPTY_EMAIL.ko);
+  if (!trimmedPassword) throw new Error(ERROR_MESSAGES.EMPTY_PWD.ko);
   if (!emailCheck(trimmedEmail))
-    throw new Error('올바른 email 형식을 입력해 주세요');
-  if (trimmedPassword.length < 8)
-    throw new Error('비밀번호는 최소 8자 이상이어야 합니다!');
+    throw new Error(ERROR_MESSAGES.INVALID_EMAIL.ko);
+  if (trimmedPassword.length < 8) throw new Error(ERROR_MESSAGES.SHORT_PWD.ko);
 
   try {
     const res = await axios.post(
