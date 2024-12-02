@@ -28,12 +28,20 @@ interface InputBoxProps extends InputProps {
   helperText?: string;
   isError?: boolean;
   errorText?: string;
+  inputValue?: string;
 }
 
 const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
   function InputBox(props, ref) {
-    const { setKeyValue, fieldType, helperText, errorText, isError, ...rest } =
-      props;
+    const {
+      setKeyValue,
+      fieldType,
+      helperText,
+      errorText,
+      isError,
+      inputValue,
+      ...rest
+    } = props;
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
       setKeyValue(e.currentTarget.value);
@@ -57,6 +65,7 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
               'border-slate-100': !isError,
               'border-red-300': isError,
             })}
+            value={inputValue}
           />
         </Field>
       </>

@@ -4,6 +4,10 @@ import InputBox from '../common/inputBox';
 import StyledButton from '../common/styledButton';
 import { emailCheck } from '@/app/utils/emailCheck';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
+import { useMutation } from '@tanstack/react-query';
+import { userLogin } from '@/app/services/api/user';
+import { UserInput } from '@/types/user';
+import { useRouter } from 'next/navigation';
 
 interface LoginFormState {
   email: string;
@@ -19,6 +23,8 @@ export default function LoginForm() {
   const [emailMessage, setEmailMessage] = useState('');
   const [pwdMessage, setPwdMessage] = useState('');
 
+  const router = useRouter();
+
   const setKeyValue = <K extends keyof LoginFormState>(
     key: K,
     newValue: LoginFormState[K]
@@ -26,20 +32,18 @@ export default function LoginForm() {
     setInputValue((prev) => ({ ...prev, [key]: newValue }));
   };
 
-  // const { mutate } = useMutation({
-  //   mutationFn: ({ email, password }: Partial<UserInput>) =>
-  //     userLogin({ email, password }),
-  //   onError: (err) => {
-  //     console.error(`로그인 실패 : ${err}`);
-  //   },
-  // });
+  const { mutate } = useMutation({
+    mutationFn: ({ email, password }: Partial<UserInput>) =>
+      userLogin({ email, password }),
+    onError: () => {
+      setInputValue({ email: '', password: '' });
+    },
+    onSuccess: () => {
+      router.push('/');
+    },
+  });
 
-  // useEffect(() => {
-  //   emailValue.current = email;
-  //   pwdValue.current = pwd;
-  // }, [email, pwd]);
-
-  // // 제출 로직
+  // 제출 로직
   const handleSubmit = () => {
     if (!inputValue.email) {
       setError({ email: true, password: false });
@@ -67,9 +71,9 @@ export default function LoginForm() {
     }
 
     setError({ email: false, password: false });
+
+    mutate(inputValue);
   };
-  //   mutate({ email: emailValue.current, password: pwdValue.current });
-  // }, [mutate, emailValue, pwdValue]);
 
   const handleEnterDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleSubmit();
@@ -92,6 +96,7 @@ export default function LoginForm() {
           onKeyDown={handleEnterDown}
           isError={error.email}
           errorText={emailMessage}
+          inputValue={inputValue.email}
         />
         <InputBox
           fieldType="password"
@@ -100,6 +105,7 @@ export default function LoginForm() {
           onKeyDown={handleEnterDown}
           isError={error.password}
           errorText={pwdMessage}
+          inputValue={inputValue.password}
         />
         <StyledButton className="w-full" type="submit">
           로그인
