@@ -23,6 +23,7 @@ export default function LoginForm() {
   const [error, setError] = useState({ email: false, password: false });
   const [emailMessage, setEmailMessage] = useState('');
   const [pwdMessage, setPwdMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -42,12 +43,14 @@ export default function LoginForm() {
         type: 'error',
       }),
     onSuccess: () => {
+      setIsLoading(false);
       router.push('/');
     },
   });
 
   // 제출 로직
   const handleSubmit = () => {
+    setIsLoading(true);
     if (!inputValue.email) {
       setError({ email: true, password: false });
       setEmailMessage(ERROR_MESSAGES.EMPTY_EMAIL.ko);
@@ -105,7 +108,7 @@ export default function LoginForm() {
           errorText={pwdMessage}
           inputValue={inputValue.password}
         />
-        <StyledButton className="w-full" type="submit">
+        <StyledButton className="w-full" type="submit" disabled={isLoading}>
           로그인
         </StyledButton>
       </form>
