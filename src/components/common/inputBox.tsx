@@ -8,16 +8,19 @@ const labels = {
     type: 'email',
     en: 'email',
     ko: '이메일',
+    ariaLabel: '이메일 입력',
   },
   password: {
     type: 'password',
     en: 'password',
     ko: '비밀번호',
+    ariaLabel: '비밀번호 입력',
   },
   username: {
     type: 'text',
     en: 'username',
     ko: '닉네임',
+    ariaLabel: '닉네임 입력',
   },
 } as const;
 
@@ -66,6 +69,7 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
               'border-red-300': isError,
             })}
             value={inputValue}
+            aria-label={labels[fieldType].ariaLabel}
           />
         </Field>
       </>
