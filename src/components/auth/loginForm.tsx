@@ -77,7 +77,14 @@ export default function LoginForm() {
 
   return (
     <>
-      <div className="w-[480px] mx-auto bg-white shadow-card rounded-xl p-10 flex flex-col items-center gap-5">
+      <form
+        className="w-[480px] mx-auto bg-white shadow-card rounded-xl p-10 flex flex-col items-center gap-5"
+        onSubmit={(e: React.FormEvent) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+        noValidate
+      >
         <InputBox
           fieldType="email"
           setKeyValue={(email) => setKeyValue('email', email)}
@@ -94,10 +101,10 @@ export default function LoginForm() {
           isError={error.password}
           errorText={pwdMessage}
         />
-        <StyledButton className="w-full" onClick={handleSubmit}>
+        <StyledButton className="w-full" type="submit">
           로그인
         </StyledButton>
-      </div>
+      </form>
     </>
   );
 }
