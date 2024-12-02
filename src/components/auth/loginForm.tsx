@@ -1,0 +1,117 @@
+'use client';
+import { useState } from 'react';
+import InputBox from '../common/inputBox';
+import StyledButton from '../common/styledButton';
+import { emailCheck } from '@/app/utils/emailCheck';
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
+import { useMutation } from '@tanstack/react-query';
+import { userLogin } from '@/app/services/api/user';
+import { UserInput } from '@/types/user';
+import { useRouter } from 'next/navigation';
+import { Toaster, toaster } from '../ui/toaster';
+
+interface LoginFormState {
+  email: string;
+  password: string;
+}
+
+export default function LoginForm() {
+  const [inputValue, setInputValue] = useState<LoginFormState>({
+    email: '',
+    password: '',
+  });
+  const [error, setError] = useState({ email: false, password: false });
+  const [emailMessage, setEmailMessage] = useState('');
+  const [pwdMessage, setPwdMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
+
+  const setKeyValue = <K extends keyof LoginFormState>(
+    key: K,
+    newValue: LoginFormState[K]
+  ) => {
+    setInputValue((prev) => ({ ...prev, [key]: newValue }));
+  };
+
+  const { mutate } = useMutation({
+    mutationFn: ({ email, password }: Partial<UserInput>) =>
+      userLogin({ email, password }),
+    onError: () =>
+      toaster.create({
+        title: ERROR_MESSAGES.INVALID_USER.ko,
+        type: 'error',
+      }),
+    onSuccess: () => {
+      setIsLoading(false);
+      router.push('/');
+    },
+  });
+
+  // 제출 로직
+  const handleSubmit = () => {
+    setIsLoading(true);
+    if (!inputValue.email) {
+      setError({ email: true, password: false });
+      setEmailMessage(ERROR_MESSAGES.EMPTY_EMAIL.ko);
+      return;
+    }
+
+    if (!emailCheck(inputValue.email)) {
+      console.log(inputValue.email);
+      setError({ email: true, password: false });
+      setEmailMessage(ERROR_MESSAGES.INVALID_EMAIL.ko);
+      return;
+    }
+
+    if (!inputValue.password) {
+      setError({ email: false, password: true });
+      setPwdMessage(ERROR_MESSAGES.EMPTY_PWD.ko);
+      return;
+    }
+
+    if (inputValue.password.length < 8) {
+      setError({ email: false, password: true });
+      setPwdMessage(ERROR_MESSAGES.SHORT_PWD.ko);
+      return;
+    }
+
+    setError({ email: false, password: false });
+
+    mutate(inputValue);
+  };
+
+  return (
+    <>
+      <Toaster />
+      <form
+        className="w-[480px] mx-auto bg-white shadow-card rounded-xl p-10 flex flex-col items-center gap-5"
+        onSubmit={(e: React.FormEvent) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+        noValidate
+      >
+        <InputBox
+          fieldType="email"
+          setKeyValue={(email) => setKeyValue('email', email)}
+          required
+          isError={error.email}
+          errorText={emailMessage}
+          inputValue={inputValue.email}
+        />
+        <InputBox
+          fieldType="password"
+          setKeyValue={(password) => setKeyValue('password', password)}
+          required
+          isError={error.password}
+          errorText={pwdMessage}
+          inputValue={inputValue.password}
+        />
+        <StyledButton className="w-full" type="submit" disabled={isLoading}>
+          로그인
+        </StyledButton>
+      </form>
+    </>
+  );
+}
