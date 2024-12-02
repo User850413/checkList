@@ -14,6 +14,9 @@ const ERROR_MESSAGES = {
   INVALID_USER: {
     ko: '아이디 또는 비밀번호가 올바르지 않습니다.',
   },
+  EMPTY_USERNAME: {
+    ko: '닉네임은 1자 이상이어야 합니다!',
+  },
 };
 
 export default ERROR_MESSAGES;
