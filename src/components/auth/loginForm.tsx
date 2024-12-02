@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import InputBox from '../common/inputBox';
 import StyledButton from '../common/styledButton';
+import { emailCheck } from '@/app/utils/emailCheck';
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 
 interface LoginFormState {
   email: string;
@@ -14,6 +16,8 @@ export default function LoginForm() {
     password: '',
   });
   const [error, setError] = useState({ email: false, password: false });
+  const [emailMessage, setEmailMessage] = useState('');
+  const [pwdMessage, setPwdMessage] = useState('');
 
   const setKeyValue = <K extends keyof LoginFormState>(
     key: K,
@@ -38,12 +42,31 @@ export default function LoginForm() {
   // // 제출 로직
   const handleSubmit = () => {
     if (!inputValue.email) {
-      setError((prev) => ({ ...prev, email: true }));
-    } else if (!inputValue.password) {
-      setError({ email: false, password: true });
-    } else {
-      setError({ email: false, password: false });
+      setError({ email: true, password: false });
+      setEmailMessage(ERROR_MESSAGES.EMPTY_EMAIL.ko);
+      return;
     }
+
+    if (!emailCheck(inputValue.email)) {
+      console.log(inputValue.email);
+      setError({ email: true, password: false });
+      setEmailMessage(ERROR_MESSAGES.INVALID_EMAIL.ko);
+      return;
+    }
+
+    if (!inputValue.password) {
+      setError({ email: false, password: true });
+      setPwdMessage(ERROR_MESSAGES.EMPTY_PWD.ko);
+      return;
+    }
+
+    if (inputValue.password.length < 8) {
+      setError({ email: false, password: true });
+      setPwdMessage(ERROR_MESSAGES.SHORT_PWD.ko);
+      return;
+    }
+
+    setError({ email: false, password: false });
   };
   //   mutate({ email: emailValue.current, password: pwdValue.current });
   // }, [mutate, emailValue, pwdValue]);
@@ -61,6 +84,7 @@ export default function LoginForm() {
           required
           onKeyDown={handleEnterDown}
           isError={error.email}
+          errorText={emailMessage}
         />
         <InputBox
           fieldType="password"
@@ -68,6 +92,7 @@ export default function LoginForm() {
           required
           onKeyDown={handleEnterDown}
           isError={error.password}
+          errorText={pwdMessage}
         />
         <StyledButton className="w-full" onClick={handleSubmit}>
           로그인

@@ -39,8 +39,6 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
       setKeyValue(e.currentTarget.value);
     };
 
-    if (isError) console.log(fieldType);
-
     return (
       <>
         <Field
