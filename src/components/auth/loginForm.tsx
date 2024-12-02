@@ -115,7 +115,3 @@ export default function LoginForm() {
     </>
   );
 }
-
-// 해야하는거
-// 토큰 저장
-// 로그인폼으로 이름바꾸거나 확장성 추가하거나 해야함
