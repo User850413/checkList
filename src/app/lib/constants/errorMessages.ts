@@ -41,6 +41,15 @@ const ERROR_MESSAGES = {
   JWT_SECRET_ERROR: {
     ko: '환경 변수 JWT_SECRET이 설정되지 않았습니다',
   },
+  SERVER_ERROR: {
+    ko: '서버 에러가 발생하였습니다',
+  },
+  EMPTY_ID: {
+    ko: 'id값은 필수 항목입니다',
+  },
+  EMPTY_TAGNAME: {
+    ko: '태그명은 1자 이상이어야 합니다.',
+  },
 };
 
 export default ERROR_MESSAGES;

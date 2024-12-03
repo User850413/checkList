@@ -7,20 +7,21 @@ import { verifyAuthToken } from '@/app/services/token/verifyToken';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import jwt from 'jsonwebtoken';
 
-const getUserId = (req: Request) => {
+const getUserId = (req: Request): { userId: string; error?: string } => {
+  let userId = '';
+
   const { error, token } = verifyAuthToken(req);
   if (error) {
-    return NextResponse.json({ error }, { status: 401 });
+    return { userId, error };
   }
 
   const JWT_SECRET = process.env.JWT_SECRET;
-  if (!JWT_SECRET)
-    return NextResponse.json({ error: ERROR_MESSAGES.JWT_SECRET_ERROR.ko });
+  if (!JWT_SECRET) return { userId, error: ERROR_MESSAGES.JWT_SECRET_ERROR.ko };
   const decoded = jwt.verify(token!, JWT_SECRET) as { userId: string };
 
-  const userId = decoded.userId;
+  userId = decoded.userId;
 
-  return userId;
+  return { userId };
 };
 
 export async function GET() {
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
 
     if (data.name === '') {
       return NextResponse.json(
-        { error: '태그명은 필수사항입니다.' },
+        { error: ERROR_MESSAGES.EMPTY_TAGNAME.ko },
         { status: 400 }
       );
     }
@@ -65,24 +66,25 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json();
   const tagId = searchParams.get('id');
 
-  const userId = getUserId(req);
+  const { userId, error } = getUserId(req);
+  if (!userId) return NextResponse.json({ error }, { status: 401 });
 
   await dbConnect();
 
   if (!tagId) {
     return NextResponse.json(
-      { error: 'tag id는 필수 값입니다' },
+      { error: ERROR_MESSAGES.EMPTY_ID.ko },
       { status: 400 }
     );
   }
 
   const tag = await Tag.findById(tagId);
-  if (tag.userId.toString() !== userId)
+  if (String(tag.userId) !== userId)
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   if (!body.name) {
     return NextResponse.json(
-      { error: '태그명은 1자 이상이어야 합니다' },
+      { error: ERROR_MESSAGES.EMPTY_TAGNAME.ko },
       { status: 400 }
     );
   }
@@ -107,14 +109,18 @@ export async function DELETE(req: NextRequest) {
 
   await dbConnect();
 
-  const userId = getUserId(req);
+  const { userId, error } = getUserId(req);
+  if (!userId) return NextResponse.json({ error }, { status: 401 });
 
   if (!tagId) {
-    return NextResponse.json({ error: 'id는 필수 값입니다.' }, { status: 400 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.EMPTY_ID.ko },
+      { status: 400 }
+    );
   }
 
   const tag = await Tag.findById(tagId);
-  if (tag.userId.toString() !== userId)
+  if (String(tag.userId) !== userId)
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   try {

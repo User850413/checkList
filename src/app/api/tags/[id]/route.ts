@@ -19,17 +19,20 @@ export async function GET(
 
     const JWT_SECRET = process.env.JWT_SECRET;
     if (!JWT_SECRET)
-      return NextResponse.json({ error: ERROR_MESSAGES.JWT_SECRET_ERROR.ko });
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.JWT_SECRET_ERROR.ko },
+        { status: 500 }
+      );
 
     const decoded = jwt.verify(token!, JWT_SECRET) as { userId: string };
     const loggedInUserId = decoded.userId;
     const requestedUserId = params.id;
 
     if (loggedInUserId === requestedUserId) {
-      const myTags = await Tag.find({ _id: loggedInUserId });
+      const myTags = await Tag.find({ userId: loggedInUserId });
       return NextResponse.json(myTags);
     } else {
-      const otherUserTags = await Tag.find({ _id: requestedUserId });
+      const otherUserTags = await Tag.find({ userId: requestedUserId });
       return NextResponse.json(otherUserTags);
     }
   } catch {

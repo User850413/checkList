@@ -4,7 +4,6 @@ import Check from '@/app/lib/db/models/checks';
 import { createCheck } from '@/app/services/database/createCheck';
 import { verifyAuthToken } from '@/app/services/token/verifyToken';
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
 
 export async function GET(req: NextRequest) {
   // NOTE: 쿼리값 가져오기
@@ -26,24 +25,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const token = authHeader.split(' ')[1];
-
   try {
-    // NOTE: 토큰 검증
-    const JWT_SECRET = process.env.JWT_SECRET;
-
-    if (!JWT_SECRET) {
-      throw new Error(ERROR_MESSAGES.JWT_SECRET_ERROR.ko);
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET);
-    if (!decoded) {
-      return new Response(
-        JSON.stringify({ error: ERROR_MESSAGES.TOKEN_ERROR.ko }),
-        { status: 401 }
-      );
-    }
-
     await dbConnect();
 
     if (tagId) {
@@ -55,14 +37,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(checks);
   } catch {
     return new Response(
-      JSON.stringify({ error: ERROR_MESSAGES.TOKEN_ERROR.ko }),
-      { status: 401 }
+      JSON.stringify({ error: ERROR_MESSAGES.SERVER_ERROR.ko }),
+      { status: 500 }
     );
   }
 }
 
 export async function POST(req: Request) {
   await dbConnect();
+
+  const { error } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
 
   try {
     const data = await req.json();
@@ -89,8 +76,16 @@ export async function PATCH(req: NextRequest) {
 
   await dbConnect();
 
+  const { error } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
+
   if (!id) {
-    return NextResponse.json({ error: 'id는 필수 값입니다' }, { status: 400 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.EMPTY_ID.ko },
+      { status: 400 }
+    );
   }
 
   const updatedCheck = await Check.findByIdAndUpdate(id, body, {
@@ -103,6 +98,11 @@ export async function PATCH(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get('id');
+
+  const { error } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
 
   await dbConnect();
 
