@@ -1,5 +1,4 @@
 import { Check } from '@/types/check';
-import axios from 'axios';
 import apiClient from '../token/apiClient';
 
 export async function getAllChecks() {
