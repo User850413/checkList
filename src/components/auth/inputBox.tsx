@@ -16,6 +16,12 @@ const labels = {
     ko: '비밀번호',
     ariaLabel: '비밀번호 입력',
   },
+  passwordCheck: {
+    type: 'password',
+    en: 'password check',
+    ko: '비밀번호 확인',
+    ariaLabel: '비밀번호 확인 입력',
+  },
   username: {
     type: 'text',
     en: 'username',
@@ -43,11 +49,16 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
       errorText,
       isError,
       inputValue,
+      maxLength,
       ...rest
     } = props;
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setKeyValue(e.currentTarget.value);
+      if (maxLength) {
+        setKeyValue(e.currentTarget.value.slice(0, maxLength));
+      } else {
+        setKeyValue(e.currentTarget.value);
+      }
     };
 
     return (

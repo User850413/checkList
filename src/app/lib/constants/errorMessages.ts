@@ -11,8 +11,23 @@ const ERROR_MESSAGES = {
   SHORT_PWD: {
     ko: '비밀번호는 8자 이상이어야 합니다',
   },
+  PWD_CHECK_ERROR: {
+    ko: '비밀번호가 일치하지 않습니다',
+  },
   INVALID_USER: {
     ko: '아이디 또는 비밀번호가 올바르지 않습니다.',
+  },
+  EMPTY_USERNAME: {
+    ko: '닉네임은 1자 이상이어야 합니다!',
+  },
+  LOGIN_ERROR: {
+    ko: '로그인 중 오류가 발생했습니다',
+  },
+  REGISTER_ERROR: {
+    ko: '회원가입 중 오류가 발생했습니다',
+  },
+  TOO_MANY_TRIES: {
+    ko: '너무 많은 시도가 있었습니다. 나중에 다시 시도해 주세요.',
   },
 };
 
