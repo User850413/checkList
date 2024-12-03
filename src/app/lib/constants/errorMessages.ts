@@ -48,7 +48,10 @@ const ERROR_MESSAGES = {
     ko: 'id값은 필수 항목입니다',
   },
   EMPTY_TAGNAME: {
-    ko: '태그명은 1자 이상이어야 합니다.',
+    ko: '태그명은 1자 이상이어야 합니다',
+  },
+  NOT_FOUND_TAG: {
+    ko: '존재하지 않는 태그입니다',
   },
 };
 

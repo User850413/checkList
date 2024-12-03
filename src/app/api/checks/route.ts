@@ -35,7 +35,10 @@ export async function GET(req: NextRequest) {
 
     const checks = await Check.find();
     return NextResponse.json(checks);
-  } catch {
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
     return new Response(
       JSON.stringify({ error: ERROR_MESSAGES.SERVER_ERROR.ko }),
       { status: 500 }
