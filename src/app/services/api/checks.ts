@@ -1,9 +1,10 @@
 import { Check } from '@/types/check';
 import axios from 'axios';
+import apiClient from '../token/apiClient';
 
 export async function getAllChecks() {
   try {
-    const res = await axios.get('/api/checks');
+    const res = await apiClient.get('/api/checks');
     return res.data;
   } catch (error) {
     console.error(`체크 항목 생성 중 오류 발생 : ${error}`);
@@ -16,7 +17,7 @@ export async function getChecks({ tagId }: { tagId: string }) {
     const encodedTag = encodeURIComponent(tagId);
     if (!encodedTag.trim()) throw new Error('태그 id값이 유효하지 않습니다');
 
-    const res = await axios.get(`/api/checks?tagId=${encodedTag}`);
+    const res = await apiClient.get(`/api/checks?tagId=${encodedTag}`);
     return res.data;
   } catch (error) {
     console.error(`체크 목록 조회 중 오류 발생 : ${error}`);
@@ -29,7 +30,7 @@ export async function postChecks({ task, tagId }: Partial<Check>) {
   if (!tagId?.trim()) throw new Error('tagId는 필수 입력값입니다');
 
   try {
-    const res = await axios.post('/api/checks', {
+    const res = await apiClient.post('/api/checks', {
       task: task.trim(),
       tagId: tagId.trim(),
     });
@@ -45,7 +46,7 @@ export async function patchChecks({ _id, task }: Partial<Check>) {
   if (!task?.trim()) throw new Error('task는 필수 입력값입니다');
 
   try {
-    const res = await axios.patch(`/api/checks?id=${_id}`, {
+    const res = await apiClient.patch(`/api/checks?id=${_id}`, {
       task: task.trim(),
     });
     return res.data;
@@ -59,7 +60,7 @@ export async function deleteCheck({ _id }: Pick<Check, '_id'>) {
   if (!_id?.trim()) throw new Error('id가 필요합니다');
 
   try {
-    const res = await axios.delete(`/api/checks?id=${_id}`);
+    const res = await apiClient.delete(`/api/checks?id=${_id}`);
     return res.status;
   } catch (error) {
     console.error(`체크 항목 생성 중 오류 발생 : ${error}`);
