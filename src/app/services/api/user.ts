@@ -3,23 +3,18 @@ import { emailCheck } from '@/app/utils/emailCheck';
 import { UserInput } from '@/types/user';
 import axios from 'axios';
 
-const validateUserInput = ({
-  email,
-  password,
-  username,
-}: Partial<UserInput>) => {
+const validateUserInput = ({ email, password }: Partial<UserInput>) => {
   const trimmedEmail = email?.trim();
   const trimmedPassword = password?.trim();
-  const trimmedUsername = username?.trim();
 
   if (!trimmedEmail) throw new Error(ERROR_MESSAGES.EMPTY_EMAIL.ko);
   if (!trimmedPassword) throw new Error(ERROR_MESSAGES.EMPTY_PWD.ko);
-  if (!trimmedUsername) throw new Error(ERROR_MESSAGES.EMPTY_USERNAME.ko);
+
   if (!emailCheck(trimmedEmail))
     throw new Error(ERROR_MESSAGES.INVALID_EMAIL.ko);
   if (trimmedPassword.length < 8) throw new Error(ERROR_MESSAGES.SHORT_PWD.ko);
 
-  return { trimmedEmail, trimmedPassword, trimmedUsername };
+  return { trimmedEmail, trimmedPassword };
 };
 
 export async function userRegister({
@@ -27,11 +22,14 @@ export async function userRegister({
   password,
   username,
 }: Partial<UserInput>) {
-  const { trimmedEmail, trimmedPassword, trimmedUsername } = validateUserInput({
+  const { trimmedEmail, trimmedPassword } = validateUserInput({
     email,
     password,
-    username,
   });
+
+  const trimmedUsername = username?.trim();
+  if (!trimmedUsername) throw new Error(ERROR_MESSAGES.EMPTY_USERNAME.ko);
+
   try {
     const res = await axios.post(
       '/api/register',
@@ -57,6 +55,7 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
     email,
     password,
   });
+
   try {
     const res = await axios.post(
       '/api/login',
