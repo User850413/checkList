@@ -37,47 +37,63 @@ export default function LoginForm() {
   const { mutate } = useMutation({
     mutationFn: ({ email, password }: Partial<UserInput>) =>
       userLogin({ email, password }),
-    onError: () =>
-      toaster.create({
+    onError: () => {
+      setIsLoading(false);
+      return toaster.create({
         title: ERROR_MESSAGES.INVALID_USER.ko,
         type: 'error',
-      }),
+      });
+    },
     onSuccess: () => {
       setIsLoading(false);
       router.push('/');
     },
   });
 
+  // 에러 상태 처리
+  const resetErrors = () => ({
+    email: false,
+    password: false,
+    passwordCheck: false,
+    username: false,
+  });
+
+  const setFieldError = (field: keyof typeof error) => {
+    setError({ ...resetErrors(), [field]: true });
+  };
+
   // 제출 로직
   const handleSubmit = () => {
+    setIsLoading(true);
     if (!inputValue.email) {
-      setError({ email: true, password: false });
+      setIsLoading(false);
+      setFieldError('email');
       setEmailMessage(ERROR_MESSAGES.EMPTY_EMAIL.ko);
       return;
     }
 
     if (!emailCheck(inputValue.email)) {
-      console.log(inputValue.email);
-      setError({ email: true, password: false });
+      setIsLoading(false);
+      setFieldError('password');
       setEmailMessage(ERROR_MESSAGES.INVALID_EMAIL.ko);
       return;
     }
 
     if (!inputValue.password) {
-      setError({ email: false, password: true });
+      setIsLoading(false);
+      setFieldError('password');
       setPwdMessage(ERROR_MESSAGES.EMPTY_PWD.ko);
       return;
     }
 
     if (inputValue.password.length < 8) {
-      setError({ email: false, password: true });
+      setIsLoading(false);
+      setFieldError('password');
       setPwdMessage(ERROR_MESSAGES.SHORT_PWD.ko);
       return;
     }
 
     setError({ email: false, password: false });
-
-    setIsLoading(true);
     mutate(inputValue);
   };
 

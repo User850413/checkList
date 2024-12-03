@@ -26,6 +26,9 @@ const ERROR_MESSAGES = {
   REGISTER_ERROR: {
     ko: '회원가입 중 오류가 발생했습니다',
   },
+  TOO_MANY_TRIES: {
+    ko: '너무 많은 시도가 있었습니다. 나중에 다시 시도해 주세요.',
+  },
 };
 
 export default ERROR_MESSAGES;

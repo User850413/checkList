@@ -45,6 +45,9 @@ export default function SignupForm() {
     onSuccess: () => {
       setIsLoading(false);
     },
+    onError: () => {
+      setIsLoading(false);
+    },
   });
 
   const handleSubmit = () => {

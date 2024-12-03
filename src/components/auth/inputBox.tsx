@@ -54,7 +54,7 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
     } = props;
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-      if (maxLength && inputValue) {
+      if (maxLength) {
         setKeyValue(e.currentTarget.value.slice(0, maxLength));
       } else {
         setKeyValue(e.currentTarget.value);
