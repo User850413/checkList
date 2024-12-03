@@ -41,7 +41,9 @@ export async function GET() {
 export async function POST(req: Request) {
   await dbConnect();
 
-  const userId = getUserId(req);
+  const { userId, error } = getUserId(req);
+  if (!userId) return NextResponse.json({ error }, { status: 401 });
+
   try {
     const data = await req.json();
 
@@ -79,6 +81,13 @@ export async function PATCH(req: NextRequest) {
   }
 
   const tag = await Tag.findById(tagId);
+  if (!tag) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
+      { status: 404 }
+    );
+  }
+
   if (String(tag.userId) !== userId)
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
@@ -120,6 +129,12 @@ export async function DELETE(req: NextRequest) {
   }
 
   const tag = await Tag.findById(tagId);
+  if (!tag) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
+      { status: 404 }
+    );
+  }
   if (String(tag.userId) !== userId)
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
