@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import Tag from '@/app/lib/db/models/tags';
 import { updateTagAndChecks } from '@/app/services/database/updateTagAndChecks';
 import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
+import { verifyAuthToken } from '@/app/services/token/verifyToken';
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
+import jwt from 'jsonwebtoken';
 
 export async function GET() {
   try {
@@ -21,6 +24,18 @@ export async function GET() {
 export async function POST(req: Request) {
   await dbConnect();
 
+  const { error, token } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
+
+  const JWT_SECRET = process.env.JWT_SECRET;
+  if (!JWT_SECRET)
+    return NextResponse.json({ error: ERROR_MESSAGES.JWT_SECRET_ERROR.ko });
+  const decoded = jwt.verify(token!, JWT_SECRET) as { userId: string };
+
+  const userId = decoded.userId;
+
   try {
     const data = await req.json();
 
@@ -31,7 +46,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const newTag = await Tag.create([{ name: data.name }]);
+    const newTag = await Tag.create([{ name: data.name, userId }]);
     return NextResponse.json(newTag);
   } catch (err) {
     if (err instanceof Error) {
@@ -44,6 +59,11 @@ export async function PATCH(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const body = await req.json();
   const tagId = searchParams.get('id');
+
+  const { error } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
 
   await dbConnect();
 

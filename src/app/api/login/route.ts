@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     );
 
     return NextResponse.json(
-      { message: '로그인되었습니다', token },
+      { message: '로그인되었습니다', userId: user._id, token },
       { status: 200 }
     );
   } catch (error) {

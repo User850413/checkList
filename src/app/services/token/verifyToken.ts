@@ -6,6 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 interface TokenResult {
   payload?: object | string;
   error?: string;
+  token?: string;
 }
 
 export function verifyAuthToken(req: Request): TokenResult {
@@ -19,7 +20,7 @@ export function verifyAuthToken(req: Request): TokenResult {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    return { payload: decoded };
+    return { payload: decoded, token };
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       return { error: ERROR_MESSAGES.EXPIRED_TOKEN.ko };
