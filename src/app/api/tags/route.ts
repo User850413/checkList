@@ -7,6 +7,22 @@ import { verifyAuthToken } from '@/app/services/token/verifyToken';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import jwt from 'jsonwebtoken';
 
+const getUserId = (req: Request) => {
+  const { error, token } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
+
+  const JWT_SECRET = process.env.JWT_SECRET;
+  if (!JWT_SECRET)
+    return NextResponse.json({ error: ERROR_MESSAGES.JWT_SECRET_ERROR.ko });
+  const decoded = jwt.verify(token!, JWT_SECRET) as { userId: string };
+
+  const userId = decoded.userId;
+
+  return userId;
+};
+
 export async function GET() {
   try {
     await dbConnect();
@@ -24,18 +40,7 @@ export async function GET() {
 export async function POST(req: Request) {
   await dbConnect();
 
-  const { error, token } = verifyAuthToken(req);
-  if (error) {
-    return NextResponse.json({ error }, { status: 401 });
-  }
-
-  const JWT_SECRET = process.env.JWT_SECRET;
-  if (!JWT_SECRET)
-    return NextResponse.json({ error: ERROR_MESSAGES.JWT_SECRET_ERROR.ko });
-  const decoded = jwt.verify(token!, JWT_SECRET) as { userId: string };
-
-  const userId = decoded.userId;
-
+  const userId = getUserId(req);
   try {
     const data = await req.json();
 
@@ -60,10 +65,7 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json();
   const tagId = searchParams.get('id');
 
-  const { error } = verifyAuthToken(req);
-  if (error) {
-    return NextResponse.json({ error }, { status: 401 });
-  }
+  const userId = getUserId(req);
 
   await dbConnect();
 
@@ -73,6 +75,10 @@ export async function PATCH(req: NextRequest) {
       { status: 400 }
     );
   }
+
+  const tag = await Tag.findById(tagId);
+  if (tag.userId.toString() !== userId)
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   if (!body.name) {
     return NextResponse.json(
@@ -97,15 +103,22 @@ export async function PATCH(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
-  const id = searchParams.get('id');
+  const tagId = searchParams.get('id');
 
   await dbConnect();
 
-  if (!id) {
+  const userId = getUserId(req);
+
+  if (!tagId) {
     return NextResponse.json({ error: 'id는 필수 값입니다.' }, { status: 400 });
   }
+
+  const tag = await Tag.findById(tagId);
+  if (tag.userId.toString() !== userId)
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   try {
-    const deletedTag = await deleteTagAndChecks(id);
+    const deletedTag = await deleteTagAndChecks(tagId);
     return NextResponse.json(
       {
         message: '삭제되었습니다',
