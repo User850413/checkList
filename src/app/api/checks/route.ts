@@ -1,6 +1,8 @@
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import Check from '@/app/lib/db/models/checks';
 import { createCheck } from '@/app/services/database/createCheck';
+import { verifyAuthToken } from '@/app/services/token/verifyToken';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -8,19 +10,49 @@ export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const tagId = searchParams.get('tagId');
 
-  await dbConnect();
-
-  if (tagId) {
-    const check = await Check.find({ tagId }).lean();
-    return new Response(JSON.stringify(check), { status: 200 });
+  const { error } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
   }
 
-  const checks = await Check.find();
-  return NextResponse.json(checks);
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return new Response(
+      JSON.stringify({ error: ERROR_MESSAGES.TOKEN_ERROR.ko }),
+      {
+        status: 401,
+      }
+    );
+  }
+
+  try {
+    await dbConnect();
+
+    if (tagId) {
+      const check = await Check.find({ tagId }).lean();
+      return new Response(JSON.stringify(check), { status: 200 });
+    }
+
+    const checks = await Check.find();
+    return NextResponse.json(checks);
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+    return new Response(
+      JSON.stringify({ error: ERROR_MESSAGES.SERVER_ERROR.ko }),
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(req: Request) {
   await dbConnect();
+
+  const { error } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
 
   try {
     const data = await req.json();
@@ -47,8 +79,16 @@ export async function PATCH(req: NextRequest) {
 
   await dbConnect();
 
+  const { error } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
+
   if (!id) {
-    return NextResponse.json({ error: 'id는 필수 값입니다' }, { status: 400 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.EMPTY_ID.ko },
+      { status: 400 }
+    );
   }
 
   const updatedCheck = await Check.findByIdAndUpdate(id, body, {
@@ -62,10 +102,18 @@ export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get('id');
 
+  const { error } = verifyAuthToken(req);
+  if (error) {
+    return NextResponse.json({ error }, { status: 401 });
+  }
+
   await dbConnect();
 
   if (!id) {
-    return NextResponse.json({ error: 'id는 필수 값입니다' }, { status: 400 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.EMPTY_ID.ko },
+      { status: 400 }
+    );
   }
   await Check.findByIdAndDelete(id);
 

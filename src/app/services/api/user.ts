@@ -71,7 +71,16 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
         },
       }
     );
-    return res.data;
+
+    if (res.status === 200) {
+      const { token, expiresIn } = res.data;
+      const tokenData = {
+        value: token,
+        expires: Date.now() + expiresIn * 1000,
+      };
+
+      sessionStorage.setItem('token', JSON.stringify(tokenData));
+    }
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {

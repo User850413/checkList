@@ -3,6 +3,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import Tag from '@/app/lib/db/models/tags';
 import { updateTagAndChecks } from '@/app/services/database/updateTagAndChecks';
 import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
+import { verifyAuthToken } from '@/app/services/token/verifyToken';
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
+import jwt from 'jsonwebtoken';
+
+const getUserId = (req: Request): { userId: string; error?: string } => {
+  let userId = '';
+
+  const { error, token } = verifyAuthToken(req);
+  if (error) {
+    return { userId, error };
+  }
+
+  const JWT_SECRET = process.env.JWT_SECRET;
+  if (!JWT_SECRET) return { userId, error: ERROR_MESSAGES.JWT_SECRET_ERROR.ko };
+  const decoded = jwt.verify(token!, JWT_SECRET) as { userId: string };
+
+  userId = decoded.userId;
+
+  return { userId };
+};
 
 export async function GET() {
   try {
@@ -21,17 +41,20 @@ export async function GET() {
 export async function POST(req: Request) {
   await dbConnect();
 
+  const { userId, error } = getUserId(req);
+  if (!userId) return NextResponse.json({ error }, { status: 401 });
+
   try {
     const data = await req.json();
 
     if (data.name === '') {
       return NextResponse.json(
-        { error: '태그명은 필수사항입니다.' },
+        { error: ERROR_MESSAGES.EMPTY_TAGNAME.ko },
         { status: 400 }
       );
     }
 
-    const newTag = await Tag.create([{ name: data.name }]);
+    const newTag = await Tag.create([{ name: data.name, userId }]);
     return NextResponse.json(newTag);
   } catch (err) {
     if (err instanceof Error) {
@@ -45,18 +68,32 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json();
   const tagId = searchParams.get('id');
 
+  const { userId, error } = getUserId(req);
+  if (!userId) return NextResponse.json({ error }, { status: 401 });
+
   await dbConnect();
 
   if (!tagId) {
     return NextResponse.json(
-      { error: 'tag id는 필수 값입니다' },
+      { error: ERROR_MESSAGES.EMPTY_ID.ko },
       { status: 400 }
     );
   }
 
+  const tag = await Tag.findById(tagId);
+  if (!tag) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
+      { status: 404 }
+    );
+  }
+
+  if (String(tag.userId) !== userId)
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   if (!body.name) {
     return NextResponse.json(
-      { error: '태그명은 1자 이상이어야 합니다' },
+      { error: ERROR_MESSAGES.EMPTY_TAGNAME.ko },
       { status: 400 }
     );
   }
@@ -77,15 +114,32 @@ export async function PATCH(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
-  const id = searchParams.get('id');
+  const tagId = searchParams.get('id');
 
   await dbConnect();
 
-  if (!id) {
-    return NextResponse.json({ error: 'id는 필수 값입니다.' }, { status: 400 });
+  const { userId, error } = getUserId(req);
+  if (!userId) return NextResponse.json({ error }, { status: 401 });
+
+  if (!tagId) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.EMPTY_ID.ko },
+      { status: 400 }
+    );
   }
+
+  const tag = await Tag.findById(tagId);
+  if (!tag) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
+      { status: 404 }
+    );
+  }
+  if (String(tag.userId) !== userId)
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   try {
-    const deletedTag = await deleteTagAndChecks(id);
+    const deletedTag = await deleteTagAndChecks(tagId);
     return NextResponse.json(
       {
         message: '삭제되었습니다',
