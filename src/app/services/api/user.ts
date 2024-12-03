@@ -71,7 +71,11 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
         },
       }
     );
-    return res.data;
+
+    if (res.status === 200) {
+      const { token } = res.data;
+      sessionStorage.setItem('token', token);
+    }
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {

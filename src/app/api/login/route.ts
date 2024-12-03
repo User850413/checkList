@@ -7,11 +7,6 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 if (!JWT_SECRET) throw new Error('JWT 환경 변수가 설정되지 않았습니다');
 
 export async function POST(req: Request) {
-  // const { error } = verifyAuthToken(req);
-  // if (error) {
-  //   return NextResponse.json({ error }, { status: 401 });
-  // }
-
   try {
     const { email, password } = await req.json();
 
