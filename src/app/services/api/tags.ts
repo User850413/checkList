@@ -9,11 +9,13 @@ export async function getAllTags() {
 }
 
 export async function postTag({ name }: Pick<Tag, 'name'>) {
-  if (!name?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_TAGNAME.ko);
+  const trimmedName = name.trim();
+
+  if (!trimmedName) throw new Error(ERROR_MESSAGES.EMPTY_TAGNAME.ko);
 
   try {
     const res = await apiClient.post('/tags', {
-      name: name.trim(),
+      name: trimmedName,
     });
     return res.data;
   } catch (error) {
