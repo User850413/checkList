@@ -51,8 +51,6 @@ export default function SignupForm() {
   });
 
   const handleSubmit = () => {
-    console.log(errorMessage);
-
     if (!inputValue.email) {
       setError({
         email: true,
