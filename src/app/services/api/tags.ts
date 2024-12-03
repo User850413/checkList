@@ -1,5 +1,7 @@
 import { Tag } from '@/types/tag';
 import axios from 'axios';
+import apiClient from '../token/apiClient';
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 
 export async function getAllTags() {
   const res = await axios.get('/api/tags');
@@ -7,10 +9,10 @@ export async function getAllTags() {
 }
 
 export async function postTag({ name }: Pick<Tag, 'name'>) {
-  if (!name?.trim()) throw new Error('1자 이상 필수 입력입니다!');
+  if (!name?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_TAGNAME.ko);
 
   try {
-    const res = await axios.post('/api/tags', {
+    const res = await apiClient.post('/tags', {
       name: name.trim(),
     });
     return res.data;
@@ -21,11 +23,11 @@ export async function postTag({ name }: Pick<Tag, 'name'>) {
 }
 
 export async function patchTag({ _id, name }: Partial<Tag>) {
-  if (!_id?.trim()) throw new Error('id는 필수입니다!');
-  if (!name?.trim()) throw new Error('1자 이상 필수 입력입니다!');
+  if (!_id?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
+  if (!name?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_TAGNAME.ko);
 
   try {
-    const res = await axios.patch(`/api/tags?id=${_id}`, { name: name.trim() });
+    const res = await apiClient.patch(`/tags?id=${_id}`, { name: name.trim() });
     return res.data;
   } catch (error) {
     console.error(`태그 항목 수정 중 오류 발생 : ${error}`);
@@ -34,13 +36,12 @@ export async function patchTag({ _id, name }: Partial<Tag>) {
 }
 
 export async function deleteTag({ _id }: Pick<Tag, '_id'>) {
-  if (!_id?.trim()) throw new Error('id가 필요합니다');
+  if (!_id?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
 
   try {
-    const res = await axios.delete(`/api/tags?id=${_id}`);
+    const res = await apiClient.delete(`/tags?id=${_id}`);
     return res.status;
   } catch (error) {
-    console.error(`태그 항목 삭제 중 오류 발생 : ${error}`);
     throw error;
   }
 }

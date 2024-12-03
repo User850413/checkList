@@ -107,7 +107,10 @@ export async function DELETE(req: NextRequest) {
   await dbConnect();
 
   if (!id) {
-    return NextResponse.json({ error: 'id는 필수 값입니다' }, { status: 400 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.EMPTY_ID.ko },
+      { status: 400 }
+    );
   }
   await Check.findByIdAndDelete(id);
 
