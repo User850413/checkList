@@ -24,8 +24,8 @@ export async function GET(
         { status: 500 }
       );
 
-    const decoded = jwt.verify(token!, JWT_SECRET) as { userId: string };
-    const loggedInUserId = decoded.userId;
+    const decoded = jwt.verify(token!, JWT_SECRET) as { id: string };
+    const loggedInUserId = decoded.id;
     const requestedUserId = params.id;
 
     if (loggedInUserId === requestedUserId) {

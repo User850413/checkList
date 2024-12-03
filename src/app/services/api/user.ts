@@ -78,7 +78,7 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
         expires: Date.now() + expiresIn * 1000,
       };
 
-      sessionStorage.setItem('token', JSON.stringify(tokenData));
+      sessionStorage.setItem('token', tokenData.value);
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {

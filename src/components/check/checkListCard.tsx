@@ -8,17 +8,17 @@ interface CheckListCardProps {
   id: string;
   task: string;
   isCompleted: boolean;
-  tag: string;
+  tagId: string;
 }
 
-function CheckListCard({ id, task, isCompleted, tag }: CheckListCardProps) {
+function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
   const queryClient = useQueryClient();
 
   const [checked, setChecked] = useState(isCompleted);
   const { mutate } = useMutation({
     mutationFn: ({ _id }: Pick<Check, '_id'>) => deleteCheck({ _id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['checks', tag] });
+      queryClient.invalidateQueries({ queryKey: ['checks', tagId] });
     },
     onError: (err) => {
       console.log(`항목 삭제 실패 : ${err}`);

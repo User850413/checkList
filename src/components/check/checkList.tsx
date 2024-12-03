@@ -57,13 +57,13 @@ function CheckList({ tagName, tagId }: CheckListProp) {
               id={check._id}
               task={check.task}
               isCompleted={check.isCompleted}
-              tag={tagName}
+              tagId={check.tagId}
             />
           </li>
         ))}
       </ul>
       <div>
-        <CheckInput tagId={tagId} tagName={tagName} />
+        <CheckInput tagId={tagId} />
       </div>
     </div>
   );

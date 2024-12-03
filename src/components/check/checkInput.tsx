@@ -21,7 +21,7 @@ function CheckInput({ tagId, tagName }: CheckInputProps) {
     mutationFn: ({ task, tagId }: Partial<Check>) =>
       postChecks({ task, tagId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['checks', tagName] });
+      queryClient.invalidateQueries({ queryKey: ['checks', tagId] });
     },
     onError: (err) => {
       console.log(`항목 추가 실패 : ${err}`);
