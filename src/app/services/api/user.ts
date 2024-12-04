@@ -1,6 +1,6 @@
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { emailCheck } from '@/app/utils/emailCheck';
-import { UserInput } from '@/types/user';
+import { User, UserInput } from '@/types/user';
 import axios from 'axios';
 import apiClient from '../token/apiClient';
 
@@ -111,7 +111,7 @@ export async function getAllUsers() {
 // 내 데이터 불러오기
 export async function getMyData() {
   try {
-    const res = await apiClient.get('/user/me');
+    const res: { data: User } = await apiClient.get('/user/me');
     return res.data;
   } catch (err) {
     if (err instanceof Error) {

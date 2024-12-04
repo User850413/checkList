@@ -1,9 +1,10 @@
 import Header from '@/components/layout/header';
 
-export default function Home() {
+export default function UserPage() {
   return (
-    <main>
+    <>
       <Header />
-    </main>
+      <div>내 페이지</div>
+    </>
   );
 }
