@@ -13,7 +13,9 @@ export default function Profile({
   username,
   clickable = false,
 }: ProfileProps) {
-  const defaultProfile = process.env.PUBLIC_URL + '/icons/user-default.svg';
+  const defaultProfile = `${
+    process.env.PUBLIC_URL || ''
+  }/icons/user-default.svg`;
 
   const router = useRouter();
 
@@ -26,6 +28,7 @@ export default function Profile({
       onClick={() => {
         if (clickable) return router.push('/user-page');
       }}
+      aria-label={`${username}의 프로필`}
     >
       <Image
         fill

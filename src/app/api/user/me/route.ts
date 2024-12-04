@@ -2,7 +2,6 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import User from '@/app/lib/db/models/users';
 import { getUserId } from '@/app/services/token/getUserId';
-import type { User as UserType } from '@/types/user';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
@@ -12,8 +11,14 @@ export async function GET(req: Request) {
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 401 });
 
-    const userList: UserType[] = await User.find({ _id: userId });
-    const { email, username, createdAt, updatedAt, profileUrl } = userList[0];
+    const user = await User.findById(userId);
+    if (!user)
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
+        { status: 404 }
+      );
+
+    const { email, username, createdAt, updatedAt, profileUrl } = user;
 
     return NextResponse.json({
       email,
