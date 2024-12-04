@@ -27,14 +27,24 @@ export async function GET(req: NextRequest) {
 
   try {
     await dbConnect();
+    const page = Number(req.nextUrl?.searchParams.get('page')) || 1;
+    const limit = Number(req.nextUrl?.searchParams.get('limit')) || 10;
+    const skip = (page - 1) * limit;
 
     if (tagId) {
-      const check = await Check.find({ tagId }).lean();
-      return new Response(JSON.stringify(check), { status: 200 });
+      const checks = await Check.find({ tagId }).skip(skip).limit(limit).lean();
+      const total = checks.length;
+
+      return new Response(
+        JSON.stringify({ total, page, limit, data: checks }),
+        { status: 200 }
+      );
     }
 
-    const checks = await Check.find();
-    return NextResponse.json(checks);
+    const checks = await Check.find().skip(skip).limit(limit);
+    const total = await Check.countDocuments();
+
+    return NextResponse.json({ total, page, limit, data: checks });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });

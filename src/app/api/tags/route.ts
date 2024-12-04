@@ -6,13 +6,18 @@ import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { getUserId } from '@/app/services/token/getUserId';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
-    const tags = await Tag.find();
+    const page = Number(req.nextUrl?.searchParams.get('page')) || 1;
+    const limit = Number(req.nextUrl?.searchParams.get('limit')) || 10;
+    const skip = (page - 1) * limit;
 
-    return NextResponse.json(tags);
+    const tags = await Tag.find().skip(skip).limit(limit);
+    const total = await Tag.countDocuments();
+
+    return NextResponse.json({ total, page, limit, data: tags });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
