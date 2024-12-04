@@ -4,26 +4,19 @@ import Tag from '@/app/lib/db/models/tags';
 import dbConnect from '@/app/lib/db/dbConnect';
 import { getUserId } from '@/app/services/token/getUserId';
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: Request) {
   try {
     await dbConnect();
 
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 401 });
-    const loggedInUserId = userId;
-    const requestedUserId = params.id;
 
-    if (loggedInUserId === requestedUserId) {
-      const myTags = await Tag.find({ userId: loggedInUserId });
-      return NextResponse.json(myTags);
-    } else {
-      const otherUserTags = await Tag.find({ userId: requestedUserId });
-      return NextResponse.json(otherUserTags);
+    const myTags = await Tag.find({ userId });
+    return NextResponse.json(myTags);
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
     }
-  } catch {
     return NextResponse.json(
       { error: ERROR_MESSAGES.TOKEN_ERROR.ko },
       { status: 500 }
