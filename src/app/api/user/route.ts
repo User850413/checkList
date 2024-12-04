@@ -1,6 +1,7 @@
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import User from '@/app/lib/db/models/users';
+import type { User as UserType } from '@/types/user';
 import { NextResponse } from 'next/server';
 
 // NOTE: 전체 유저 불러오는 엔드포인트
@@ -8,9 +9,14 @@ export async function GET() {
   try {
     await dbConnect();
 
-    const users = await User.find();
+    const users: UserType[] = await User.find();
 
-    return NextResponse.json(users);
+    const userList = users.map((user) => {
+      const { email, username, createdAt, updatedAt, profileUrl } = user;
+      return { email, username, createdAt, updatedAt, profileUrl };
+    });
+
+    return NextResponse.json(userList);
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
