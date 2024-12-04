@@ -10,10 +10,9 @@ import StyledButton from '../common/styledButton';
 
 interface CheckInputProps {
   tagId: string;
-  tagName: string;
 }
 
-function CheckInput({ tagId, tagName }: CheckInputProps) {
+function CheckInput({ tagId }: CheckInputProps) {
   const queryClient = useQueryClient();
   const [task, setTask] = useState('');
 
