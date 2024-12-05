@@ -2,6 +2,7 @@ import dbConnect from '@/app/lib/db/dbConnect';
 import { NextResponse } from 'next/server';
 import User from '@/app/lib/db/models/users';
 import mongoose from 'mongoose';
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 
 export async function POST(req: Request) {
   try {
@@ -9,7 +10,7 @@ export async function POST(req: Request) {
 
     if (!username) {
       return NextResponse.json(
-        { error: 'username은 필수 입력사항입니다' },
+        { error: ERROR_MESSAGES.EMPTY_USERNAME.ko },
         { status: 400 }
       );
     }
@@ -17,14 +18,14 @@ export async function POST(req: Request) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       return NextResponse.json(
-        { error: '유효한 email 형식을 입력해주세요.' },
+        { error: ERROR_MESSAGES.INVALID_EMAIL.ko },
         { status: 400 }
       );
     }
 
     if (!password || password.length < 8) {
       return NextResponse.json(
-        { error: 'password는 최소 8자 이상이어야 합니다.' },
+        { error: ERROR_MESSAGES.SHORT_PWD.ko },
         { status: 400 }
       );
     }
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
       const result = await session.withTransaction(async () => {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-          throw new Error('이미 사용중인 email입니다');
+          throw new Error(ERROR_MESSAGES.EXISTED_EMAIL.ko);
         }
 
         const newUser = new User({ username, email, password });
@@ -51,7 +52,7 @@ export async function POST(req: Request) {
       const errorMessage =
         transactionError instanceof Error
           ? transactionError.message
-          : '트랜잭션 중 알 수 없는 오류 발생';
+          : ERROR_MESSAGES.TRANSACTION_ERROR.ko;
 
       return NextResponse.json({ error: errorMessage }, { status: 400 });
     } finally {
@@ -62,7 +63,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     return NextResponse.json(
-      { error: '서버 오류가 발생했습니다.' },
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 }
     );
   }

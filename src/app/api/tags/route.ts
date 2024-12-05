@@ -3,35 +3,34 @@ import { NextRequest, NextResponse } from 'next/server';
 import Tag from '@/app/lib/db/models/tags';
 import { updateTagAndChecks } from '@/app/services/database/updateTagAndChecks';
 import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
-import { verifyAuthToken } from '@/app/services/token/verifyToken';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
-import jwt from 'jsonwebtoken';
+import { getUserId } from '@/app/services/token/getUserId';
 
-const getUserId = (req: Request): { userId: string; error?: string } => {
-  let userId = '';
-
-  const { error, token } = verifyAuthToken(req);
-
-  if (error) {
-    return { userId, error };
-  }
-
-  const JWT_SECRET = process.env.JWT_SECRET;
-  if (!JWT_SECRET) return { userId, error: ERROR_MESSAGES.JWT_SECRET_ERROR.ko };
-  const decoded = jwt.verify(token!, JWT_SECRET) as { id: string };
-
-  userId = decoded.id;
-
-  return { userId };
-};
-
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
-    const tags = await Tag.find();
+    const rawPage = parseInt(req.nextUrl?.searchParams.get('page') ?? '1', 10);
+    const rawLimit = parseInt(
+      req.nextUrl?.searchParams.get('limit') ?? '10',
+      10
+    );
 
-    return NextResponse.json(tags);
+    if (Number.isNaN(rawPage) || Number.isNaN(rawLimit)) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.INVALID_PAGINATION.ko },
+        { status: 400 }
+      );
+    }
+
+    const page = !rawPage || rawPage < 1 ? 1 : rawPage;
+    const limit = !rawLimit || rawLimit < 1 || rawLimit > 100 ? 10 : rawLimit;
+    const skip = (page - 1) * limit;
+
+    const tags = await Tag.find().skip(skip).limit(limit);
+    const total = await Tag.countDocuments();
+
+    return NextResponse.json({ total, page, limit, data: tags });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });

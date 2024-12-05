@@ -2,19 +2,25 @@ import dbConnect from '@/app/lib/db/dbConnect';
 import User from '@/app/lib/db/models/users';
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
-if (!JWT_SECRET) throw new Error('JWT 환경 변수가 설정되지 않았습니다');
+if (!JWT_SECRET) throw new Error(ERROR_MESSAGES.JWT_SECRET_ERROR.ko);
 
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
-    if (!email || !password) {
+    if (!email) {
       return NextResponse.json(
-        {
-          error: '이메일 및 비밀번호는 필수 입력사항입니다',
-        },
+        { error: ERROR_MESSAGES.EMPTY_EMAIL.ko },
+        { status: 400 }
+      );
+    }
+
+    if (!password) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.EMPTY_PWD.ko },
         { status: 400 }
       );
     }
@@ -24,7 +30,7 @@ export async function POST(req: Request) {
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json(
-        { error: '존재하지 않는 email입니다' },
+        { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
         { status: 404 }
       );
     }
@@ -33,7 +39,7 @@ export async function POST(req: Request) {
     if (!isMatch) {
       return NextResponse.json(
         {
-          error: '아이디 혹은 비밀번호가 일치하지 않습니다',
+          error: ERROR_MESSAGES.INVALID_USER.ko,
         },
         { status: 401 }
       );
@@ -47,7 +53,7 @@ export async function POST(req: Request) {
         iss: 'checkList-app',
       },
       JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '1d' }
     );
 
     return NextResponse.json(

@@ -32,6 +32,9 @@ const ERROR_MESSAGES = {
   EXPIRED_TOKEN: {
     ko: '토큰이 만료되었습니다',
   },
+  EXPIRED_SESSION: {
+    ko: '세션이 만료되었습니다',
+  },
   INVALID_TOKEN: {
     ko: '유효하지 않은 토큰입니다',
   },
@@ -52,6 +55,18 @@ const ERROR_MESSAGES = {
   },
   NOT_FOUND_TAG: {
     ko: '존재하지 않는 태그입니다',
+  },
+  NOT_FOUND_USER: {
+    ko: '존재하지 않는 유저입니다',
+  },
+  EXISTED_EMAIL: {
+    ko: '이미 존재하는 이메일 입니다',
+  },
+  TRANSACTION_ERROR: {
+    ko: '트랜잭션 중 알 수 없는 에러 발생',
+  },
+  INVALID_PAGINATION: {
+    ko: '페이지네이션 처리 중 오류 발생',
   },
 };
 

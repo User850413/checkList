@@ -1,7 +1,8 @@
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { emailCheck } from '@/app/utils/emailCheck';
-import { UserInput } from '@/types/user';
+import { User, UserInput } from '@/types/user';
 import axios from 'axios';
+import apiClient from '../token/apiClient';
 
 const validateUserInput = ({ email, password }: Partial<UserInput>) => {
   const trimmedEmail = email?.trim();
@@ -91,5 +92,31 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
       throw new Error(ERROR_MESSAGES.LOGIN_ERROR.ko);
     }
     throw error;
+  }
+}
+
+// 전체 유저 정보 불러오기
+export async function getAllUsers() {
+  try {
+    const res = await axios.get('/api/user');
+    return res.data;
+  } catch (err) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
+    throw new Error(ERROR_MESSAGES.SERVER_ERROR.ko);
+  }
+}
+
+// 내 데이터 불러오기
+export async function getMyData() {
+  try {
+    const res: { data: User } = await apiClient.get('/user/me');
+    return res.data;
+  } catch (err) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
+    throw new Error(ERROR_MESSAGES.SERVER_ERROR.ko);
   }
 }
