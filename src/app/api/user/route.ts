@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
       10
     );
 
-    if (isNaN(rawPage) || isNaN(rawLimit)) {
+    if (Number.isNaN(rawPage) || Number.isNaN(rawLimit)) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.INVALID_PAGINATION.ko },
         { status: 400 }

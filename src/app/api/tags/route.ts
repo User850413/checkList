@@ -10,8 +10,18 @@ export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
-    const rawPage = Number(req.nextUrl?.searchParams.get('page'));
-    const rawLimit = Number(req.nextUrl?.searchParams.get('limit'));
+    const rawPage = parseInt(req.nextUrl?.searchParams.get('page') ?? '1', 10);
+    const rawLimit = parseInt(
+      req.nextUrl?.searchParams.get('limit') ?? '10',
+      10
+    );
+
+    if (Number.isNaN(rawPage) || Number.isNaN(rawLimit)) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.INVALID_PAGINATION.ko },
+        { status: 400 }
+      );
+    }
 
     const page = !rawPage || rawPage < 1 ? 1 : rawPage;
     const limit = !rawLimit || rawLimit < 1 || rawLimit > 100 ? 10 : rawLimit;
