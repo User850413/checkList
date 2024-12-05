@@ -4,6 +4,7 @@ import { getMyData } from '@/app/services/api/user';
 import { useQuery } from '@tanstack/react-query';
 import Profile from './profile';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Header() {
   const { data, isLoading, error } = useQuery({
@@ -13,9 +14,10 @@ export default function Header() {
 
   const router = useRouter();
 
-  if (error) {
-    router.push('/login');
-  }
+  //NOTE: 세션 만료 시 리다이렉션
+  useEffect(() => {
+    if (error) router.push('/login?sessionExpired=true');
+  }, [error, router]);
 
   if (isLoading) return <div> loading... </div>;
 

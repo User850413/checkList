@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InputBox from './inputBox';
 import StyledButton from '../common/styledButton';
 import { emailCheck } from '@/app/utils/emailCheck';
@@ -7,7 +7,7 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { useMutation } from '@tanstack/react-query';
 import { userLogin } from '@/app/services/api/user';
 import { UserInput } from '@/types/user';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Toaster, toaster } from '../ui/toaster';
 
 interface LoginFormState {
@@ -26,6 +26,8 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+
+  const searchParams = useSearchParams();
 
   const setKeyValue = <K extends keyof LoginFormState>(
     key: K,
@@ -49,6 +51,18 @@ export default function LoginForm() {
       router.push('/');
     },
   });
+
+  //NOTE: 세션 만료로 리다이렉션 시 받아오는 파라미터값
+  const sessionExpired = searchParams.get('sessionExpired');
+
+  useEffect(() => {
+    if (sessionExpired) {
+      toaster.create({
+        title: ERROR_MESSAGES.EXPIRED_SESSION.ko,
+        type: 'error',
+      });
+    }
+  }, [sessionExpired]);
 
   // 에러 상태 처리
   const resetErrors = () => ({

@@ -32,6 +32,9 @@ const ERROR_MESSAGES = {
   EXPIRED_TOKEN: {
     ko: '토큰이 만료되었습니다',
   },
+  EXPIRED_SESSION: {
+    ko: '세션이 만료되었습니다',
+  },
   INVALID_TOKEN: {
     ko: '유효하지 않은 토큰입니다',
   },
