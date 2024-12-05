@@ -65,6 +65,9 @@ const ERROR_MESSAGES = {
   TRANSACTION_ERROR: {
     ko: '트랜잭션 중 알 수 없는 에러 발생',
   },
+  INVALID_PAGINATION: {
+    ko: '페이지네이션 처리 중 오류 발생',
+  },
 };
 
 export default ERROR_MESSAGES;
