@@ -47,7 +47,7 @@ export async function POST(req: Request) {
         iss: 'checkList-app',
       },
       JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '1d' }
     );
 
     return NextResponse.json(

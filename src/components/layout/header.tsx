@@ -6,12 +6,16 @@ import Profile from './profile';
 import { useRouter } from 'next/navigation';
 
 export default function Header() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['me'],
     queryFn: () => getMyData(),
   });
 
   const router = useRouter();
+
+  if (error) {
+    router.push('/login');
+  }
 
   if (isLoading) return <div> loading... </div>;
 
@@ -25,16 +29,18 @@ export default function Header() {
           <button onClick={() => router.push('/my-list')}>내 리스트</button>
         </li>
       </ul>
-      <ul className="flex items-center gap-4 cursor-default text-sm text-slate-500">
-        <li>{data!.username}</li>
-        <li>
-          <Profile
-            profileUrl={data!.profileUrl}
-            username={data!.username}
-            clickable
-          />
-        </li>
-      </ul>
+      {data && (
+        <ul className="flex items-center gap-4 cursor-default text-sm text-slate-500">
+          <li>{data!.username}</li>
+          <li>
+            <Profile
+              profileUrl={data!.profileUrl}
+              username={data!.username}
+              clickable
+            />
+          </li>
+        </ul>
+      )}
     </div>
   );
 }
