@@ -59,6 +59,12 @@ const ERROR_MESSAGES = {
   NOT_FOUND_USER: {
     ko: '존재하지 않는 유저입니다',
   },
+  EXISTED_EMAIL: {
+    ko: '이미 존재하는 이메일 입니다',
+  },
+  TRANSACTION_ERROR: {
+    ko: '트랜잭션 중 알 수 없는 에러 발생',
+  },
 };
 
 export default ERROR_MESSAGES;

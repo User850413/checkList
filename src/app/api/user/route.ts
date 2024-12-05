@@ -22,16 +22,17 @@ export async function GET(req: NextRequest) {
       .limit(limit);
     const total = await User.countDocuments();
 
-    return new Response(
-      JSON.stringify({ total, page, limit, data: userList }),
+    return NextResponse.json(
+      { total, page, limit, data: userList },
       { status: 200 }
     );
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
-    return new Response(
-      JSON.stringify({ error: ERROR_MESSAGES.SERVER_ERROR.ko }),
+
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 }
     );
   }

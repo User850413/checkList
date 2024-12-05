@@ -17,11 +17,9 @@ export async function GET(req: NextRequest) {
 
   const authHeader = req.headers.get('Authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return new Response(
-      JSON.stringify({ error: ERROR_MESSAGES.TOKEN_ERROR.ko }),
-      {
-        status: 401,
-      }
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.TOKEN_ERROR.ko },
+      { status: 401 }
     );
   }
 
@@ -33,10 +31,10 @@ export async function GET(req: NextRequest) {
 
     if (tagId) {
       const checks = await Check.find({ tagId }).skip(skip).limit(limit).lean();
-      const total = checks.length;
+      const total = await Check.countDocuments({ tagId });
 
-      return new Response(
-        JSON.stringify({ total, page, limit, data: checks }),
+      return NextResponse.json(
+        { total, page, limit, data: checks },
         { status: 200 }
       );
     }
@@ -49,8 +47,8 @@ export async function GET(req: NextRequest) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
-    return new Response(
-      JSON.stringify({ error: ERROR_MESSAGES.SERVER_ERROR.ko }),
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 }
     );
   }
