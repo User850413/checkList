@@ -11,22 +11,16 @@ export async function GET(req: Request) {
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 401 });
 
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select(
+      'username createdAt updatedAt profileUrl'
+    );
     if (!user)
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
         { status: 404 }
       );
 
-    const { email, username, createdAt, updatedAt, profileUrl } = user;
-
-    return NextResponse.json({
-      email,
-      username,
-      createdAt,
-      updatedAt,
-      profileUrl,
-    });
+    return NextResponse.json(user);
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });

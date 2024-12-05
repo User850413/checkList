@@ -9,17 +9,18 @@ export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
-    const page = Number(req.nextUrl?.searchParams.get('page')) || 1;
-    const limit = Number(req.nextUrl?.searchParams.get('limit')) || 10;
+    const rawPage = Number(req.nextUrl?.searchParams.get('page'));
+    const rawLimit = Number(req.nextUrl?.searchParams.get('limit'));
+
+    const page = !rawPage || rawPage < 1 ? 1 : rawPage;
+    const limit = !rawLimit || rawLimit < 1 || rawLimit > 100 ? 10 : rawLimit;
     const skip = (page - 1) * limit;
 
-    const users: UserType[] = await User.find().skip(skip).limit(limit);
+    const userList: UserType[] = await User.find()
+      .select('username createdAt updatedAt profileUrl')
+      .skip(skip)
+      .limit(limit);
     const total = await User.countDocuments();
-
-    const userList = users.map((user) => {
-      const { email, username, createdAt, updatedAt, profileUrl } = user;
-      return { email, username, createdAt, updatedAt, profileUrl };
-    });
 
     return new Response(
       JSON.stringify({ total, page, limit, data: userList }),
