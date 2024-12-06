@@ -5,10 +5,10 @@ import StyledButton from '../common/styledButton';
 import { emailCheck } from '@/app/utils/emailCheck';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { useMutation } from '@tanstack/react-query';
-import { userLogin } from '@/app/services/api/user';
 import { UserInput } from '@/types/user';
 import { useRouter } from 'next/navigation';
 import { Toaster, toaster } from '../ui/toaster';
+import { userLogin } from '@/app/services/api/register';
 
 interface LoginFormState {
   email: string;

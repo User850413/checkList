@@ -6,8 +6,8 @@ import StyledButton from '../common/styledButton';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { emailCheck } from '@/app/utils/emailCheck';
 import { useMutation } from '@tanstack/react-query';
-import { userRegister } from '@/app/services/api/user';
 import { UserInput } from '@/types/user';
+import { userRegister } from '@/app/services/api/register';
 
 interface SignupFormState {
   username: string;
