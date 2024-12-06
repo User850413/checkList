@@ -71,6 +71,9 @@ const ERROR_MESSAGES = {
   LOGIN_AGAIN: {
     ko: '다시 로그인하여 주십시오',
   },
+  LOGGED_OUT: {
+    ko: '로그아웃되셨습니다.',
+  },
 };
 
 export default ERROR_MESSAGES;
