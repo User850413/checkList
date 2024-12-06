@@ -39,6 +39,9 @@ export default function Header() {
               profileUrl={data!.profileUrl}
               username={data!.username}
               clickable
+              clickFn={() => {
+                router.push('/user-page');
+              }}
             />
           </li>
         </ul>
