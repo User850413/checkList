@@ -68,6 +68,9 @@ const ERROR_MESSAGES = {
   INVALID_PAGINATION: {
     ko: '페이지네이션 처리 중 오류 발생',
   },
+  LOGIN_AGAIN: {
+    ko: '다시 로그인하여 주십시오',
+  },
 };
 
 export default ERROR_MESSAGES;
