@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import QueryProviders from './lib/react-query-client';
 import { Provider as ChakraProvider } from '@/components/ui/provider';
-import Container from '@/components/common/Container';
+import Container from '@/components/layout/Container';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
