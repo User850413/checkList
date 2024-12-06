@@ -6,11 +6,13 @@ import clsx from 'clsx';
 interface StyledButtonProps extends ChakraButtonProps {
   loading?: boolean;
   loadingText?: React.ReactNode;
+  color?: 'default' | 'red' | 'dark';
 }
 
 const StyledButton = React.forwardRef<HTMLButtonElement, StyledButtonProps>(
   function StyledButton(props, ref) {
-    const { children, disabled, className } = props;
+    const { children, disabled, className, color } = props;
+
     return (
       <Button
         {...props}
@@ -18,9 +20,12 @@ const StyledButton = React.forwardRef<HTMLButtonElement, StyledButtonProps>(
         className={clsx(
           `${className}`,
           {
-            'hover:bg-slate-300': !disabled,
+            'bg-slate-200': !color || color == 'default',
+            'bg-red-200 hover:bg-red-300 text-white':
+              color == 'red' && !disabled,
+            'bg-slate-500 hover:bg-slate-600 text-white': color === 'dark',
           },
-          'bg-slate-200 py-2 px-5'
+          'py-2 px-5'
         )}
       >
         {children}
