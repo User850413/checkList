@@ -12,7 +12,7 @@ export default function UserPage() {
   const route = useRouter();
 
   const onClickLogout = () => {
-    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('accessToken');
     route.push('/login?loggedOut=true');
   };
 

@@ -56,6 +56,13 @@ export async function POST(req: Request) {
       { expiresIn: '1h' }
     );
 
+    const REFRESH_SECRET = process.env.REFRESH_SECRET;
+    if (!REFRESH_SECRET)
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.REFRESH_SECRET_ERROR.ko },
+        { status: 400 }
+      );
+
     const refreshToken = jwt.sign(
       {
         id: user._id,
@@ -63,14 +70,19 @@ export async function POST(req: Request) {
         iat: Math.floor(Date.now() / 1000),
         iss: 'checkList-app',
       },
-      JWT_SECRET,
+      REFRESH_SECRET,
       { expiresIn: '1d' }
     );
 
     await User.findByIdAndUpdate(user._id, { refreshToken });
 
     return NextResponse.json(
-      { message: '로그인되었습니다', userId: user._id, token: accessToken },
+      {
+        message: '로그인되었습니다',
+        userId: user._id,
+        accessToken,
+        refreshToken,
+      },
       { status: 200 }
     );
   } catch (error) {

@@ -73,13 +73,10 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
     );
 
     if (res.status === 200) {
-      const { token, expiresIn } = res.data;
-      const tokenData = {
-        value: token,
-        expires: Date.now() + expiresIn * 1000,
-      };
+      const { accessToken, refreshToken } = res.data;
 
-      sessionStorage.setItem('token', tokenData.value);
+      sessionStorage.setItem('accessToken', accessToken);
+      sessionStorage.setItem('refreshToken', refreshToken);
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {
