@@ -2,6 +2,7 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { emailCheck } from '@/app/utils/emailCheck';
 import { UserInput } from '@/types/user';
 import axios from 'axios';
+import apiClient from '../token/apiClient';
 
 const validateUserInput = ({ email, password }: Partial<UserInput>) => {
   const trimmedEmail = email?.trim();
@@ -87,5 +88,14 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
       throw new Error(ERROR_MESSAGES.LOGIN_ERROR.ko);
     }
     throw error;
+  }
+}
+
+export async function userLogout() {
+  try {
+    const res = await apiClient.post('/logout');
+    return res.status;
+  } catch (err) {
+    throw new Error(ERROR_MESSAGES.LOGOUT_ERROR.ko);
   }
 }

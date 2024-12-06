@@ -23,6 +23,9 @@ const ERROR_MESSAGES = {
   LOGIN_ERROR: {
     ko: '로그인 중 오류가 발생했습니다',
   },
+  LOGOUT_ERROR: {
+    ko: '로그아웃 중 오류가 발생했습니다',
+  },
   REGISTER_ERROR: {
     ko: '회원가입 중 오류가 발생했습니다',
   },
