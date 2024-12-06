@@ -1,14 +1,12 @@
 import axios from 'axios';
 
-const apiClient = axios.create({ baseURL: '/api' });
+let accessToken: null | string = null;
+const apiClient = axios.create({ baseURL: '/api', withCredentials: true });
 
 apiClient.interceptors.request.use(
   (config) => {
-    if (typeof window !== 'undefined') {
-      const token = sessionStorage.getItem('accessToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -22,21 +20,28 @@ export default apiClient;
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response.status === 401) {
-      const refreshToken = sessionStorage.getItem('refreshToken');
-      const refreshResponse = await axios.post('/api/refresh', {
-        refreshToken,
-      });
+    const originalRequest = error.config;
 
-      if (refreshResponse.status === 200) {
-        const newAccessToken = refreshResponse.data.accessToken;
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+      try {
+        const refreshResponse = await axios.post('/api/refresh', null, {
+          withCredentials: true,
+        });
 
-        error.config.header.Authorization = `Bearer ${newAccessToken}`;
-        return axios(error.config);
+        if (refreshResponse.status === 200) {
+          accessToken = refreshResponse.data.accessToken;
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          return apiClient(originalRequest);
+        }
+      } catch (refreshError) {
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
       }
-    } else {
-      window.location.href = '/login';
-      return Promise.reject(error);
     }
 
     return Promise.reject(error);

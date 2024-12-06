@@ -73,10 +73,9 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
     );
 
     if (res.status === 200) {
-      const { accessToken, refreshToken } = res.data;
+      const { accessToken } = res.data;
 
       sessionStorage.setItem('accessToken', accessToken);
-      sessionStorage.setItem('refreshToken', refreshToken);
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -53,7 +53,7 @@ export async function POST(req: Request) {
         iss: 'checkList-app',
       },
       JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '5m' }
     );
 
     const REFRESH_SECRET = process.env.REFRESH_SECRET;
@@ -71,12 +71,12 @@ export async function POST(req: Request) {
         iss: 'checkList-app',
       },
       REFRESH_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '7d' }
     );
 
     await User.findByIdAndUpdate(user._id, { refreshToken });
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         message: '로그인되었습니다',
         userId: user._id,
@@ -85,7 +85,19 @@ export async function POST(req: Request) {
       },
       { status: 200 }
     );
-  } catch (error) {
-    return NextResponse.json({ error }, { status: 400 });
+
+    response.cookies.set('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60,
+      path: '/',
+    });
+
+    return response;
+  } catch (err) {
+    if (err instanceof Error)
+      return NextResponse.json({ error: err.message }, { status: 400 });
+    return NextResponse.json({ error: ERROR_MESSAGES.SERVER_ERROR.ko });
   }
 }
