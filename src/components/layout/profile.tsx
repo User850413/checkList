@@ -24,7 +24,7 @@ export default function Profile({
   return (
     <button
       className={clsx(
-        'relative inline-block bg-white rounded-full border-2 border-gray-200',
+        'relative inline-block bg-white rounded-full border-2 border-gray-200 flex-shrink-0',
         { 'cursor-default': !clickable, 'cursor-pointer': clickable },
         {
           'w-[40px] h-[40px]': size == 'small',
