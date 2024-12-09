@@ -80,11 +80,17 @@ export async function POST(req: Request) {
       {
         message: '로그인되었습니다',
         userId: user._id,
-        accessToken,
-        refreshToken,
       },
       { status: 200 }
     );
+
+    response.cookies.set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 5 * 60,
+      path: '/',
+    });
 
     response.cookies.set('refreshToken', refreshToken, {
       httpOnly: true,
