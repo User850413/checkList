@@ -45,7 +45,18 @@ export async function POST(req: Request) {
       );
     }
 
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        iat: Math.floor(Date.now() / 1000),
+        iss: 'checkList-app',
+      },
+      JWT_SECRET,
+      { expiresIn: '15m' }
+    );
+
+    const refreshToken = jwt.sign(
       {
         id: user._id,
         email: user.email,
@@ -56,8 +67,10 @@ export async function POST(req: Request) {
       { expiresIn: '1d' }
     );
 
+    await User.findByIdAndUpdate(user._id, { refreshToken });
+
     return NextResponse.json(
-      { message: '로그인되었습니다', userId: user._id, token },
+      { message: '로그인되었습니다', userId: user._id, token: accessToken },
       { status: 200 }
     );
   } catch (error) {

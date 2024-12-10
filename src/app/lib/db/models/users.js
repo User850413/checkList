@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     profileUrl: { type: String, default: null },
+    refreshToken: { type: String },
   },
   { timestamps: true }
 );
@@ -23,6 +24,9 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
+
+// delete mongoose.models['User'];
+// delete mongoose.modelSchemas['User'];
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 

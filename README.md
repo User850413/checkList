@@ -34,6 +34,7 @@ _생각나는 게 있으면 계속 추가하기_
 - Next App Router
 - Tailwind
 - React-query
+- JWT(Json Web Token)
 
 ### 백엔드 관련
 
