@@ -1,8 +1,11 @@
 import jwt from 'jsonwebtoken';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { verifyAuthToken } from './verifyToken';
+import { NextRequest } from 'next/server';
 
-export const getUserId = (req: Request): { userId: string; error?: string } => {
+export const getUserId = (
+  req: NextRequest
+): { userId: string; error?: string } => {
   let userId = '';
 
   const { error, token } = verifyAuthToken(req);
