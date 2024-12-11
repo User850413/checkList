@@ -8,7 +8,7 @@ import { Check } from '@/types/check';
 import { deleteTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
 import TagNameInput from './tagNameInput';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface CheckListProp {
   tagName: string;
@@ -16,12 +16,24 @@ interface CheckListProp {
 }
 
 function CheckList({ tagName, tagId }: CheckListProp) {
+  const [checkList, setCheckList] = useState([]);
+
   const queryClient = useQueryClient();
 
-  const { isLoading, data: list } = useQuery<Check[]>({
+  const {
+    isLoading,
+    data: list,
+    isSuccess,
+  } = useQuery({
     queryKey: ['checks', tagId],
     queryFn: () => getChecks({ tagId }),
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setCheckList(list.data);
+    }
+  }, [list, isSuccess]);
 
   const { mutate: deleteMutate } = useMutation({
     mutationFn: ({ _id }: Pick<Tag, '_id'>) => deleteTag({ _id }),
@@ -51,7 +63,7 @@ function CheckList({ tagName, tagId }: CheckListProp) {
         </button>
       </div>
       <ul className="my-3">
-        {list?.map((check, index) => (
+        {checkList?.map((check, index) => (
           <li key={check._id || index}>
             <CheckListCard
               id={check._id}
