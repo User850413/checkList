@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import ERROR_MESSAGES from './app/lib/constants/errorMessages';
 
 export function middleware(req: NextRequest) {
   console.log(
@@ -8,7 +9,12 @@ export function middleware(req: NextRequest) {
   const refreshToken = req.cookies.get('refreshToken');
 
   //NOTE : accessToken을 필요로 하지 않는 route 경로
-  const unAuthorizedPath = ['/api/register', '/api/login', '/api/logout'];
+  const unAuthorizedPath = [
+    '/api/register',
+    '/api/login',
+    '/api/logout',
+    '/api/refresh',
+  ];
   const isAuthorizationRequired = !unAuthorizedPath.some((path) =>
     req.nextUrl.pathname.includes(path)
   );
@@ -27,17 +33,22 @@ export function middleware(req: NextRequest) {
 
       const response = NextResponse.next();
       response.headers.set('Authorization', decodedValue);
-      if (refreshToken) {
-        response.cookies.set('refreshToken', '', { maxAge: 0 }); // 쿠키 삭제
-      }
+
+      // if (refreshToken) {
+      //   response.cookies.set('refreshToken', '', { maxAge: 0 }); // 쿠키 삭제
+      // }
 
       return response;
     }
     console.log('--------not isAuthorizationRequired');
 
-    return NextResponse.json({ error: 'error' });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.INVALID_TOKEN.ko },
+      { status: 401 }
+    );
   } else {
     console.log('else');
+    console.log(refreshToken);
     return NextResponse.next();
   }
 }

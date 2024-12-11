@@ -7,6 +7,9 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 const JWT_SECRET = process.env.JWT_SECRET as string;
 if (!JWT_SECRET) throw new Error(ERROR_MESSAGES.JWT_SECRET_ERROR.ko);
 
+const REFRESH_SECRET = process.env.REFRESH_SECRET as string;
+if (!REFRESH_SECRET) throw new Error(ERROR_MESSAGES.REFRESH_SECRET_ERROR.ko);
+
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
@@ -63,7 +66,7 @@ export async function POST(req: Request) {
         iat: Math.floor(Date.now() / 1000),
         iss: 'checkList-app',
       },
-      JWT_SECRET,
+      REFRESH_SECRET,
       { expiresIn: '1d' }
     );
 
