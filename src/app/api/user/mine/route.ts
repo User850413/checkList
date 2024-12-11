@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
 
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 401 });
+    console.log(userId);
 
     const user = await User.findById(userId).select(
       'username createdAt updatedAt profileUrl'

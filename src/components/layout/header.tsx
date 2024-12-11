@@ -4,20 +4,31 @@ import { getMyData } from '@/app/services/api/user';
 import { useQuery } from '@tanstack/react-query';
 import Profile from './profile';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { User } from '@/types/user';
 
 export default function Header() {
-  const { data, isLoading, error } = useQuery({
+  const [myData, setMyData] = useState();
+
+  const { data, isLoading, error, isSuccess } = useQuery({
     queryKey: ['me'],
     queryFn: () => getMyData(),
+    retry: false,
   });
 
   const router = useRouter();
 
   //NOTE: 세션 만료 시 리다이렉션
   useEffect(() => {
-    if (error) router.push('/login?sessionExpired=true');
-  }, [error, router]);
+    if (error) {
+      console.log(error.message);
+      // router.push('/login?sessionExpired=true');
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (isSuccess) setMyData(data.user);
+  }, [isSuccess, data]);
 
   if (isLoading) return <div> loading... </div>;
 
@@ -31,13 +42,13 @@ export default function Header() {
           <button onClick={() => router.push('/my-list')}>내 리스트</button>
         </li>
       </ul>
-      {data && (
+      {myData && (
         <ul className="flex items-center gap-4 cursor-default text-sm text-slate-500">
-          <li>{data!.username}</li>
+          <li>{myData.username}</li>
           <li>
             <Profile
-              profileUrl={data!.profileUrl}
-              username={data!.username}
+              profileUrl={myData.profileUrl}
+              username={myData.username}
               clickable
               clickFn={() => {
                 router.push('/user-page');
