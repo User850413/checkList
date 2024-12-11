@@ -69,10 +69,28 @@ export async function POST(req: Request) {
 
     await User.findByIdAndUpdate(user._id, { refreshToken });
 
-    return NextResponse.json(
-      { message: '로그인되었습니다', userId: user._id, token: accessToken },
+    const response = NextResponse.json(
+      { message: '로그인되었습니다', userId: user._id },
       { status: 200 }
     );
+
+    response.cookies.set('accessToken', accessToken, {
+      httpOnly: true,
+      // secure: true,
+      // sameSite: 'strict',
+      path: '/',
+      maxAge: 15 * 60,
+    });
+
+    response.cookies.set('refreshToken', refreshToken, {
+      httpOnly: true,
+      // secure: true,
+      // sameSite: 'strict',
+      path: '/',
+      maxAge: 24 * 60 * 60,
+    });
+
+    return response;
   } catch (error) {
     return NextResponse.json({ error }, { status: 400 });
   }
