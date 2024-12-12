@@ -8,9 +8,9 @@ const tagSchema = new mongoose.Schema({
     required: true,
   },
   interest: {
-    type: mongoose.Schema.Types.String,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Interest',
-    default: '기타',
+    default: null,
   },
 });
 
