@@ -6,15 +6,9 @@ export function middleware(req: NextRequest) {
     `---------middleWare working on ${req.nextUrl.pathname}---------`
   );
   const accessToken = req.cookies.get('accessToken');
-  const refreshToken = req.cookies.get('refreshToken');
 
   //NOTE : accessToken을 필요로 하지 않는 route 경로
-  const unAuthorizedPath = [
-    '/api/register',
-    '/api/login',
-    '/api/logout',
-    '/api/refresh',
-  ];
+  const unAuthorizedPath = ['/api/register', '/api/login', '/api/refresh'];
   const isAuthorizationRequired = !unAuthorizedPath.some(
     (path) => req.nextUrl.pathname === path
   );
@@ -35,8 +29,6 @@ export function middleware(req: NextRequest) {
       { status: 401 }
     );
   } else {
-    console.log('else');
-    console.log(refreshToken);
     return NextResponse.next();
   }
 }

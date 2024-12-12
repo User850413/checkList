@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     await dbConnect();
 
     const { userId, error } = getUserId(req);
-    if (!userId) return NextResponse.json({ error }, { status: 401 });
+    if (!userId) return NextResponse.json({ error }, { status: 403 });
 
     const rawPage = parseInt(req.nextUrl?.searchParams.get('page') ?? '1', 10);
     const rawLimit = parseInt(

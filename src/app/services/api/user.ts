@@ -95,6 +95,19 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
   }
 }
 
+// 로그아웃
+export async function userLogout() {
+  try {
+    const res = await apiClient.post('/logout');
+    return res.data;
+  } catch (err) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
+    throw new Error(ERROR_MESSAGES.LOGOUT_ERROR.ko);
+  }
+}
+
 // 전체 유저 정보 불러오기
 export async function getAllUsers() {
   try {
