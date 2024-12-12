@@ -83,6 +83,9 @@ const ERROR_MESSAGES = {
   LOGGED_OUT: {
     ko: '로그아웃되셨습니다',
   },
+  LOGOUT_ERROR: {
+    ko: '로그아웃 도중 오류 발생',
+  },
   UPDATE_FAILED: {
     ko: '업데이트에 실패하였습니다',
   },
