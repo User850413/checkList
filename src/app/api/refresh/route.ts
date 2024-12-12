@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       if (!refreshToken) {
         return NextResponse.json(
           { error: ERROR_MESSAGES.EXPIRED_REFRESH_TOKEN.ko },
-          { status: 401 }
+          { status: 403 }
         );
       }
 
@@ -32,8 +32,6 @@ export async function POST(req: NextRequest) {
           { error: ERROR_MESSAGES.REFRESH_SECRET_ERROR.ko },
           { status: 500 }
         );
-      // return NextResponse.json({ message: refreshToken });
-      // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTJjZWFmOTllOTE1ZTZkZmVkOTY0MSIsImVtYWlsIjoic2FtcGxlQHNhbXBsZS5jb20iLCJpYXQiOjE3MzM5MTQxMjUsImlzcyI6ImNoZWNrTGlzdC1hcHAiLCJleHAiOjE3MzQwMDA1MjV9.Ea6QWCgfP-kBPa2KbueKpGUeUTEDaroH9ZImw9MrJfw
 
       const decoded = jwt.verify(refreshToken, REFRESH_SECRET) as {
         id: string;
@@ -41,9 +39,12 @@ export async function POST(req: NextRequest) {
       const user = await User.findById(decoded.id);
 
       if (!user || user.refreshToken !== refreshToken) {
-        return NextResponse.json({
-          error: ERROR_MESSAGES.INVALID_REFRESH_TOKEN.ko,
-        });
+        return NextResponse.json(
+          {
+            error: ERROR_MESSAGES.INVALID_REFRESH_TOKEN.ko,
+          },
+          { status: 403 }
+        );
       }
 
       const JWT_SECRET = process.env.JWT_SECRET;
@@ -81,7 +82,7 @@ export async function POST(req: NextRequest) {
     } else {
       return NextResponse.json(
         { error: ERROR_MESSAGES.EXPIRED_REFRESH_TOKEN.ko },
-        { status: 500 }
+        { status: 403 }
       );
     }
   } catch (err) {
