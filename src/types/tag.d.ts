@@ -5,10 +5,8 @@ export interface Tag {
 
 export interface TagResponse {
   tags: Tag[];
-  pagination?: {
-    total: number;
-    page: number;
-    limit: number;
-    pages: number;
-  };
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
 }

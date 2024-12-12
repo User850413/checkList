@@ -38,10 +38,18 @@ export async function POST(req: NextRequest) {
       };
       const user = await User.findById(decoded.id);
 
-      if (!user || user.refreshToken !== refreshToken) {
+      if (!user)
+        return NextResponse.json(
+          { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
+          { status: 403 }
+        );
+
+      if (user.refreshToken !== refreshToken) {
         return NextResponse.json(
           {
             error: ERROR_MESSAGES.INVALID_REFRESH_TOKEN.ko,
+            refreshToken,
+            user,
           },
           { status: 403 }
         );

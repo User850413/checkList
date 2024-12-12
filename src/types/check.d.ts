@@ -9,10 +9,8 @@ export interface Check {
 
 export interface CheckResponse {
   checks: Check[];
-  pagination?: {
-    total: number;
-    page: number;
-    limit: number;
-    pages: number;
-  };
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
 }

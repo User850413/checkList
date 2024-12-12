@@ -18,7 +18,6 @@ export function middleware(req: NextRequest) {
   const isAuthorizationRequired = !unAuthorizedPath.some(
     (path) => req.nextUrl.pathname === path
   );
-  console.log(`middleWare working on ${req.nextUrl.pathname}`);
 
   //NOTE: accessToken 검증
   if (isAuthorizationRequired) {

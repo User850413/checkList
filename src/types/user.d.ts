@@ -5,14 +5,12 @@ export interface User {
   profileUrl: string;
 }
 
-export interface UserResponse {
+export interface UsersResponse {
   users: User[];
-  pagination?: {
-    total: number;
-    page: number;
-    limit: number;
-    pages: number;
-  };
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
 }
 
 export interface UserInput {
