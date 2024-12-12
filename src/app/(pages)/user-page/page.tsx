@@ -5,10 +5,13 @@ import StyledButton from '@/components/common/styledButton';
 import FieldButton from '@/components/layout/fieldButton';
 import Header from '@/components/layout/header';
 import Profile from '@/components/layout/profile';
+import { User } from '@/types/user';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function UserPage() {
+  const [myData, setMyData] = useState<User | undefined>();
   const route = useRouter();
 
   const onClickLogout = () => {
@@ -16,7 +19,10 @@ export default function UserPage() {
     route.push('/login?loggedOut=true');
   };
 
-  const { data } = useQuery({ queryKey: ['user'], queryFn: () => getMyData() });
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['user'],
+    queryFn: () => getMyData(),
+  });
 
   const fieldList = [
     { fieldName: '건강', fieldIcon: '💪' },
@@ -25,21 +31,28 @@ export default function UserPage() {
     { fieldName: '여가', fieldIcon: '🎉' },
   ];
 
+  useEffect(() => {
+    if (data) setMyData(data.user);
+  }, [data]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error</div>;
+
   return (
     <>
       <Header />
       <main className="bg-white shadow-card rounded-lg mx-14 p-6 mt-14 flex gap-8 items-center">
-        {data && (
+        {myData && (
           <>
             <Profile
-              profileUrl={data.profileUrl}
-              username={data.username}
+              profileUrl={myData.profileUrl}
+              username={myData.username}
               editable
               size="large"
             />
             <div className="flex flex-col items-start gap-4 w-full">
               <h1 className="font-bold text-xl">
-                {data.username}님의 페이지입니다.
+                {myData.username}님의 페이지입니다.
               </h1>
               <div className="bg-slate-100 w-full p-4 rounded-md">
                 <h2 className="font-semibold text-base">한 마디 🎤</h2>
