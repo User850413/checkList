@@ -7,6 +7,11 @@ const tagSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  interest: {
+    type: mongoose.Schema.Types.String,
+    ref: 'Interest',
+    default: '기타',
+  },
 });
 
 const Tag = mongoose.models['Tag'] || mongoose.model('Tag', tagSchema);
