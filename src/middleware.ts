@@ -8,12 +8,7 @@ export function middleware(req: NextRequest) {
   const accessToken = req.cookies.get('accessToken');
 
   //NOTE : accessToken을 필요로 하지 않는 route 경로
-  const unAuthorizedPath = [
-    '/api/register',
-    '/api/login',
-    '/api/logout',
-    '/api/refresh',
-  ];
+  const unAuthorizedPath = ['/api/register', '/api/login', '/api/refresh'];
   const isAuthorizationRequired = !unAuthorizedPath.some(
     (path) => req.nextUrl.pathname === path
   );

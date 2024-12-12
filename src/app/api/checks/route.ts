@@ -12,14 +12,14 @@ export async function GET(req: NextRequest) {
 
   const { error } = verifyAuthToken(req);
   if (error) {
-    return NextResponse.json({ error }, { status: 401 });
+    return NextResponse.json({ error }, { status: 403 });
   }
 
   const authHeader = req.headers.get('Authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.TOKEN_ERROR.ko },
-      { status: 401 }
+      { status: 403 }
     );
   }
 
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
 
   const { error } = verifyAuthToken(req);
   if (error) {
-    return NextResponse.json({ error }, { status: 401 });
+    return NextResponse.json({ error }, { status: 403 });
   }
 
   try {
@@ -89,7 +89,7 @@ export async function PATCH(req: NextRequest) {
 
   const { error } = verifyAuthToken(req);
   if (error) {
-    return NextResponse.json({ error }, { status: 401 });
+    return NextResponse.json({ error }, { status: 403 });
   }
 
   if (!id) {
@@ -112,7 +112,7 @@ export async function DELETE(req: NextRequest) {
 
   const { error } = verifyAuthToken(req);
   if (error) {
-    return NextResponse.json({ error }, { status: 401 });
+    return NextResponse.json({ error }, { status: 403 });
   }
 
   await dbConnect();

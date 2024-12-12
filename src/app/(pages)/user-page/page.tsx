@@ -1,12 +1,12 @@
 'use client';
 
-import { getMyData } from '@/app/services/api/user';
+import { getMyData, userLogout } from '@/app/services/api/user';
 import StyledButton from '@/components/common/styledButton';
 import FieldButton from '@/components/layout/fieldButton';
 import Header from '@/components/layout/header';
 import Profile from '@/components/layout/profile';
 import { User } from '@/types/user';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -14,15 +14,21 @@ export default function UserPage() {
   const [myData, setMyData] = useState<User | undefined>();
   const route = useRouter();
 
-  const onClickLogout = () => {
-    sessionStorage.removeItem('token');
-    route.push('/login?loggedOut=true');
-  };
-
   const { data, isLoading, isError } = useQuery({
     queryKey: ['user'],
     queryFn: () => getMyData(),
   });
+
+  const { mutate: logoutMutation } = useMutation({
+    mutationFn: () => userLogout(),
+    mutationKey: ['user'],
+    onSuccess: () => route.push('/login?loggedOut=true'),
+    onError: () => console.log('error'),
+  });
+
+  const onClickLogout = () => {
+    logoutMutation();
+  };
 
   const fieldList = [
     { fieldName: '건강', fieldIcon: '💪' },

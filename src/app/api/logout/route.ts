@@ -6,9 +6,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId, error } = getUserId(req);
-    if (!userId) return NextResponse.json({ error }, { status: 401 });
     await dbConnect();
+
+    const { userId, error } = getUserId(req);
+    if (!userId) return NextResponse.json({ error }, { status: 403 });
     const user = await User.findByIdAndUpdate(userId, { refreshToken: '' });
 
     if (!user)

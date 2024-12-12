@@ -44,7 +44,7 @@ export async function POST(req: Request) {
         {
           error: ERROR_MESSAGES.INVALID_USER.ko,
         },
-        { status: 401 }
+        { status: 403 }
       );
     }
 

@@ -98,7 +98,7 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
 // 로그아웃
 export async function userLogout() {
   try {
-    const res = await apiClient.get('/logout');
+    const res = await apiClient.post('/logout');
     return res.data;
   } catch (err) {
     if (err instanceof Error) {

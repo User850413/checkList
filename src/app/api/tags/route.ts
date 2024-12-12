@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
   await dbConnect();
 
   const { userId, error } = getUserId(req);
-  if (!userId) return NextResponse.json({ error }, { status: 401 });
+  if (!userId) return NextResponse.json({ error }, { status: 403 });
 
   try {
     const data = await req.json();
@@ -69,7 +69,7 @@ export async function PATCH(req: NextRequest) {
   const tagId = searchParams.get('id');
 
   const { userId, error } = getUserId(req);
-  if (!userId) return NextResponse.json({ error }, { status: 401 });
+  if (!userId) return NextResponse.json({ error }, { status: 403 });
 
   await dbConnect();
 
@@ -119,7 +119,7 @@ export async function DELETE(req: NextRequest) {
   await dbConnect();
 
   const { userId, error } = getUserId(req);
-  if (!userId) return NextResponse.json({ error }, { status: 401 });
+  if (!userId) return NextResponse.json({ error }, { status: 403 });
 
   if (!tagId) {
     return NextResponse.json(
