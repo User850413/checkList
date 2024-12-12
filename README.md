@@ -39,10 +39,15 @@ _생각나는 게 있으면 계속 추가하기_
 ### 백엔드 관련
 
 - mongoDB - mongoose
-- bcrypt
+- httpOnly option 사용
 
-### 보조 도구
+### 미들웨어
 
+- 토큰 검증 로직
+
+### AI 보조 도구
+
+- [챗 GPT](https://chatgpt.com/)
 - [코드래빗](https://www.coderabbit.ai/)
 
 ### 컨벤션
@@ -51,4 +56,11 @@ _생각나는 게 있으면 계속 추가하기_
 - **브랜치명 :** _태그: 기술명_
 - **커밋명 :** _MM/DD :깃모지: : 기술명_
 
-(11/22 마지막 수정)
+### 인증 및 인가 프로세스
+
+1. 로그인 시 response의 httpOnly 쿠키로 accessToken 및 refreshToken 발급
+2. 이후 api 요청 시 미들웨어로 accessToken 검증
+3. 상태코드 401일 시 인터셉터로 /api/refresh 요청
+4. refreshToken 유효할 시 새 accessToken 발급, refreshToken 만료 시 새 로그인 필요
+
+(12/12 마지막 수정)
