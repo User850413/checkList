@@ -4,11 +4,11 @@ import { getChecks } from '@/app/services/api/checks';
 import CheckListCard from './checkListCard';
 import CheckInput from './checkInput';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Check } from '@/types/check';
 import { deleteTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
 import TagNameInput from './tagNameInput';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Check } from '@/types/check';
 
 interface CheckListProp {
   tagName: string;
@@ -16,12 +16,25 @@ interface CheckListProp {
 }
 
 function CheckList({ tagName, tagId }: CheckListProp) {
+  const [checkList, setCheckList] = useState<Check[]>([]);
+
   const queryClient = useQueryClient();
 
-  const { isLoading, data: list } = useQuery<Check[]>({
+  const {
+    isLoading,
+    data: list,
+    isSuccess,
+    isError,
+  } = useQuery({
     queryKey: ['checks', tagId],
     queryFn: () => getChecks({ tagId }),
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setCheckList(list.data);
+    }
+  }, [list, isSuccess]);
 
   const { mutate: deleteMutate } = useMutation({
     mutationFn: ({ _id }: Pick<Tag, '_id'>) => deleteTag({ _id }),
@@ -38,6 +51,7 @@ function CheckList({ tagName, tagId }: CheckListProp) {
   };
 
   if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error</div>;
 
   return (
     <div className="bg-white rounded-lg w-full px-3 h-full py-2">
@@ -51,7 +65,7 @@ function CheckList({ tagName, tagId }: CheckListProp) {
         </button>
       </div>
       <ul className="my-3">
-        {list?.map((check, index) => (
+        {checkList?.map((check, index) => (
           <li key={check._id || index}>
             <CheckListCard
               id={check._id}

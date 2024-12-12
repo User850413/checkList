@@ -7,6 +7,9 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 const JWT_SECRET = process.env.JWT_SECRET as string;
 if (!JWT_SECRET) throw new Error(ERROR_MESSAGES.JWT_SECRET_ERROR.ko);
 
+const REFRESH_SECRET = process.env.REFRESH_SECRET as string;
+if (!REFRESH_SECRET) throw new Error(ERROR_MESSAGES.REFRESH_SECRET_ERROR.ko);
+
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
@@ -45,7 +48,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       {
         id: user._id,
         email: user.email,
@@ -53,13 +56,52 @@ export async function POST(req: Request) {
         iss: 'checkList-app',
       },
       JWT_SECRET,
+      { expiresIn: '15m' }
+    );
+
+    const refreshToken = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        iat: Math.floor(Date.now() / 1000),
+        iss: 'checkList-app',
+      },
+      REFRESH_SECRET,
       { expiresIn: '1d' }
     );
 
-    return NextResponse.json(
-      { message: '로그인되었습니다', userId: user._id, token },
+    const updateResult = await User.findByIdAndUpdate(user._id, {
+      refreshToken,
+    });
+    if (!updateResult) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.UPDATE_FAILED.ko },
+        { status: 500 }
+      );
+    }
+
+    const response = NextResponse.json(
+      { message: '로그인되었습니다', userId: user._id },
       { status: 200 }
     );
+
+    response.cookies.set('accessToken', accessToken, {
+      httpOnly: true,
+      // secure: true,
+      // sameSite: 'strict',
+      path: '/',
+      maxAge: 15 * 60,
+    });
+
+    response.cookies.set('refreshToken', refreshToken, {
+      httpOnly: true,
+      // secure: true,
+      // sameSite: 'strict',
+      path: '/',
+      maxAge: 24 * 60 * 60,
+    });
+
+    return response;
   } catch (error) {
     return NextResponse.json({ error }, { status: 400 });
   }

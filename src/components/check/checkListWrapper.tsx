@@ -2,26 +2,43 @@
 
 import { useQuery } from '@tanstack/react-query';
 import CheckList from './checkList';
-import { Tag } from '@/types/tag';
-import { getAllTags } from '@/app/services/api/tags';
+import { getMyTags } from '@/app/services/api/tags';
 import AddNewTag from './addNewTag';
+import { useEffect, useState } from 'react';
+import { Tag } from '@/types/tag';
 
 export default function CheckListWrapper() {
-  const { isLoading, data: tags } = useQuery<Tag[]>({
-    queryKey: ['tags'],
-    queryFn: () => getAllTags(),
+  const [tagList, setTagList] = useState<Tag[]>([]);
+
+  const {
+    isLoading,
+    data: tags,
+    error,
+    isSuccess,
+  } = useQuery({
+    queryKey: ['tags', 'mine'],
+    queryFn: () => getMyTags(),
   });
 
+  useEffect(() => {
+    if (isSuccess) setTagList(tags?.data);
+  }, [tags, isSuccess]);
+
   if (isLoading) return <div> loading...</div>;
+  if (error) {
+    console.log(error.message);
+    return <div>error</div>;
+  }
 
   return (
     <div className="w-full px-6 py-10">
       <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {tags?.map((tag) => (
-          <li key={tag._id}>
-            <CheckList tagName={tag.name} tagId={tag._id} />
-          </li>
-        ))}
+        {tagList &&
+          tagList.map((tag) => (
+            <li key={tag._id}>
+              <CheckList tagName={tag.name} tagId={tag._id} />
+            </li>
+          ))}
         <li>
           <AddNewTag />
         </li>

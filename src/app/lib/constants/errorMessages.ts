@@ -32,17 +32,26 @@ const ERROR_MESSAGES = {
   EXPIRED_TOKEN: {
     ko: '토큰이 만료되었습니다',
   },
+  EXPIRED_REFRESH_TOKEN: {
+    ko: '만료된 리프레시 토큰입니다',
+  },
   EXPIRED_SESSION: {
     ko: '세션이 만료되었습니다',
   },
   INVALID_TOKEN: {
     ko: '유효하지 않은 토큰입니다',
   },
+  INVALID_REFRESH_TOKEN: {
+    ko: '유효하지 않은 리프레시 토큰입니다',
+  },
   TOKEN_ERROR: {
     ko: '토큰 검증 중 문제가 발생했습니다',
   },
   JWT_SECRET_ERROR: {
     ko: '환경 변수 JWT_SECRET이 설정되지 않았습니다',
+  },
+  REFRESH_SECRET_ERROR: {
+    ko: '환경 변수 REFRESH_SECRET이 설정되지 않았습니다',
   },
   SERVER_ERROR: {
     ko: '서버 에러가 발생하였습니다',
@@ -72,7 +81,10 @@ const ERROR_MESSAGES = {
     ko: '다시 로그인하여 주십시오',
   },
   LOGGED_OUT: {
-    ko: '로그아웃되셨습니다.',
+    ko: '로그아웃되셨습니다',
+  },
+  UPDATE_FAILED: {
+    ko: '업데이트에 실패하였습니다',
   },
 };
 

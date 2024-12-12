@@ -2,14 +2,15 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import User from '@/app/lib/db/models/users';
 import { getUserId } from '@/app/services/token/getUserId';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 401 });
+    console.log(userId);
 
     const user = await User.findById(userId).select(
       'username createdAt updatedAt profileUrl'
@@ -20,7 +21,7 @@ export async function GET(req: Request) {
         { status: 404 }
       );
 
-    return NextResponse.json(user);
+    return NextResponse.json({ user }, { status: 200 });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });

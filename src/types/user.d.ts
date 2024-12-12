@@ -5,6 +5,14 @@ export interface User {
   profileUrl: string;
 }
 
+export interface UsersResponse {
+  users: User[];
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+}
+
 export interface UserInput {
   username: string;
   email: string;
