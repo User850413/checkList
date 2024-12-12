@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { User } from '@/types/user';
 
 export default function Header() {
-  const [myData, setMyData] = useState();
+  const [myData, setMyData] = useState<User | undefined>();
 
   const { data, isLoading, error, isSuccess } = useQuery({
     queryKey: ['me'],
@@ -21,10 +21,10 @@ export default function Header() {
   //NOTE: 세션 만료 시 리다이렉션
   useEffect(() => {
     if (error) {
-      console.log(error.message);
-      // router.push('/login?sessionExpired=true');
+      console.error(error.message);
+      router.push('/login?sessionExpired=true');
     }
-  }, [error]);
+  }, [error, router]);
 
   useEffect(() => {
     if (isSuccess) setMyData(data.user);

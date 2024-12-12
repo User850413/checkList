@@ -81,7 +81,10 @@ const ERROR_MESSAGES = {
     ko: '다시 로그인하여 주십시오',
   },
   LOGGED_OUT: {
-    ko: '로그아웃되셨습니다.',
+    ko: '로그아웃되셨습니다',
+  },
+  UPDATE_FAILED: {
+    ko: '업데이트에 실패하였습니다',
   },
 };
 

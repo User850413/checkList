@@ -2,13 +2,13 @@
 
 import { useQuery } from '@tanstack/react-query';
 import CheckList from './checkList';
-import { Tag, TagResponse } from '@/types/tag';
 import { getMyTags } from '@/app/services/api/tags';
 import AddNewTag from './addNewTag';
 import { useEffect, useState } from 'react';
+import { Tag } from '@/types/tag';
 
 export default function CheckListWrapper() {
-  const [tagList, setTagList] = useState([]);
+  const [tagList, setTagList] = useState<Tag[]>([]);
 
   const {
     isLoading,
@@ -21,11 +21,7 @@ export default function CheckListWrapper() {
   });
 
   useEffect(() => {
-    if (isSuccess) {
-      console.log('tags:');
-      console.log(tags);
-      setTagList(tags?.data);
-    }
+    if (isSuccess) setTagList(tags?.data);
   }, [tags, isSuccess]);
 
   if (isLoading) return <div> loading...</div>;

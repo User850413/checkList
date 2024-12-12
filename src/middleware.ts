@@ -15,32 +15,21 @@ export function middleware(req: NextRequest) {
     '/api/logout',
     '/api/refresh',
   ];
-  const isAuthorizationRequired = !unAuthorizedPath.some((path) =>
-    req.nextUrl.pathname.includes(path)
+  const isAuthorizationRequired = !unAuthorizedPath.some(
+    (path) => req.nextUrl.pathname === path
   );
-  console.log(isAuthorizationRequired);
-
-  console.log(req.nextUrl.pathname);
-  console.log('--------');
+  console.log(`middleWare working on ${req.nextUrl.pathname}`);
 
   //NOTE: accessToken 검증
   if (isAuthorizationRequired) {
-    console.log('--------isAuthorizationRequired');
     if (accessToken) {
-      console.log('--------accessToken');
-
       const decodedValue = `Bearer ${decodeURIComponent(accessToken.value)}`;
 
       const response = NextResponse.next();
       response.headers.set('Authorization', decodedValue);
 
-      // if (refreshToken) {
-      //   response.cookies.set('refreshToken', '', { maxAge: 0 }); // 쿠키 삭제
-      // }
-
       return response;
     }
-    console.log('--------not isAuthorizationRequired');
 
     return NextResponse.json(
       { error: ERROR_MESSAGES.INVALID_TOKEN.ko },

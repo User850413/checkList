@@ -70,7 +70,15 @@ export async function POST(req: Request) {
       { expiresIn: '1d' }
     );
 
-    await User.findByIdAndUpdate(user._id, { refreshToken });
+    const updateResult = await User.findByIdAndUpdate(user._id, {
+      refreshToken,
+    });
+    if (!updateResult) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.UPDATE_FAILED.ko },
+        { status: 500 }
+      );
+    }
 
     const response = NextResponse.json(
       { message: '로그인되었습니다', userId: user._id },
