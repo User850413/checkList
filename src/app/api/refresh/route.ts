@@ -46,11 +46,7 @@ export async function POST(req: NextRequest) {
 
       if (user.refreshToken !== refreshToken) {
         return NextResponse.json(
-          {
-            error: ERROR_MESSAGES.INVALID_REFRESH_TOKEN.ko,
-            refreshToken,
-            user,
-          },
+          { error: ERROR_MESSAGES.INVALID_REFRESH_TOKEN.ko },
           { status: 403 }
         );
       }
