@@ -4,10 +4,12 @@ import User from '@/app/lib/db/models/users';
 import { getUserId } from '@/app/services/token/getUserId';
 import { NextRequest, NextResponse } from 'next/server';
 
+// NOTE : request의 accessToken으로 내 정보 불러오기
 export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
+    // NOTE : 토큰 검증 및 userId 추출
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 403 });
 

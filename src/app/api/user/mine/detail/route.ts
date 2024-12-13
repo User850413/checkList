@@ -5,14 +5,18 @@ import UserDetail from '@/app/lib/db/models/userDetails';
 import { getUserId } from '@/app/services/token/getUserId';
 import { NextRequest, NextResponse } from 'next/server';
 
+// NOTE : accessToken의 userId로 내 userDetail 정보 불러오기
 export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
+    // NOTE : 토큰 검증 및 userId 추출
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 403 });
 
-    const userDetail = await UserDetail.findById(userId).select('bio interest');
+    const userDetail = await UserDetail.findOne({ userId }).select(
+      'bio interest'
+    );
     if (!userDetail)
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
@@ -32,14 +36,17 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// NOTE : accessToken의 userId로 검증 후 내 userDetail 정보 수정
 export async function PATCH(req: NextRequest) {
   try {
     await dbConnect();
     const body = await req.json();
 
+    // NOTE : 토큰 검증 및 userId 추출
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 403 });
 
+    // NOTE : 업데이트 body의 interest가 Interest 테이블에 존재하는지 검증
     if (body.interest) {
       const interests = body.interest;
 
