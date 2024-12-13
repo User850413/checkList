@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
-    dbConnect();
+    await dbConnect();
 
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 403 });
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    dbConnect();
+    await dbConnect();
     const body = await req.json();
 
     const { userId, error } = getUserId(req);
@@ -43,15 +43,15 @@ export async function PATCH(req: NextRequest) {
     if (body.interest) {
       const interests = body.interest;
 
-      await interests.map((interest: string) => {
-        const isExistedInterest = Interest.findOne({ name: interest });
-
-        if (!isExistedInterest)
+      for (const interest of interests) {
+        const isExistedInterest = await Interest.findOne({ name: interest });
+        if (!isExistedInterest) {
           return NextResponse.json(
             { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
             { status: 400 }
           );
-      });
+        }
+      }
     }
 
     const updatedUserDetail = await UserDetail.findByIdAndUpdate(userId, body, {

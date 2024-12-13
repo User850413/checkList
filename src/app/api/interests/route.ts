@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
     if (error) return NextResponse.json({ error }, { status: 403 });
 
     const data = await req.json();
-    if (data.name === '') {
+    if (!data.name) {
       return NextResponse.json(
         {
           error: ERROR_MESSAGES.EMPTY_INTEREST_NAME.ko,
@@ -62,9 +62,12 @@ export async function POST(req: NextRequest) {
     const name = data.name.trim();
     const existedInterest = await Interest.findOne({ name });
     if (existedInterest)
-      throw new Error(ERROR_MESSAGES.EXISTED_INTEREST_NAME.ko);
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.EXISTED_INTEREST_NAME.ko },
+        { status: 400 }
+      );
 
-    const newInterest = await Interest.create({ name: data.name });
+    const newInterest = await Interest.create({ name });
     return NextResponse.json(newInterest);
   } catch (err) {
     if (err instanceof Error) {
