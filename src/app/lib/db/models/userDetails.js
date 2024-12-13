@@ -12,6 +12,7 @@ const userDetailSchema = new mongoose.Schema({
   interest: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Interest',
+    default: [],
   },
 });
 
