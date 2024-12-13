@@ -54,9 +54,17 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    const updatedUserDetail = await UserDetail.findByIdAndUpdate(userId, body, {
-      new: true,
-    });
+    const { bio, interest } = body;
+    const updateData = {
+      ...(bio !== undefined && { bio }),
+      ...(interest !== undefined && { interest }),
+    };
+
+    const updatedUserDetail = await UserDetail.findOneAndUpdate(
+      { userId },
+      updateData,
+      { new: true }
+    );
 
     if (!updatedUserDetail) {
       return NextResponse.json(
