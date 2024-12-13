@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (data.interest) {
-      const isExistedInterest = Interest.findOne({ name: data.interest });
+      const isExistedInterest = await Interest.findOne({ name: data.interest });
       if (!isExistedInterest)
         NextResponse.json(
           { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
@@ -130,7 +130,7 @@ export async function PATCH(req: NextRequest) {
     if (!updatedTag)
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
-        { status: 400 }
+        { status: 404 }
       );
 
     return NextResponse.json(updatedTag, { status: 200 });
