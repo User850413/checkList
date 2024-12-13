@@ -115,7 +115,7 @@ export async function PATCH(req: NextRequest) {
   if (body.interest) {
     const isExistedInterest = Interest.findOne({ name: body.interest });
     if (!isExistedInterest)
-      NextResponse.json(
+      return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
         { status: 400 }
       );
@@ -169,7 +169,10 @@ export async function DELETE(req: NextRequest) {
     );
   }
   if (String(tag.userId) !== userId)
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.FORBIDDEN_NOT_ALLOW.ko },
+      { status: 403 }
+    );
 
   try {
     const deletedTag = await deleteTagAndChecks(tagId);
@@ -185,7 +188,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
     return NextResponse.json(
-      { error: '알 수 없는 오류가 발생했습니다' },
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 }
     );
   }

@@ -1,12 +1,11 @@
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
-import axios from 'axios';
 import { NextResponse } from 'next/server';
 import apiClient from '../token/apiClient';
 import { interest } from '@/types/interest';
 
 export async function getAllInterest() {
   try {
-    const res = await axios.get('/api/interest');
+    const res = await apiClient.get('/api/interest');
 
     return res.data as interest[];
   } catch (err) {
