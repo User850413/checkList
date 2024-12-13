@@ -1,10 +1,10 @@
 import dbConnect from '@/app/lib/db/dbConnect';
 import { NextRequest, NextResponse } from 'next/server';
 import Tag from '@/app/lib/db/models/tags';
-import { updateTagAndChecks } from '@/app/services/database/updateTagAndChecks';
 import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { getUserId } from '@/app/services/token/getUserId';
+import Interest from '@/app/lib/db/models/interests';
 
 export async function GET(req: NextRequest) {
   try {
@@ -54,7 +54,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newTag = await Tag.create([{ name: data.name, userId }]);
+    if (data.interest) {
+      const isExistedInterest = await Interest.findOne({ name: data.interest });
+      if (!isExistedInterest)
+        NextResponse.json(
+          { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
+          { status: 400 }
+        );
+    }
+
+    const newTag = await Tag.create([
+      { name: data.name, interest: data.interest, userId },
+    ]);
     return NextResponse.json(newTag);
   } catch (err) {
     if (err instanceof Error) {
@@ -89,7 +100,10 @@ export async function PATCH(req: NextRequest) {
   }
 
   if (String(tag.userId) !== userId)
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.FORBIDDEN_NOT_ALLOW.ko },
+      { status: 403 }
+    );
 
   if (!body.name) {
     return NextResponse.json(
@@ -98,15 +112,34 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
+  if (body.interest) {
+    const isExistedInterest = Interest.findOne({ name: body.interest });
+    if (!isExistedInterest)
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
+        { status: 400 }
+      );
+  }
+
   try {
-    const updatedTag = await updateTagAndChecks(tagId, body.name.trim());
-    return NextResponse.json(updatedTag);
+    const updatedTag = await Tag.findByIdAndUpdate(
+      tagId,
+      { name: body.name, interest: body.interest },
+      { new: true }
+    );
+    if (!updatedTag)
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
+        { status: 404 }
+      );
+
+    return NextResponse.json(updatedTag, { status: 200 });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
     return NextResponse.json(
-      { error: '알 수 없는 오류가 발생했습니다' },
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 }
     );
   }
@@ -136,7 +169,10 @@ export async function DELETE(req: NextRequest) {
     );
   }
   if (String(tag.userId) !== userId)
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.FORBIDDEN_NOT_ALLOW.ko },
+      { status: 403 }
+    );
 
   try {
     const deletedTag = await deleteTagAndChecks(tagId);
@@ -152,7 +188,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
     return NextResponse.json(
-      { error: '알 수 없는 오류가 발생했습니다' },
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 }
     );
   }

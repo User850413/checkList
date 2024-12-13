@@ -89,6 +89,18 @@ const ERROR_MESSAGES = {
   UPDATE_FAILED: {
     ko: '업데이트에 실패하였습니다',
   },
+  NOT_FOUND_INTEREST: {
+    ko: '존재하지 않는 관심사 명입니다',
+  },
+  EMPTY_INTEREST_NAME: {
+    ko: '관심사 명은 1자 이상이어야 합니다',
+  },
+  EXISTED_INTEREST_NAME: {
+    ko: '이미 존재하는 관심사 명 입니다',
+  },
+  FORBIDDEN_NOT_ALLOW: {
+    ko: '권한이 없습니다.',
+  },
 };
 
 export default ERROR_MESSAGES;

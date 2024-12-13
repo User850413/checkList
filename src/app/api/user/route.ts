@@ -9,6 +9,7 @@ export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
+    // NOTE: 페이지네이션 로직
     const rawPage = parseInt(req.nextUrl?.searchParams.get('page') ?? '1', 10);
     const rawLimit = parseInt(
       req.nextUrl?.searchParams.get('limit') ?? '10',
@@ -26,6 +27,7 @@ export async function GET(req: NextRequest) {
     const limit = !rawLimit || rawLimit < 1 || rawLimit > 100 ? 10 : rawLimit;
     const skip = (page - 1) * limit;
 
+    // 전체 유저 불러오기
     const userList: UserType[] = await User.find()
       .select('username createdAt updatedAt profileUrl')
       .skip(skip)

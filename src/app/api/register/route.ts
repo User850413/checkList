@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import User from '@/app/lib/db/models/users';
 import mongoose from 'mongoose';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
+import { createUserDetail } from '@/app/services/user/createUserDetail';
 
 export async function POST(req: Request) {
   try {
@@ -43,6 +44,8 @@ export async function POST(req: Request) {
 
         const newUser = new User({ username, email, password });
         await newUser.save({ session });
+
+        await createUserDetail(newUser._id, session);
 
         return { username, email, id: newUser._id };
       });
