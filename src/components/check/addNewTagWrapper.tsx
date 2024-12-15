@@ -5,7 +5,7 @@ import { TagInput } from './tagInput';
 import { useState } from 'react';
 import StyledButton from '../common/styledButton';
 
-export default function AddNewTag() {
+export default function AddNewTagWrapper() {
   const [addTag, setAddTag] = useState<boolean>(false);
 
   const onCancelEdit = () => {

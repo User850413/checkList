@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import CheckList from './checkList';
 import { getMyTags } from '@/app/services/api/tags';
-import AddNewTag from './addNewTag';
+import AddNewTagWrapper from './addNewTagWrapper';
 import { useEffect, useState } from 'react';
 import { Tag } from '@/types/tag';
 
@@ -40,7 +40,7 @@ export default function CheckListWrapper() {
             </li>
           ))}
         <li>
-          <AddNewTag />
+          <AddNewTagWrapper />
         </li>
       </ul>
     </div>
