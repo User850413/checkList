@@ -5,7 +5,7 @@ import { interest } from '@/types/interest';
 
 export async function getAllInterest() {
   try {
-    const res = await apiClient.get('/api/interest');
+    const res = await apiClient.get('/interests');
 
     return res.data as interest[];
   } catch (err) {
