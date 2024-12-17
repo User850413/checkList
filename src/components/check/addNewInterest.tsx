@@ -1,17 +1,52 @@
 'use client';
+import { getAllInterest } from '@/app/services/api/interests';
 import { Input } from '@chakra-ui/react';
+import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import Image from 'next/image';
-import { useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 
 export default function AddNewInterest() {
   const [addStart, setAddStart] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>('');
+
   const plusButton = `${process.env.PUBLIC_URL || ''}/icons/plus-round.svg`;
   const closeButton = `${process.env.PUBLIC_URL || ''}/icons/x-round.svg`;
 
-  //   const onClickTest = () => {
-  //     console.log('clicked!');
-  //   };
+  const inputInterestRef = useRef<null | HTMLInputElement>(null);
+
+  const { mutate: getInterestMutate } = useMutation({
+    mutationFn: () => getAllInterest(),
+    mutationKey: ['interests'],
+    onError: (err) => console.error(err.message),
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
+
+  const onClickTest = async () => {
+    console.log('clicked!');
+    getInterestMutate();
+  };
+
+  const onChangeInterestInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  function debounce<T extends () => void>(func: T) {
+    let timer: NodeJS.Timeout | null = null;
+
+    return function (this: ThisParameterType<T>, ...args: Parameters<T>): void {
+      if (timer) {
+        clearTimeout(timer);
+      }
+
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, 1000);
+    };
+  }
+  const clickDebounce = debounce(() => onClickTest());
 
   return (
     <>
@@ -47,8 +82,13 @@ export default function AddNewInterest() {
             />
           </button>
         </div>
-        <Input type="text" variant="subtle" />
-        {/* <button onClick={onClickTest}>관심사 불러오기 버튼</button> */}
+        <Input
+          type="text"
+          variant="subtle"
+          ref={inputInterestRef}
+          onChange={onChangeInterestInput}
+        />
+        <button onClick={clickDebounce}>관심사 불러오기 버튼</button>
       </div>
     </>
   );
