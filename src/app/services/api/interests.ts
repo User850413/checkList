@@ -7,7 +7,7 @@ export async function getAllInterest() {
   try {
     const res = await apiClient.get('/interests');
 
-    return res.data as interest[];
+    return res.data;
   } catch (err) {
     if (err instanceof Error)
       return NextResponse.json({ error: err.message }, { status: 500 });
@@ -19,7 +19,7 @@ export async function getAllInterest() {
   }
 }
 
-export async function postInterest({ name }: interest) {
+export async function postInterest({ name }: Pick<interest, 'name'>) {
   try {
     const trimmedName = name.trim();
 
@@ -27,7 +27,7 @@ export async function postInterest({ name }: interest) {
     if (trimmedName.length > 10)
       throw new Error('관심사 명 최대길이는 15자 입니다');
 
-    const res = await apiClient.post('/interest', { name: trimmedName });
+    const res = await apiClient.post('/interests', { name: trimmedName });
     return res.data;
   } catch (err) {
     if (err instanceof Error)
