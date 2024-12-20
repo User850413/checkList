@@ -4,19 +4,14 @@ import { useAutoComplete } from './autoCompleteContext';
 import { useEffect, useState } from 'react';
 
 export default function AutoComplete() {
-  const { suggestions, isBlur, setSelectedOption, selectedOption } =
-    useAutoComplete();
+  const { suggestions, isBlur, setSelectedOption } = useAutoComplete();
 
   const [isOpen, setIsOpen] = useState<boolean>(!isBlur);
   const handleOptionClick = (e: React.MouseEvent, id: number | string) => {
-    console.log('handleOptionClick clicked');
     e.stopPropagation();
-    console.log(`selectedId :${id}`);
     const selectedName = suggestions.find((suggestion) => suggestion.id === id);
-    console.log(selectedName);
     if (selectedName) {
       setSelectedOption(selectedName.option);
-      console.log(`selected option : ${selectedOption}`);
     } else {
       throw new Error('존재하지 않는 항목입니다.');
     }

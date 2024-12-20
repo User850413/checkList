@@ -20,11 +20,8 @@ export default function InputWithAutoComplete(
     const relatedTarget = e.relatedTarget as HTMLElement;
     if (relatedTarget && relatedTarget.closest('.auto-complete')) {
       e.preventDefault();
-      //   setInputValue(selectedOption);
-      //    if (inputRef.current) inputRef.current.focus();
       return;
     }
-    console.log('Input blurred!');
     setIsBlur(true);
   };
 
