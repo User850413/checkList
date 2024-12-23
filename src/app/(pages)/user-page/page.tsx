@@ -1,6 +1,7 @@
 'use client';
 
-import { getMyData, userLogout } from '@/app/services/api/user';
+import { userLogout } from '@/app/services/api/register';
+import { getMyData } from '@/app/services/api/user';
 import AddNewInterest from '@/components/check/addNewInterest';
 import StyledButton from '@/components/common/styledButton';
 import FieldButton from '@/components/layout/fieldButton';
@@ -20,12 +21,19 @@ export default function UserPage() {
     queryFn: () => getMyData(),
   });
 
+  // NOTE : 로그아웃 로직
   const { mutate: logoutMutation } = useMutation({
     mutationFn: () => userLogout(),
     mutationKey: ['user'],
     onSuccess: () => route.push('/login?loggedOut=true'),
     onError: () => console.log('error'),
   });
+
+  // NOTE : userDetail 불러오기
+  // const { mutate: getUserDetailmutation } = useMutation({
+  //   mutationFn: () => {}
+  //   mutationKey: ['userDetail'],
+  // });
 
   const onClickLogout = () => {
     logoutMutation();
