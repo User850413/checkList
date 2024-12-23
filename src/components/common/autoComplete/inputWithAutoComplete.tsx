@@ -1,19 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { InputHTMLAttributes, useEffect, useRef } from 'react';
 import { useAutoComplete } from './autoCompleteContext';
+import { Input } from '@chakra-ui/react';
 
-export default function InputWithAutoComplete(
-  props: React.InputHTMLAttributes<HTMLInputElement>
-) {
-  const [inputValue, setInputValue] = useState('');
+type CustomInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '2xs' | 'xs';
+};
+
+function InputWithAutoComplete(props: CustomInputProps) {
   const { selectedOption, setIsBlur } = useAutoComplete();
   const inputRef = useRef<null | HTMLInputElement>(null);
 
-  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
   useEffect(() => {
-    setInputValue(selectedOption);
+    if (inputRef.current) inputRef.current.value = selectedOption;
   }, [selectedOption]);
 
   const handleBlur = (e: React.FocusEvent) => {
@@ -26,14 +24,15 @@ export default function InputWithAutoComplete(
   };
 
   return (
-    <input
+    <Input
       type="text"
-      value={inputValue}
-      onChange={onChangeInput}
       ref={inputRef}
       onFocus={() => setIsBlur(false)}
       onBlur={handleBlur}
       {...props}
+      id="inputWithAutoComplete"
     />
   );
 }
+
+export default InputWithAutoComplete;
