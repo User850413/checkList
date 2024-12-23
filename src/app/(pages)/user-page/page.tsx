@@ -102,7 +102,7 @@ export default function UserPage() {
                     myDetailData.interest.length > 0 && (
                       <>
                         <span className="text-sm">
-                          {data.username}님이 관심 있어하는 분야
+                          {myData.username}님이 관심 있어하는 분야
                         </span>
                         <ul className="flex gap-1">
                           {myDetailData.interest.map((field, index) => (
