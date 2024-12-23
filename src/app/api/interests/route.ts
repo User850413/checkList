@@ -11,6 +11,16 @@ export async function GET(req: NextRequest) {
       req.nextUrl?.searchParams.get('limit') ?? '10',
       10
     );
+    const word = decodeURIComponent(
+      req.nextUrl.searchParams.get('word') || ''
+    ).toString();
+
+    if (word) {
+      const interestList = await Interest.find({
+        name: { $regex: new RegExp(word, 'i') },
+      }).select('name');
+      return NextResponse.json({ data: interestList });
+    }
 
     if (Number.isNaN(rawPage) || Number.isNaN(rawLimit)) {
       return NextResponse.json(

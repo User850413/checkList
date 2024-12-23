@@ -1,6 +1,7 @@
 'use client';
 
 import { getMyData, userLogout } from '@/app/services/api/user';
+import AddNewInterest from '@/components/check/addNewInterest';
 import StyledButton from '@/components/common/styledButton';
 import FieldButton from '@/components/layout/fieldButton';
 import Header from '@/components/layout/header';
@@ -47,7 +48,7 @@ export default function UserPage() {
   return (
     <>
       <Header />
-      <main className="bg-white shadow-card rounded-lg mx-14 p-6 mt-14 flex gap-8 items-center">
+      <header className="bg-white shadow-card rounded-lg mx-14 p-6 mt-14 flex gap-8 items-center">
         {myData && (
           <>
             <Profile
@@ -99,6 +100,9 @@ export default function UserPage() {
             </div>
           </>
         )}
+      </header>
+      <main>
+        <AddNewInterest />
       </main>
     </>
   );
