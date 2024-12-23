@@ -27,3 +27,16 @@ export async function getMyData() {
     throw new Error(ERROR_MESSAGES.SERVER_ERROR.ko);
   }
 }
+
+// 내 디테일 데이터 불러오기
+export async function getMyDetailData() {
+  try {
+    const res = await apiClient.get('/user/mine/detail');
+    return res.data;
+  } catch (err) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
+    throw new Error(ERROR_MESSAGES.SERVER_ERROR.ko);
+  }
+}
