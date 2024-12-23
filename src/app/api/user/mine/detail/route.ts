@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
         { status: 404 }
       );
 
-    return NextResponse.json({ userDetail }, { status: 200 });
+    return NextResponse.json({ data: userDetail }, { status: 200 });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });

@@ -1,25 +1,46 @@
 'use client';
 
-import { getMyData, userLogout } from '@/app/services/api/user';
+import { userLogout } from '@/app/services/api/register';
+import { getMyData, getMyDetailData } from '@/app/services/api/user';
 import AddNewInterest from '@/components/check/addNewInterest';
 import StyledButton from '@/components/common/styledButton';
 import FieldButton from '@/components/layout/fieldButton';
 import Header from '@/components/layout/header';
 import Profile from '@/components/layout/profile';
-import { User } from '@/types/user';
+import { User, UserDetail } from '@/types/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function UserPage() {
   const [myData, setMyData] = useState<User | undefined>();
+  const [myDetailData, setMyDetailData] = useState<UserDetail>({
+    bio: '',
+    interest: [],
+  });
   const route = useRouter();
 
-  const { data, isLoading, isError } = useQuery({
+  // NOTE : 내 데이터
+  const {
+    data,
+    isLoading: dataLoading,
+    isError: dataError,
+  } = useQuery({
     queryKey: ['user'],
     queryFn: () => getMyData(),
   });
 
+  // NOTE : 내 디테일 데이터
+  const {
+    data: detailData,
+    isLoading: detailDataLoading,
+    isError: detailDataError,
+  } = useQuery({
+    queryKey: ['userDetail'],
+    queryFn: () => getMyDetailData(),
+  });
+
+  // NOTE : 로그아웃 로직
   const { mutate: logoutMutation } = useMutation({
     mutationFn: () => userLogout(),
     mutationKey: ['user'],
@@ -31,19 +52,25 @@ export default function UserPage() {
     logoutMutation();
   };
 
-  const fieldList = [
-    { fieldName: '건강', fieldIcon: '💪' },
-    { fieldName: '취미', fieldIcon: '✨' },
-    { fieldName: '음식', fieldIcon: '🍚' },
-    { fieldName: '여가', fieldIcon: '🎉' },
-  ];
-
+  // NOTE : 내 데이터
   useEffect(() => {
     if (data) setMyData(data.user);
   }, [data]);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error</div>;
+  // NOTE : 내 디테일 데이터
+  useEffect(() => {
+    if (detailData) {
+      setMyDetailData(() => ({
+        ...detailData,
+        bio: !detailData.bio
+          ? '아직 작성되지 않았습니다. 한 마디 남겨주세요!'
+          : detailData.bio,
+      }));
+    }
+  }, [detailData]);
+
+  if (dataLoading && detailDataLoading) return <div>Loading...</div>;
+  if (dataError && detailDataError) return <div>Error</div>;
 
   return (
     <>
@@ -63,28 +90,29 @@ export default function UserPage() {
               </h1>
               <div className="bg-slate-100 w-full p-4 rounded-md">
                 <h2 className="font-semibold text-base">한 마디 🎤</h2>
-                <span className="text-sm text-pretty">
-                  열심히 하겠습니다! 열심히 하겠습니다! 열심히 하겠습니다!
-                  열심히 하겠습니다! 열심히 하겠습니다! 열심히 하겠습니다!
-                  열심히 하겠습니다! 열심히 하겠습니다! 열심히 하겠습니다!
-                  열심히 하겠습니다! 열심히 하겠습니다!
-                </span>
+                {myDetailData.bio && (
+                  <span className="text-sm text-pretty">
+                    {myDetailData.bio}
+                  </span>
+                )}
               </div>
               <div className="flex items-end justify-between w-full">
                 <div className="flex flex-col gap-2">
-                  <span className="text-sm">
-                    {data.username}님이 관심 있어하는 분야
-                  </span>
-                  <ul className="flex gap-1">
-                    {fieldList.map((field, index) => (
-                      <li key={index}>
-                        <FieldButton
-                          fieldName={field.fieldName}
-                          fieldIcon={field.fieldIcon}
-                        />
-                      </li>
-                    ))}
-                  </ul>
+                  {myDetailData.interest &&
+                    myDetailData.interest.length > 0 && (
+                      <>
+                        <span className="text-sm">
+                          {myData.username}님이 관심 있어하는 분야
+                        </span>
+                        <ul className="flex gap-1">
+                          {myDetailData.interest.map((field, index) => (
+                            <li key={index}>
+                              <FieldButton fieldName={field} />
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
                 </div>
                 <div className="flex items-center gap-2">
                   <StyledButton size={'sm'}>수정</StyledButton>
