@@ -42,7 +42,7 @@ export async function postInterest({ name }: Pick<interest, 'name'>) {
     const trimmedName = name.trim();
 
     if (!trimmedName) throw new Error(ERROR_MESSAGES.EMPTY_INTEREST_NAME.ko);
-    if (trimmedName.length > 10)
+    if (trimmedName.length > 15)
       throw new Error('관심사 명 최대길이는 15자 입니다');
 
     const res = await apiClient.post('/interests', { name: trimmedName });
