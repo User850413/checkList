@@ -16,7 +16,7 @@ function InputWithAutoComplete(props: CustomInputProps) {
 
   const handleBlur = (e: React.FocusEvent) => {
     const relatedTarget = e.relatedTarget as HTMLElement;
-    if (relatedTarget && relatedTarget.closest('.auto-complete')) {
+    if (relatedTarget?.closest('.auto-complete')) {
       e.preventDefault();
       return;
     }

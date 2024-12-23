@@ -22,6 +22,7 @@ export async function getAllInterest() {
 export async function getWordInterest({ word }: { word: string }) {
   try {
     const trimmedWord = word.trim();
+    if (!trimmedWord) return;
     const res = await apiClient.get(`/interests?word=${trimmedWord}`);
 
     return res.data;

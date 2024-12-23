@@ -30,6 +30,7 @@ export default function AddNewInterest() {
     mutationKey: ['interests'],
     onError: (err) => console.error(err.message),
     onSuccess: (data: interestResponse) => {
+      if (!data) return;
       //NOTE :interest[] -> OptionsType[] 변환
       const mappedData = data.data.map(({ _id, name }) => ({
         id: _id,
