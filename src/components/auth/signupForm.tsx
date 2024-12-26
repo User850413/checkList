@@ -9,6 +9,33 @@ import { useMutation } from '@tanstack/react-query';
 import { UserInput } from '@/types/user';
 import { userRegister } from '@/app/services/api/register';
 
+export const labels = {
+  email: {
+    type: 'email',
+    en: 'email',
+    ko: '이메일',
+    ariaLabel: '이메일 입력',
+  },
+  password: {
+    type: 'password',
+    en: 'password',
+    ko: '비밀번호',
+    ariaLabel: '비밀번호 입력',
+  },
+  passwordCheck: {
+    type: 'password',
+    en: 'password check',
+    ko: '비밀번호 확인',
+    ariaLabel: '비밀번호 확인 입력',
+  },
+  username: {
+    type: 'text',
+    en: 'username',
+    ko: '닉네임',
+    ariaLabel: '닉네임 입력',
+  },
+} as const;
+
 interface SignupFormState {
   username: string;
   email: string;
@@ -143,7 +170,7 @@ export default function SignupForm() {
         noValidate
       >
         <InputBox
-          fieldType="email"
+          label={labels.email}
           setKeyValue={(email) => setKeyValue('email', email)}
           required
           isError={error.email}
@@ -151,7 +178,7 @@ export default function SignupForm() {
           inputValue={inputValue.email}
         />
         <InputBox
-          fieldType="password"
+          label={labels.password}
           setKeyValue={(password) => setKeyValue('password', password)}
           required
           isError={error.password}
@@ -159,7 +186,7 @@ export default function SignupForm() {
           inputValue={inputValue.password}
         />
         <InputBox
-          fieldType="passwordCheck"
+          label={labels.passwordCheck}
           setKeyValue={(passwordCheck) =>
             setKeyValue('passwordCheck', passwordCheck)
           }
@@ -169,7 +196,7 @@ export default function SignupForm() {
           inputValue={inputValue.passwordCheck}
         />
         <InputBox
-          fieldType="username"
+          label={labels.username}
           setKeyValue={(username) => setKeyValue('username', username)}
           required
           maxLength={10}
