@@ -28,7 +28,49 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
     return NextResponse.json(
-      { error: ERROR_MESSAGES.TOKEN_ERROR.ko },
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  try {
+    await dbConnect();
+
+    const { userId, error } = getUserId(req);
+    if (!userId) return NextResponse.json({ error }, { status: 403 });
+
+    const data = await req.json();
+
+    if (data.username === '') {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.EMPTY_USERNAME.ko },
+        { status: 400 }
+      );
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        username: data.username,
+      },
+      { new: true }
+    );
+
+    if (!updatedUser)
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
+        { status: 404 }
+      );
+
+    return NextResponse.json(updatedUser, { status: 200 });
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 }
     );
   }
