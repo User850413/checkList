@@ -72,6 +72,11 @@ export default function UserPage() {
   if (dataLoading && detailDataLoading) return <div>Loading...</div>;
   if (dataError && detailDataError) return <div>Error</div>;
 
+  // NOTE : 수정 페이지로 이동
+  const onClickEditButton = () => {
+    route.push('/user-page/edit');
+  };
+
   return (
     <>
       <Header />
@@ -115,7 +120,9 @@ export default function UserPage() {
                     )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <StyledButton size={'sm'}>수정</StyledButton>
+                  <StyledButton size={'sm'} onClick={onClickEditButton}>
+                    수정
+                  </StyledButton>
                   <StyledButton
                     color="dark"
                     size={'sm'}
