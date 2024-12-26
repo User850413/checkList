@@ -7,6 +7,7 @@ import {
   getMyData,
   getMyDetailData,
   patchMyData,
+  patchMyDetailData,
 } from '@/app/services/api/user';
 import StyledButton from '../common/styledButton';
 import InputBox from '../auth/inputBox';
@@ -70,7 +71,7 @@ export default function UserEditForm() {
     data,
     isLoading: dataLoading,
     isError: dataError,
-  } = useQuery({ queryKey: ['user'], queryFn: () => getMyData() });
+  } = useQuery({ queryKey: ['me'], queryFn: () => getMyData() });
   useEffect(() => {
     if (data) setMyData(data.user);
     if (myData) setUserDataState({ username: myData.username });
@@ -81,10 +82,14 @@ export default function UserEditForm() {
     data: detailData,
     isLoading: detailLoading,
     isError: detailError,
-  } = useQuery({ queryKey: ['userDetail'], queryFn: () => getMyDetailData() });
+  } = useQuery({
+    queryKey: ['me', 'detail'],
+    queryFn: () => getMyDetailData(),
+  });
   useEffect(() => {
     if (detailData) setMyDetailData(detailData.data);
-  }, [detailData]);
+    if (myDetailData) setUserDetailDataState({ bio: myDetailData.bio });
+  }, [detailData, myDetailData]);
 
   const onClickProfileImage = () => {
     console.log('profileImage clicked!');
@@ -99,6 +104,12 @@ export default function UserEditForm() {
   });
 
   // NOTE : UserDetail 데이터 업데이트
+  const { mutate: userDetailMutate } = useMutation({
+    mutationFn: ({ bio }: { bio: string }) => patchMyDetailData({ bio }),
+    mutationKey: ['me', 'detail'],
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['me', 'detail'] }),
+  });
 
   // NOTE : 확인 버튼 클릭 시
   const onClickSubmitButton = (e: React.FormEvent) => {
@@ -106,6 +117,7 @@ export default function UserEditForm() {
 
     if (!myData) return;
     userDataMutate({ username: userDataState.username });
+    userDetailMutate({ bio: userDetailDataState.bio });
 
     console.log(`username : ${myData?.username}`);
     console.log(`myDetailData : ${myDetailData?.bio}`);

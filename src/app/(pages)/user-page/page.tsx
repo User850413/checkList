@@ -29,6 +29,9 @@ export default function UserPage() {
     queryKey: ['me'],
     queryFn: () => getMyData(),
   });
+  useEffect(() => {
+    if (data) setMyData(data.user);
+  }, [data]);
 
   // NOTE : 내 디테일 데이터
   const {
@@ -36,9 +39,20 @@ export default function UserPage() {
     isLoading: detailDataLoading,
     isError: detailDataError,
   } = useQuery({
-    queryKey: ['userDetail'],
+    queryKey: ['me', 'detail'],
     queryFn: () => getMyDetailData(),
   });
+  useEffect(() => {
+    if (detailData) {
+      console.log(detailData.data);
+      setMyDetailData(() => ({
+        ...detailData.data,
+        bio: !detailData.data.bio
+          ? '아직 작성되지 않았습니다. 한 마디 남겨주세요!'
+          : detailData.data.bio,
+      }));
+    }
+  }, [detailData]);
 
   // NOTE : 로그아웃 로직
   const { mutate: logoutMutation } = useMutation({
@@ -51,23 +65,6 @@ export default function UserPage() {
   const onClickLogout = () => {
     logoutMutation();
   };
-
-  // NOTE : 내 데이터
-  useEffect(() => {
-    if (data) setMyData(data.user);
-  }, [data]);
-
-  // NOTE : 내 디테일 데이터
-  useEffect(() => {
-    if (detailData) {
-      setMyDetailData(() => ({
-        ...detailData,
-        bio: !detailData.bio
-          ? '아직 작성되지 않았습니다. 한 마디 남겨주세요!'
-          : detailData.bio,
-      }));
-    }
-  }, [detailData]);
 
   if (dataLoading && detailDataLoading) return <div>Loading...</div>;
   if (dataError && detailDataError) return <div>Error</div>;
