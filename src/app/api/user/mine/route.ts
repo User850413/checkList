@@ -34,6 +34,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// NOTE : 내 데이터 업데이트(username)
 export async function PATCH(req: NextRequest) {
   try {
     await dbConnect();

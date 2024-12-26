@@ -28,6 +28,19 @@ export async function getMyData() {
   }
 }
 
+// 내 데이터 업데이트(username)
+export async function patchMyData({ username }: { username: string }) {
+  try {
+    const res = await apiClient.patch('/user/mine', { username });
+    return res.data;
+  } catch (err) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
+    throw new Error(ERROR_MESSAGES.SERVER_ERROR.ko);
+  }
+}
+
 // 내 디테일 데이터 불러오기
 export async function getMyDetailData() {
   try {
