@@ -2,8 +2,12 @@ import { useRouter } from 'next/navigation';
 import Profile from '../layout/profile';
 import { useEffect, useState } from 'react';
 import { User, UserDetail } from '@/types/user';
-import { useQuery } from '@tanstack/react-query';
-import { getMyData, getMyDetailData } from '@/app/services/api/user';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  getMyData,
+  getMyDetailData,
+  patchMyData,
+} from '@/app/services/api/user';
 import StyledButton from '../common/styledButton';
 import InputBox from '../auth/inputBox';
 
@@ -33,9 +37,10 @@ interface UserDetailState {
 }
 
 export default function UserEditForm() {
+  const queryClient = useQueryClient();
+
   const [myData, setMyData] = useState<User | undefined>();
   const [myDetailData, setMyDetailData] = useState<UserDetail | undefined>();
-
   const [userDataState, setUserDataState] = useState<UserState>({
     username: '',
   });
@@ -85,8 +90,27 @@ export default function UserEditForm() {
     console.log('profileImage clicked!');
   };
 
-  // 확인 버튼 클릭 시
-  const onClickSubmitButton = () => {};
+  // NOTE : User 데이터 업데이트
+  const { mutate: userDataMutate } = useMutation({
+    mutationFn: ({ username }: { username: string }) =>
+      patchMyData({ username }),
+    mutationKey: ['me'],
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['me'] }),
+  });
+
+  // NOTE : UserDetail 데이터 업데이트
+
+  // NOTE : 확인 버튼 클릭 시
+  const onClickSubmitButton = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!myData) return;
+    userDataMutate({ username: userDataState.username });
+
+    console.log(`username : ${myData?.username}`);
+    console.log(`myDetailData : ${myDetailData?.bio}`);
+    route.push('/user-page');
+  };
 
   // NOTE : 취소 버튼 클릭 시
   const onClickCancelButton = () => {
@@ -109,7 +133,10 @@ export default function UserEditForm() {
           />
         )}
       </span>
-      <form className="bg-white max-w-[800px] px-10 pt-24 pb-5 -mt-16 rounded-lg shadow-card mx-auto flex flex-col gap-5">
+      <form
+        className="bg-white max-w-[800px] px-10 pt-24 pb-5 -mt-16 rounded-lg shadow-card mx-auto flex flex-col gap-5"
+        onSubmit={onClickSubmitButton}
+      >
         <InputBox
           inputValue={userDataState.username}
           label={labels.username}
@@ -124,9 +151,7 @@ export default function UserEditForm() {
 
         <span>관심사 수정</span>
         <div className="w-fit mx-auto flex gap-2">
-          <StyledButton type="submit" onClick={onClickSubmitButton}>
-            확인
-          </StyledButton>
+          <StyledButton type="submit">확인</StyledButton>
           <StyledButton type="button" color="red" onClick={onClickCancelButton}>
             취소
           </StyledButton>

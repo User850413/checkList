@@ -26,7 +26,7 @@ export default function UserPage() {
     isLoading: dataLoading,
     isError: dataError,
   } = useQuery({
-    queryKey: ['user'],
+    queryKey: ['me'],
     queryFn: () => getMyData(),
   });
 
@@ -43,7 +43,7 @@ export default function UserPage() {
   // NOTE : 로그아웃 로직
   const { mutate: logoutMutation } = useMutation({
     mutationFn: () => userLogout(),
-    mutationKey: ['user'],
+    mutationKey: ['me'],
     onSuccess: () => route.push('/login?loggedOut=true'),
     onError: () => console.log('error'),
   });
