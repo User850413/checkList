@@ -38,14 +38,17 @@ interface UserState {
 // UserDetail 데이터 타입
 interface UserDetailState {
   bio: string;
-  interest: interest[];
+  interest: Pick<interest, 'name'>[];
 }
 
 export default function UserEditForm() {
   const queryClient = useQueryClient();
 
+  // NOTE : 불러온 데이터 관리
   const [myData, setMyData] = useState<User | undefined>();
   const [myDetailData, setMyDetailData] = useState<UserDetail | undefined>();
+
+  // NOTE : 업데이트된 데이터 관리
   const [userDataState, setUserDataState] = useState<UserState>({
     username: '',
   });
@@ -122,6 +125,16 @@ export default function UserEditForm() {
       queryClient.invalidateQueries({ queryKey: ['me', 'detail'] }),
   });
 
+  // interest 데이터 다루기
+  const handleInterestData = (value: string) => {
+    setUserDetailDataState((prev) => {
+      const addNewInterest = [{ name: value }, ...prev.interest];
+      const newInterest = Array.from(new Set(addNewInterest)) as interest[];
+      return { bio: prev.bio, interest: newInterest };
+    });
+    console.log(userDetailDataState);
+  };
+
   // NOTE : 확인 버튼 클릭 시
   const onClickSubmitButton = (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,7 +207,7 @@ export default function UserEditForm() {
           </div>
           <div className="flex flex-col gap-2 flex-1">
             <span className="text-sm cursor-default">새 관심사 추가</span>
-            <AddNewInterest />
+            <AddNewInterest onSubmit={handleInterestData} />
           </div>
         </div>
         <div className="w-fit mx-auto flex gap-2">

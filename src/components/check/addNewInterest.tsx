@@ -13,10 +13,10 @@ import AutoComplete from '../common/autoComplete/autoComplete';
 import debounce from '@/app/utils/debounce';
 
 interface AddNewInterestProps {
-  onEntered?: () => void;
+  onSubmit: (value: string) => void;
 }
 
-export default function AddNewInterest({ onEntered }: AddNewInterestProps) {
+export default function AddNewInterest({ onSubmit }: AddNewInterestProps) {
   const [inputValue, setInputValue] = useState<string>('');
 
   const [autoCompleteValue, setAutoCompleteValue] = useState<OptionsType[]>([]);
@@ -38,15 +38,18 @@ export default function AddNewInterest({ onEntered }: AddNewInterestProps) {
     },
   });
 
-  // NOTE : form 제출
-  // const submitInterest = (e: React.FormEvent) => {
-  //   e.preventDefault();
+  const submitFunc = () => {
+    onSubmit(inputValue);
+  };
 
-  //   const form = e.currentTarget as HTMLFormElement;
-  //   const formData = new FormData(form);
-
-  //   console.log(formData.get('inputValue'));
-  // };
+  // NOTE : enter 누를 시 onSubmit function 시행
+  const handleEnterInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (!inputValue) return;
+      submitFunc();
+    }
+  };
 
   // NOTE : interest 추가 input onChange function
   const onChangeInterestInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,13 +61,19 @@ export default function AddNewInterest({ onEntered }: AddNewInterestProps) {
     <>
       <div className="w-full flex gap-2">
         <AutoCompleteProvider suggestions={autoCompleteValue}>
-          <InputWithAutoComplete
-            className="bg-slate-100 p-1"
-            onChange={onChangeInterestInput}
-            name="inputValue"
-          />
-          <AutoComplete />
-          <StyledButton type="submit">추가</StyledButton>
+          <div className="w-full relative">
+            <InputWithAutoComplete
+              className="bg-slate-100 p-1"
+              onChange={onChangeInterestInput}
+              name="inputValue"
+              onKeyDown={handleEnterInput}
+              handleChangedValue={setInputValue}
+            />
+            <AutoComplete />
+          </div>
+          <StyledButton type="button" onClick={submitFunc}>
+            추가
+          </StyledButton>
         </AutoCompleteProvider>
       </div>
     </>
