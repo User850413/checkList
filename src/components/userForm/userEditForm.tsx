@@ -11,6 +11,9 @@ import {
 } from '@/app/services/api/user';
 import StyledButton from '../common/styledButton';
 import InputBox from '../auth/inputBox';
+import FieldButton from '../layout/fieldButton';
+import { interest } from '@/types/interest';
+import AddNewInterest from '../check/addNewInterest';
 
 const labels = {
   username: {
@@ -35,6 +38,7 @@ interface UserState {
 // UserDetail 데이터 타입
 interface UserDetailState {
   bio: string;
+  interest: interest[];
 }
 
 export default function UserEditForm() {
@@ -46,7 +50,7 @@ export default function UserEditForm() {
     username: '',
   });
   const [userDetailDataState, setUserDetailDataState] =
-    useState<UserDetailState>({ bio: '' });
+    useState<UserDetailState>({ bio: '', interest: [] });
 
   const route = useRouter();
 
@@ -87,8 +91,15 @@ export default function UserEditForm() {
     queryFn: () => getMyDetailData(),
   });
   useEffect(() => {
-    if (detailData) setMyDetailData(detailData.data);
-    if (myDetailData) setUserDetailDataState({ bio: myDetailData.bio });
+    if (detailData) {
+      setMyDetailData(detailData.data);
+      console.log(detailData.data.interest);
+    }
+    if (myDetailData)
+      setUserDetailDataState({
+        bio: myDetailData.bio,
+        interest: myDetailData.interest,
+      });
   }, [detailData, myDetailData]);
 
   const onClickProfileImage = () => {
@@ -119,8 +130,6 @@ export default function UserEditForm() {
     userDataMutate({ username: userDataState.username });
     userDetailMutate({ bio: userDetailDataState.bio });
 
-    console.log(`username : ${myData?.username}`);
-    console.log(`myDetailData : ${myDetailData?.bio}`);
     route.push('/user-page');
   };
 
@@ -161,7 +170,21 @@ export default function UserEditForm() {
           setKeyValue={(bio) => setUserDetailKeyValue('bio', bio)}
         />
 
-        <span>관심사 수정</span>
+        <div className="flex flex-col items-start gap-2">
+          <span>내 관심사</span>
+          <div className="bg-slate-100 min-h-12 w-full rounded-lg">
+            <AddNewInterest />
+            <ul className="flex gap-3">
+              {myDetailData &&
+                myDetailData.interest.length > 0 &&
+                myDetailData?.interest.map((item) => (
+                  <li key={item._id}>
+                    <FieldButton fieldName={item.name} deletable />
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </div>
         <div className="w-fit mx-auto flex gap-2">
           <StyledButton type="submit">확인</StyledButton>
           <StyledButton type="button" color="red" onClick={onClickCancelButton}>

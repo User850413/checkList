@@ -72,6 +72,7 @@ export default function AddNewInterest() {
           hidden: addStart,
           block: !addStart,
         })}
+        type="button"
         onClick={() => setAddStart(true)}
       >
         <Image fill objectFit="cover" src={plusButton} alt="관심사 추가" />

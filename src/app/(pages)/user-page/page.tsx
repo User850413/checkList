@@ -107,9 +107,9 @@ export default function UserPage() {
                           {myData.username}님이 관심 있어하는 분야
                         </span>
                         <ul className="flex gap-1">
-                          {myDetailData.interest.map((field, index) => (
-                            <li key={index}>
-                              <FieldButton fieldName={field} />
+                          {myDetailData.interest.map((field) => (
+                            <li key={field._id}>
+                              <FieldButton fieldName={field.name} size="lg" />
                             </li>
                           ))}
                         </ul>
