@@ -8,6 +8,6 @@ export default function debounce<T extends () => void>(func: T) {
 
     timer = setTimeout(() => {
       func.apply(this, args);
-    }, 1500);
+    }, 1000);
   };
 }

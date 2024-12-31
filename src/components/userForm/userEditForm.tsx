@@ -126,6 +126,10 @@ export default function UserEditForm() {
   const onClickSubmitButton = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const form = e.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+    console.log(formData.get('inputValue'));
+
     if (!myData) return;
     userDataMutate({ username: userDataState.username });
     userDetailMutate({ bio: userDetailDataState.bio });
@@ -169,20 +173,28 @@ export default function UserEditForm() {
           label={labels.bio}
           setKeyValue={(bio) => setUserDetailKeyValue('bio', bio)}
         />
+        <div className="flex items-center w-full gap-5">
+          <div className="flex flex-col items-start gap-2 flex-1">
+            <span className="text-sm cursor-default">내 관심사</span>
 
-        <div className="flex flex-col items-start gap-2">
-          <span>내 관심사</span>
-          <div className="bg-slate-100 min-h-12 w-full rounded-lg">
-            <AddNewInterest />
-            <ul className="flex gap-3">
-              {myDetailData &&
-                myDetailData.interest.length > 0 &&
-                myDetailData?.interest.map((item) => (
+            {myDetailData && myDetailData.interest.length > 0 && (
+              <ul className="flex gap-3 bg-slate-100 min-h-12 w-full rounded-lg">
+                {myDetailData?.interest.map((item) => (
                   <li key={item._id}>
                     <FieldButton fieldName={item.name} deletable />
                   </li>
                 ))}
-            </ul>
+              </ul>
+            )}
+            {myDetailData && myDetailData.interest.length === 0 && (
+              <span className="text-xs w-full py-4 text-center cursor-default rounded-lg bg-slate-50">
+                추가된 관심사가 없습니다.
+              </span>
+            )}
+          </div>
+          <div className="flex flex-col gap-2 flex-1">
+            <span className="text-sm cursor-default">새 관심사 추가</span>
+            <AddNewInterest />
           </div>
         </div>
         <div className="w-fit mx-auto flex gap-2">
