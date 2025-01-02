@@ -53,7 +53,7 @@ export default function AddNewTagName({
         <Input
           onChange={onChangeInput}
           type="text"
-          className="flex w-full items-center bg-white"
+          className="flex w-full items-center bg-slate-100 px-1"
           ref={tagNameRef}
           value={tagNameValue}
         />

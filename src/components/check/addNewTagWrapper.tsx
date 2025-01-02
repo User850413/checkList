@@ -17,8 +17,10 @@ export default function AddNewTagWrapper() {
     <>
       <div
         className={clsx(
-          'flex flex-col gap-2 rounded-lg bg-slate-100 px-2 py-4',
-          { hidden: !addTag },
+          'flex flex-col gap-2 rounded-lg bg-white px-2 py-4 shadow-card',
+          {
+            hidden: !addTag,
+          },
         )}
       >
         <div className="flex items-center justify-between">

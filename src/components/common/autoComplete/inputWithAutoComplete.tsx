@@ -39,6 +39,7 @@ function InputWithAutoComplete({
       onBlur={handleBlur}
       {...rest}
       id="inputWithAutoComplete"
+      className="flex w-full items-center rounded-lg bg-slate-100 px-1"
     />
   );
 }

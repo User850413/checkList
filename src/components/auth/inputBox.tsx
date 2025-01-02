@@ -55,7 +55,7 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
             {...rest}
             ref={ref}
             onChange={(e) => handleInputChange(e)}
-            className={clsx('rounded-lg border-2', {
+            className={clsx('rounded-lg border-2 bg-slate-100 px-1', {
               'border-slate-100': !isError,
               'border-red-300': isError,
             })}
