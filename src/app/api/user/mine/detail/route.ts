@@ -3,6 +3,7 @@ import dbConnect from '@/app/lib/db/dbConnect';
 import Interest from '@/app/lib/db/models/interests';
 import UserDetail from '@/app/lib/db/models/userDetails';
 import { getUserId } from '@/app/services/token/getUserId';
+import { interest } from '@/types/interest';
 import { NextRequest, NextResponse } from 'next/server';
 
 // NOTE : accessToken의 userId로 내 userDetail 정보 불러오기
@@ -41,6 +42,7 @@ export async function PATCH(req: NextRequest) {
   try {
     await dbConnect();
     const body = await req.json();
+    const newInterest = [];
 
     // NOTE : 토큰 검증 및 userId 추출
     const { userId, error } = getUserId(req);
@@ -48,23 +50,33 @@ export async function PATCH(req: NextRequest) {
 
     // NOTE : 업데이트 body의 interest가 Interest 테이블에 존재하는지 검증
     if (body.interest) {
-      const interests = body.interest;
+      const interests: interest[] = body.interest;
 
       for (const interest of interests) {
-        const isExistedInterest = await Interest.findOne({ name: interest });
+        const isExistedInterest: interest | null = await Interest.findOne({
+          name: interest.name,
+        });
+
+        // NOTE : 없을 시 return
         if (!isExistedInterest) {
           return NextResponse.json(
             { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
             { status: 400 }
           );
         }
+
+        // NOTE : 존재할 시 그 interest의 id 추출
+        newInterest.push(isExistedInterest._id);
       }
     }
+
+    console.log('....new interest');
+    console.log(newInterest);
 
     const { bio, interest } = body;
     const updateData = {
       ...(bio !== undefined && { bio }),
-      ...(interest !== undefined && { interest }),
+      ...(interest !== undefined && { interest: newInterest }),
     };
 
     const updatedUserDetail = await UserDetail.findOneAndUpdate(

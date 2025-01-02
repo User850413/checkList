@@ -1,7 +1,7 @@
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import axios from 'axios';
 import apiClient from '../token/apiClient';
-import { UserDetail } from '@/types/user';
+import { UserDetailRequest } from '@/types/user';
 
 // 전체 유저 정보 불러오기
 export async function getAllUsers() {
@@ -58,7 +58,7 @@ export async function getMyDetailData() {
 }
 
 // 내 디테일 데이터 업데이트
-export async function patchMyDetailData(data: Partial<UserDetail>) {
+export async function patchMyDetailData(data: UserDetailRequest) {
   try {
     const res = await apiClient.patch('/user/mine/detail', data);
     return res.data;

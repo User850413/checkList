@@ -119,7 +119,13 @@ export default function UserEditForm() {
 
   // NOTE : UserDetail 데이터 업데이트
   const { mutate: userDetailMutate } = useMutation({
-    mutationFn: ({ bio }: { bio: string }) => patchMyDetailData({ bio }),
+    mutationFn: ({
+      bio,
+      interest,
+    }: {
+      bio: string;
+      interest: Pick<interest, 'name'>[];
+    }) => patchMyDetailData({ bio, interest }),
     mutationKey: ['me', 'detail'],
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ['me', 'detail'] }),
@@ -129,7 +135,11 @@ export default function UserEditForm() {
   const handleInterestData = (value: string) => {
     setUserDetailDataState((prev) => {
       const addNewInterest = [{ name: value }, ...prev.interest];
-      const newInterest = Array.from(new Set(addNewInterest)) as interest[];
+
+      // NOTE : 중복 삭제 로직
+      const newInterest = Array.from(
+        new Map(addNewInterest.map((item) => [item.name, item])).values()
+      ) as interest[];
       return { bio: prev.bio, interest: newInterest };
     });
     console.log(userDetailDataState);
@@ -145,7 +155,10 @@ export default function UserEditForm() {
 
     if (!myData) return;
     userDataMutate({ username: userDataState.username });
-    userDetailMutate({ bio: userDetailDataState.bio });
+    userDetailMutate({
+      bio: userDetailDataState.bio,
+      interest: userDetailDataState.interest,
+    });
 
     route.push('/user-page');
   };
@@ -186,24 +199,25 @@ export default function UserEditForm() {
           label={labels.bio}
           setKeyValue={(bio) => setUserDetailKeyValue('bio', bio)}
         />
-        <div className="flex items-center w-full gap-5">
+        <div className="flex items-start w-full gap-5">
           <div className="flex flex-col items-start gap-2 flex-1">
             <span className="text-sm cursor-default">내 관심사</span>
 
-            {myDetailData && myDetailData.interest.length > 0 && (
-              <ul className="flex gap-3 bg-slate-100 min-h-12 w-full rounded-lg">
-                {myDetailData?.interest.map((item) => (
-                  <li key={item._id}>
-                    <FieldButton fieldName={item.name} deletable />
+            {userDetailDataState && userDetailDataState.interest.length > 0 && (
+              <ul className="flex flex-col items-start gap-2 min-h-12 w-full rounded-lg">
+                {userDetailDataState.interest.map((item, index) => (
+                  <li key={index}>
+                    <FieldButton fieldName={item.name} size="md" deletable />
                   </li>
                 ))}
               </ul>
             )}
-            {myDetailData && myDetailData.interest.length === 0 && (
-              <span className="text-xs w-full py-4 text-center cursor-default rounded-lg bg-slate-50">
-                추가된 관심사가 없습니다.
-              </span>
-            )}
+            {userDetailDataState &&
+              userDetailDataState.interest.length === 0 && (
+                <span className="text-xs w-full py-4 text-center cursor-default rounded-lg bg-slate-50">
+                  추가된 관심사가 없습니다.
+                </span>
+              )}
           </div>
           <div className="flex flex-col gap-2 flex-1">
             <span className="text-sm cursor-default">새 관심사 추가</span>

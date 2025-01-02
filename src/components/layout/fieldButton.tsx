@@ -28,6 +28,7 @@ export default function FieldButton({
           'text-lg px-4 py-2': size == 'lg',
         }
       )}
+      type="button"
     >
       <span>{fieldName}</span>
       {deletable && (

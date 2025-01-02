@@ -25,3 +25,8 @@ export interface UserDetail {
   bio: string;
   interest: interest[];
 }
+
+export interface UserDetailRequest {
+  bio: string;
+  interest: { [name: string]: string }[];
+}
