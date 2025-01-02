@@ -189,7 +189,7 @@ export default function UserEditForm() {
         )}
       </span>
       <form
-        className="bg-white max-w-[800px] px-10 pt-24 pb-5 -mt-16 rounded-lg shadow-card mx-auto flex flex-col gap-5"
+        className="bg-white w-[800px] px-10 pt-24 pb-5 -mt-16 rounded-lg shadow-card mx-auto flex flex-col gap-5"
         onSubmit={onClickSubmitButton}
       >
         <InputBox

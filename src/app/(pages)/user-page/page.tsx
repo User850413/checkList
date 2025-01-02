@@ -75,7 +75,7 @@ export default function UserPage() {
   return (
     <>
       <Header />
-      <header className="bg-white shadow-card rounded-lg mx-14 p-6 mt-14 flex gap-8 items-center">
+      <header className="bg-white shadow-card rounded-lg mx-14 p-6 mt-14 flex gap-8 items-center min-w-[800px]">
         {myData && (
           <>
             <Profile
@@ -97,14 +97,14 @@ export default function UserPage() {
                 )}
               </div>
               <div className="flex items-end justify-between w-full">
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col items-start gap-2">
                   {myDetailData.interest &&
                     myDetailData.interest.length > 0 && (
                       <>
                         <span className="text-sm">
                           {myData.username}님이 관심 있어하는 분야
                         </span>
-                        <ul className="flex gap-1">
+                        <ul className="grid grid-cols-6 lg:grid-cols-8 gap-1">
                           {myDetailData.interest.map((field) => (
                             <li key={field._id}>
                               <FieldButton fieldName={field.name} size="md" />
