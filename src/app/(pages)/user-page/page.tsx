@@ -43,7 +43,6 @@ export default function UserPage() {
   });
   useEffect(() => {
     if (detailData) {
-      console.log(detailData.data);
       setMyDetailData(() => ({
         ...detailData.data,
         bio: !detailData.data.bio

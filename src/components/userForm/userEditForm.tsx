@@ -96,7 +96,6 @@ export default function UserEditForm() {
   useEffect(() => {
     if (detailData) {
       setMyDetailData(detailData.data);
-      console.log(detailData.data.interest);
     }
     if (myDetailData)
       setUserDetailDataState({

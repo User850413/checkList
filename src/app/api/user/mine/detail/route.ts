@@ -88,9 +88,6 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    console.log('....new interest');
-    console.log(newInterest);
-
     const { bio, interest } = body;
     const updateData = {
       ...(bio !== undefined && { bio }),
