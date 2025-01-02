@@ -6,7 +6,6 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import User from '@/app/lib/db/models/users';
 
-
 // NOTE: 전체 유저 불러오는 엔드포인트
 export async function GET(req: NextRequest) {
   try {
@@ -16,13 +15,13 @@ export async function GET(req: NextRequest) {
     const rawPage = parseInt(req.nextUrl?.searchParams.get('page') ?? '1', 10);
     const rawLimit = parseInt(
       req.nextUrl?.searchParams.get('limit') ?? '10',
-      10
+      10,
     );
 
     if (Number.isNaN(rawPage) || Number.isNaN(rawLimit)) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.INVALID_PAGINATION.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -39,7 +38,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       { total, page, limit, data: userList },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (err) {
     if (err instanceof Error) {
@@ -48,7 +47,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

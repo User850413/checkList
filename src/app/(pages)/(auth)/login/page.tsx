@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <>
       <Toaster />
-      <div className="h-screen flex items-center">
+      <div className="flex h-screen items-center">
         <LoginForm />
       </div>
     </>

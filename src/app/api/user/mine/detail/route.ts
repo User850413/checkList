@@ -17,12 +17,12 @@ export async function GET(req: NextRequest) {
     if (!userId) return NextResponse.json({ error }, { status: 403 });
 
     const userDetail = await UserDetail.findOne({ userId }).select(
-      'bio interest'
+      'bio interest',
     );
     if (!userDetail)
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
-        { status: 404 }
+        { status: 404 },
       );
 
     const namedInterest = [];
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
       if (!foundId)
         return NextResponse.json(
           { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
-          { status: 404 }
+          { status: 404 },
         );
 
       namedInterest.push({ name: foundId.name, _id: foundId._id });
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -98,13 +98,13 @@ export async function PATCH(req: NextRequest) {
     const updatedUserDetail = await UserDetail.findOneAndUpdate(
       { userId },
       updateData,
-      { new: true }
+      { new: true },
     );
 
     if (!updatedUserDetail) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -116,7 +116,7 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

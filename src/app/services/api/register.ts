@@ -45,7 +45,7 @@ export async function userRegister({
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     );
     return res.data;
   } catch {
@@ -71,7 +71,7 @@ export async function userLogin({ email, password }: Partial<UserInput>) {
         headers: {
           'Content-Type': 'application/json',
         },
-      }
+      },
     );
 
     if (res.status === 200) {

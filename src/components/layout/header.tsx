@@ -35,7 +35,7 @@ export default function Header() {
   if (isLoading) return <div> loading... </div>;
 
   return (
-    <div className="fixed left-0 right-0 top-0 bg-white shadow-card flex items-center justify-between py-3 px-6 z-10 min-w-[480px]">
+    <div className="fixed left-0 right-0 top-0 z-10 flex min-w-[480px] items-center justify-between bg-white px-6 py-3 shadow-card">
       <ul className="flex items-center gap-4 text-sm text-slate-500">
         <li>
           <button onClick={() => router.push('/')}>메인화면</button>
@@ -45,7 +45,7 @@ export default function Header() {
         </li>
       </ul>
       {myData && (
-        <ul className="flex items-center gap-4 cursor-default text-sm text-slate-500">
+        <ul className="flex cursor-default items-center gap-4 text-sm text-slate-500">
           <li>{myData.username}</li>
           <li>
             <Profile

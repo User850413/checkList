@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     if (!username) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.EMPTY_USERNAME.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -21,14 +21,14 @@ export async function POST(req: Request) {
     if (!email || !emailRegex.test(email)) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.INVALID_EMAIL.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!password || password.length < 8) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.SHORT_PWD.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -68,7 +68,7 @@ export async function POST(req: Request) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

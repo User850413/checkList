@@ -5,7 +5,7 @@ import UserDetail from '@/app/lib/db/models/userDetails';
 
 export async function createUserDetail(
   userId: string,
-  session: mongoose.mongo.ClientSession
+  session: mongoose.mongo.ClientSession,
 ) {
   try {
     const userDetail = new UserDetail({

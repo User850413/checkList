@@ -4,7 +4,6 @@ import React, { ChangeEvent } from 'react';
 
 import { Field } from '../ui/field';
 
-
 export interface LabelProps {
   type: string;
   en: string;
@@ -56,7 +55,7 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
             {...rest}
             ref={ref}
             onChange={(e) => handleInputChange(e)}
-            className={clsx('border-2 rounded-lg', {
+            className={clsx('rounded-lg border-2', {
               'border-slate-100': !isError,
               'border-red-300': isError,
             })}
@@ -66,7 +65,7 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
         </Field>
       </>
     );
-  }
+  },
 );
 
 export default React.memo(InputBox);

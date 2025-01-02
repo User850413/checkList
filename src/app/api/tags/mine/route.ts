@@ -15,13 +15,13 @@ export async function GET(req: NextRequest) {
     const rawPage = parseInt(req.nextUrl?.searchParams.get('page') ?? '1', 10);
     const rawLimit = parseInt(
       req.nextUrl?.searchParams.get('limit') ?? '10',
-      10
+      10,
     );
 
     if (Number.isNaN(rawPage) || Number.isNaN(rawLimit)) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.INVALID_PAGINATION.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.TOKEN_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

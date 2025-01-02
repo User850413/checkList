@@ -24,13 +24,13 @@ export default function Profile({
   return (
     <button
       className={clsx(
-        'relative inline-block bg-white rounded-full border-2 border-gray-200 flex-shrink-0',
+        'relative inline-block flex-shrink-0 rounded-full border-2 border-gray-200 bg-white',
         { 'cursor-default': !clickable, 'cursor-pointer': clickable },
         {
-          'w-[40px] h-[40px]': size == 'small',
-          'w-[80px] h-[80px]': size == 'medium',
-          'w-[160px] h-[160px]': size == 'large',
-        }
+          'h-[40px] w-[40px]': size == 'small',
+          'h-[80px] w-[80px]': size == 'medium',
+          'h-[160px] w-[160px]': size == 'large',
+        },
       )}
       onClick={() => {
         if (clickFn) {

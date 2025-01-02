@@ -63,7 +63,7 @@ export default function SignupForm() {
 
   const setKeyValue = <K extends keyof SignupFormState>(
     key: K,
-    newValue: SignupFormState[K]
+    newValue: SignupFormState[K],
   ) => {
     setInputValue((prev) => ({ ...prev, [key]: newValue }));
   };
@@ -164,7 +164,7 @@ export default function SignupForm() {
   return (
     <>
       <form
-        className="w-[480px] mx-auto bg-white shadow-card rounded-xl p-10 flex flex-col items-center gap-5"
+        className="mx-auto flex w-[480px] flex-col items-center gap-5 rounded-xl bg-white p-10 shadow-card"
         onSubmit={(e: React.FormEvent) => {
           e.preventDefault();
           handleSubmit();

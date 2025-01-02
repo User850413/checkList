@@ -10,10 +10,10 @@ export async function GET(req: NextRequest) {
     const rawPage = parseInt(req.nextUrl?.searchParams.get('page') ?? '1', 10);
     const rawLimit = parseInt(
       req.nextUrl?.searchParams.get('limit') ?? '10',
-      10
+      10,
     );
     const word = decodeURIComponent(
-      req.nextUrl.searchParams.get('word') || ''
+      req.nextUrl.searchParams.get('word') || '',
     ).toString();
 
     if (word) {
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     if (Number.isNaN(rawPage) || Number.isNaN(rawLimit)) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.INVALID_PAGINATION.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         {
           error: ERROR_MESSAGES.EMPTY_INTEREST_NAME.ko,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     if (existedInterest)
       return NextResponse.json(
         { error: ERROR_MESSAGES.EXISTED_INTEREST_NAME.ko },
-        { status: 400 }
+        { status: 400 },
       );
 
     const newInterest = await Interest.create({ name });
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

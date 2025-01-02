@@ -5,8 +5,6 @@ import React from 'react';
 
 import { Button } from '@/components/ui/button';
 
-
-
 interface StyledButtonProps extends ChakraButtonProps {
   loading?: boolean;
   loadingText?: React.ReactNode;
@@ -25,17 +23,17 @@ const StyledButton = React.forwardRef<HTMLButtonElement, StyledButtonProps>(
           `${className}`,
           {
             'bg-slate-200 hover:bg-slate-300': !color || color == 'default',
-            'bg-red-200 hover:bg-red-300 text-white':
+            'bg-red-200 text-white hover:bg-red-300':
               color == 'red' && !disabled,
-            'bg-slate-500 hover:bg-slate-600 text-white': color === 'dark',
+            'bg-slate-500 text-white hover:bg-slate-600': color === 'dark',
           },
-          'py-2 px-5'
+          'px-5 py-2',
         )}
       >
         {children}
       </Button>
     );
-  }
+  },
 );
 
 export default StyledButton;

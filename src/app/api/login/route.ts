@@ -5,7 +5,6 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import User from '@/app/lib/db/models/users';
 
-
 const JWT_SECRET = process.env.JWT_SECRET as string;
 if (!JWT_SECRET) throw new Error(ERROR_MESSAGES.JWT_SECRET_ERROR.ko);
 
@@ -19,14 +18,14 @@ export async function POST(req: Request) {
     if (!email) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.EMPTY_EMAIL.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!password) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.EMPTY_PWD.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -36,7 +35,7 @@ export async function POST(req: Request) {
     if (!user) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -46,7 +45,7 @@ export async function POST(req: Request) {
         {
           error: ERROR_MESSAGES.INVALID_USER.ko,
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -58,7 +57,7 @@ export async function POST(req: Request) {
         iss: 'checkList-app',
       },
       JWT_SECRET,
-      { expiresIn: '15m' }
+      { expiresIn: '15m' },
     );
 
     const refreshToken = jwt.sign(
@@ -69,7 +68,7 @@ export async function POST(req: Request) {
         iss: 'checkList-app',
       },
       REFRESH_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '1d' },
     );
 
     const updateResult = await User.findByIdAndUpdate(user._id, {
@@ -78,13 +77,13 @@ export async function POST(req: Request) {
     if (!updateResult) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.UPDATE_FAILED.ko },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     const response = NextResponse.json(
       { message: '로그인되었습니다', userId: user._id },
-      { status: 200 }
+      { status: 200 },
     );
 
     response.cookies.set('accessToken', accessToken, {

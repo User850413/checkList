@@ -35,7 +35,7 @@ function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
   };
 
   return (
-    <div className="flex items-center text-sm gap-2">
+    <div className="flex items-center gap-2 text-sm">
       <input type="checkbox" checked={checked} onChange={onClickCard} />
       <div className="cursor-pointer" onClick={onClickCard}>
         {task}

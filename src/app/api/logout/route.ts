@@ -16,12 +16,12 @@ export async function POST(req: NextRequest) {
     if (!user)
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
-        { status: 404 }
+        { status: 404 },
       );
 
     const response = NextResponse.json(
       { message: ERROR_MESSAGES.LOGGED_OUT.ko },
-      { status: 200 }
+      { status: 200 },
     );
     response.cookies.delete('accessToken');
     response.cookies.delete('refreshToken');
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     return NextResponse.json(
       { error: ERROR_MESSAGES.LOGOUT_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

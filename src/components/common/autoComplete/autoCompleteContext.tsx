@@ -22,7 +22,7 @@ interface AutoCompleteProviderProps {
 }
 
 const AutoCompleteContext = createContext<AutoCompleteContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 export const AutoCompleteProvider: React.FC<
@@ -50,7 +50,7 @@ export const useAutoComplete = () => {
   const context = useContext(AutoCompleteContext);
   if (!context) {
     throw new Error(
-      'useAutoComplete는 AutoCompleteProvider 아래에서 작동합니다'
+      'useAutoComplete는 AutoCompleteProvider 아래에서 작동합니다',
     );
   }
 

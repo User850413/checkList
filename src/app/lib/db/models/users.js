@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     profileUrl: { type: String, default: null },
     refreshToken: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // 비밀번호 해싱 (회원가입 전)

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useAutoComplete } from './autoCompleteContext';
 
 export default function AutoComplete(
-  props: React.HTMLAttributes<HTMLUListElement>
+  props: React.HTMLAttributes<HTMLUListElement>,
 ) {
   const { suggestions, isBlur, setSelectedOption } = useAutoComplete();
 
@@ -30,11 +30,11 @@ export default function AutoComplete(
     return (
       <ul
         {...props}
-        className="bg-white shadow-card cursor-default z-10 auto-complete p-2 rounded-md absolute top-full"
+        className="auto-complete absolute top-full z-10 cursor-default rounded-md bg-white p-2 shadow-card"
       >
         {suggestions.map((suggestion) => (
           <li
-            className="cursor-pointer hover:bg-slate-300 auto-complete"
+            className="auto-complete cursor-pointer hover:bg-slate-300"
             key={suggestion.id}
             role="button"
             tabIndex={0}

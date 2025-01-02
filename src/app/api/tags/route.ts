@@ -14,13 +14,13 @@ export async function GET(req: NextRequest) {
     const rawPage = parseInt(req.nextUrl?.searchParams.get('page') ?? '1', 10);
     const rawLimit = parseInt(
       req.nextUrl?.searchParams.get('limit') ?? '10',
-      10
+      10,
     );
 
     if (Number.isNaN(rawPage) || Number.isNaN(rawLimit)) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.INVALID_PAGINATION.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     if (data.name === '') {
       return NextResponse.json(
         { error: ERROR_MESSAGES.EMPTY_TAGNAME.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       if (!isExistedInterest)
         NextResponse.json(
           { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
-          { status: 400 }
+          { status: 400 },
         );
     }
 
@@ -88,7 +88,7 @@ export async function PATCH(req: NextRequest) {
   if (!tagId) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.EMPTY_ID.ko },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -96,20 +96,20 @@ export async function PATCH(req: NextRequest) {
   if (!tag) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
   if (String(tag.userId) !== userId)
     return NextResponse.json(
       { error: ERROR_MESSAGES.FORBIDDEN_NOT_ALLOW.ko },
-      { status: 403 }
+      { status: 403 },
     );
 
   if (!body.name) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.EMPTY_TAGNAME.ko },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -118,7 +118,7 @@ export async function PATCH(req: NextRequest) {
     if (!isExistedInterest)
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
-        { status: 400 }
+        { status: 400 },
       );
   }
 
@@ -126,12 +126,12 @@ export async function PATCH(req: NextRequest) {
     const updatedTag = await Tag.findByIdAndUpdate(
       tagId,
       { name: body.name, interest: body.interest },
-      { new: true }
+      { new: true },
     );
     if (!updatedTag)
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
-        { status: 404 }
+        { status: 404 },
       );
 
     return NextResponse.json(updatedTag, { status: 200 });
@@ -141,7 +141,7 @@ export async function PATCH(req: NextRequest) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -158,7 +158,7 @@ export async function DELETE(req: NextRequest) {
   if (!tagId) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.EMPTY_ID.ko },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -166,13 +166,13 @@ export async function DELETE(req: NextRequest) {
   if (!tag) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
-      { status: 404 }
+      { status: 404 },
     );
   }
   if (String(tag.userId) !== userId)
     return NextResponse.json(
       { error: ERROR_MESSAGES.FORBIDDEN_NOT_ALLOW.ko },
-      { status: 403 }
+      { status: 403 },
     );
 
   try {
@@ -182,7 +182,7 @@ export async function DELETE(req: NextRequest) {
         message: '삭제되었습니다',
         deletedTag,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (err) {
     if (err instanceof Error) {
@@ -190,7 +190,7 @@ export async function DELETE(req: NextRequest) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -23,7 +23,7 @@ export function TagInput({ Undo }: TagInPutProps) {
   return (
     <form
       onSubmit={onHandleSubmit}
-      className="flex items-center gap-5 bg-red-50 flex-col"
+      className="flex flex-col items-center gap-5 bg-red-50"
     >
       <AddNewTagName
         trigger={trigger1}

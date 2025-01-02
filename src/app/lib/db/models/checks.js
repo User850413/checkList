@@ -6,7 +6,7 @@ const checkSchema = new mongoose.Schema(
     isCompleted: { type: Boolean, default: false },
     tagId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tag', required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // type: mongoose.Schema.Types.ObjectId,

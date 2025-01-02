@@ -5,7 +5,6 @@ import { Tag } from '@/types/tag';
 
 import apiClient from '../token/apiClient';
 
-
 export async function getAllTags() {
   const res = await axios.get('/api/tags');
   return res.data;
