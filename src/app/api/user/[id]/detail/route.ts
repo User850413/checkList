@@ -1,8 +1,9 @@
+import { NextRequest, NextResponse } from 'next/server';
+
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import UserDetail from '@/app/lib/db/models/userDetails';
 import { getUserId } from '@/app/services/token/getUserId';
-import { NextRequest, NextResponse } from 'next/server';
 
 // NOTE : userId로 특정 유저 userDetail 정보 불러오기
 export async function GET(

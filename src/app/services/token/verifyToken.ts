@@ -1,5 +1,6 @@
-import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import jwt from 'jsonwebtoken';
+
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 

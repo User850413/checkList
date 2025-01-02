@@ -1,8 +1,9 @@
 'use client';
 
 import clsx from 'clsx';
-import { TagInput } from './tagInput';
 import { useState } from 'react';
+
+import { TagInput } from './tagInput';
 import StyledButton from '../common/styledButton';
 
 export default function AddNewTagWrapper() {

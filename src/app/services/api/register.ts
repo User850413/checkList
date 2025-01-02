@@ -1,7 +1,9 @@
+import axios from 'axios';
+
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { emailCheck } from '@/app/utils/emailCheck';
 import { UserInput } from '@/types/user';
-import axios from 'axios';
+
 import apiClient from '../token/apiClient';
 
 const validateUserInput = ({ email, password }: Partial<UserInput>) => {

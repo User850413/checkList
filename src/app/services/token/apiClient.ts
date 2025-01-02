@@ -1,5 +1,6 @@
-import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import axios from 'axios';
+
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 
 const apiClient = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_HOST}/api`,

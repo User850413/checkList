@@ -1,9 +1,10 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import StyledButton from '../common/styledButton';
+
 import AddNewTagDetail from './addNewTagDetail';
 import AddNewTagName from './addNewTagName';
+import StyledButton from '../common/styledButton';
 
 interface TagInPutProps {
   Undo?: () => void;

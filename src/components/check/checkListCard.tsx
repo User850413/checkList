@@ -1,8 +1,9 @@
 'use client';
-import { deleteCheck } from '@/app/services/api/checks';
-import { Check } from '@/types/check';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
+
+import { deleteCheck } from '@/app/services/api/checks';
+import { Check } from '@/types/check';
 
 interface CheckListCardProps {
   id: string;

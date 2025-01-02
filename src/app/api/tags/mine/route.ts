@@ -1,7 +1,8 @@
-import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { NextRequest, NextResponse } from 'next/server';
-import Tag from '@/app/lib/db/models/tags';
+
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
+import Tag from '@/app/lib/db/models/tags';
 import { getUserId } from '@/app/services/token/getUserId';
 
 export async function GET(req: NextRequest) {

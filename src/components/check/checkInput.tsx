@@ -1,9 +1,11 @@
 'use client';
 
-import { postChecks } from '@/app/services/api/checks';
-import { Check } from '@/types/check';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { FormEvent, useRef, useState } from 'react';
+
+import { postChecks } from '@/app/services/api/checks';
+import { Check } from '@/types/check';
+
 import StyledButton from '../common/styledButton';
 
 // NOTE: 체크 가능 항목을 신규 추가하는 컴포넌트

@@ -1,8 +1,9 @@
+import { NextRequest, NextResponse } from 'next/server';
+
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import User from '@/app/lib/db/models/users';
 import { getUserId } from '@/app/services/token/getUserId';
-import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {

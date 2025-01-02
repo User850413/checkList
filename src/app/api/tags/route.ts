@@ -1,10 +1,11 @@
-import dbConnect from '@/app/lib/db/dbConnect';
 import { NextRequest, NextResponse } from 'next/server';
+
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
+import dbConnect from '@/app/lib/db/dbConnect';
+import Interest from '@/app/lib/db/models/interests';
 import Tag from '@/app/lib/db/models/tags';
 import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
-import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { getUserId } from '@/app/services/token/getUserId';
-import Interest from '@/app/lib/db/models/interests';
 
 export async function GET(req: NextRequest) {
   try {

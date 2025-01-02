@@ -1,5 +1,9 @@
 'use client';
 
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import { userLogout } from '@/app/services/api/register';
 import { getMyData, getMyDetailData } from '@/app/services/api/user';
 import StyledButton from '@/components/common/styledButton';
@@ -7,9 +11,6 @@ import FieldButton from '@/components/layout/fieldButton';
 import Header from '@/components/layout/header';
 import Profile from '@/components/layout/profile';
 import { User, UserDetail } from '@/types/user';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 export default function UserPage() {
   const [myData, setMyData] = useState<User | undefined>();

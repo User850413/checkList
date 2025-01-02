@@ -1,4 +1,5 @@
 import { Check } from '@/types/check';
+
 import apiClient from '../token/apiClient';
 
 export async function getAllChecks() {

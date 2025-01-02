@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken';
-import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
-import { verifyAuthToken } from './verifyToken';
 import { NextRequest } from 'next/server';
+
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
+
+import { verifyAuthToken } from './verifyToken';
 
 export const getUserId = (
   req: NextRequest

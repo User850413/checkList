@@ -1,7 +1,10 @@
-import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import axios from 'axios';
-import apiClient from '../token/apiClient';
+
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { UserDetailRequest } from '@/types/user';
+
+import apiClient from '../token/apiClient';
+
 
 // 전체 유저 정보 불러오기
 export async function getAllUsers() {

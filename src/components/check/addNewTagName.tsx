@@ -1,10 +1,12 @@
 'use client';
 import { Input } from '@chakra-ui/react';
-import { Field } from '../ui/field';
-import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef, useState } from 'react';
+
 import { postTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
+
+import { Field } from '../ui/field';
 
 interface AddNewTagNameProps {
   trigger: boolean;
