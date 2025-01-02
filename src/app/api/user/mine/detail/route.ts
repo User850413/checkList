@@ -74,20 +74,17 @@ export async function PATCH(req: NextRequest) {
       const interests: interest[] = body.interest;
 
       for (const interest of interests) {
-        const isExistedInterest: interest | null = await Interest.findOne({
+        let isExistedInterest: interest | null = await Interest.findOne({
           name: interest.name,
         });
 
         // NOTE : 없을 시 return
         if (!isExistedInterest) {
-          return NextResponse.json(
-            { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
-            { status: 400 }
-          );
+          isExistedInterest = await Interest.create({ name: interest.name });
         }
 
         // NOTE : 존재할 시 그 interest의 id 추출
-        newInterest.push(isExistedInterest._id);
+        newInterest.push(isExistedInterest!._id);
       }
     }
 

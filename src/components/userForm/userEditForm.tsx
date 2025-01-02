@@ -158,9 +158,9 @@ export default function UserEditForm() {
   const onClickSubmitButton = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const form = e.currentTarget as HTMLFormElement;
-    const formData = new FormData(form);
-    console.log(formData.get('inputValue'));
+    // const form = e.currentTarget as HTMLFormElement;
+    // const formData = new FormData(form);
+    // console.log(formData.get('inputValue'));
 
     if (!myData) return;
     userDataMutate({ username: userDataState.username });
