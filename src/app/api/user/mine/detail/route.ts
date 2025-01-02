@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
           { status: 404 }
         );
 
-      namedInterest.push({ name: foundId.name });
+      namedInterest.push({ name: foundId.name, _id: foundId._id });
     }
 
     const namedUserDetail = { bio: userDetail.bio, interest: namedInterest };

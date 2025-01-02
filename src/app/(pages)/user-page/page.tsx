@@ -2,7 +2,6 @@
 
 import { userLogout } from '@/app/services/api/register';
 import { getMyData, getMyDetailData } from '@/app/services/api/user';
-import AddNewInterest from '@/components/check/addNewInterest';
 import StyledButton from '@/components/common/styledButton';
 import FieldButton from '@/components/layout/fieldButton';
 import Header from '@/components/layout/header';
@@ -109,7 +108,7 @@ export default function UserPage() {
                         <ul className="flex gap-1">
                           {myDetailData.interest.map((field) => (
                             <li key={field._id}>
-                              <FieldButton fieldName={field.name} size="lg" />
+                              <FieldButton fieldName={field.name} size="md" />
                             </li>
                           ))}
                         </ul>
@@ -133,9 +132,7 @@ export default function UserPage() {
           </>
         )}
       </header>
-      <main>
-        <AddNewInterest />
-      </main>
+      <main></main>
     </>
   );
 }
