@@ -3,37 +3,16 @@ import { Field } from '../ui/field';
 import React, { ChangeEvent } from 'react';
 import clsx from 'clsx';
 
-const labels = {
-  email: {
-    type: 'email',
-    en: 'email',
-    ko: '이메일',
-    ariaLabel: '이메일 입력',
-  },
-  password: {
-    type: 'password',
-    en: 'password',
-    ko: '비밀번호',
-    ariaLabel: '비밀번호 입력',
-  },
-  passwordCheck: {
-    type: 'password',
-    en: 'password check',
-    ko: '비밀번호 확인',
-    ariaLabel: '비밀번호 확인 입력',
-  },
-  username: {
-    type: 'text',
-    en: 'username',
-    ko: '닉네임',
-    ariaLabel: '닉네임 입력',
-  },
-} as const;
+export interface LabelProps {
+  type: string;
+  en: string;
+  ko: string;
+  ariaLabel: string;
+}
 
 interface InputBoxProps extends InputProps {
   setKeyValue: (name: string) => void;
-  fieldType: keyof typeof labels;
-  label?: string;
+  label: LabelProps;
   helperText?: string;
   isError?: boolean;
   errorText?: string;
@@ -44,12 +23,12 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
   function InputBox(props, ref) {
     const {
       setKeyValue,
-      fieldType,
       helperText,
       errorText,
       isError,
       inputValue,
       maxLength,
+      label,
       ...rest
     } = props;
 
@@ -65,13 +44,13 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
       <>
         <Field
           invalid={isError}
-          label={labels[fieldType].ko}
+          label={label.ko}
           required={rest.required}
           helperText={helperText}
           errorText={isError && errorText}
         >
           <Input
-            type={labels[fieldType].type}
+            type={label.type}
             {...rest}
             ref={ref}
             onChange={(e) => handleInputChange(e)}
@@ -80,7 +59,7 @@ const InputBox = React.forwardRef<HTMLInputElement, InputBoxProps>(
               'border-red-300': isError,
             })}
             value={inputValue}
-            aria-label={labels[fieldType].ariaLabel}
+            aria-label={label.ariaLabel}
           />
         </Field>
       </>

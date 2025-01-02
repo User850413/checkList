@@ -2,7 +2,6 @@
 
 import { userLogout } from '@/app/services/api/register';
 import { getMyData, getMyDetailData } from '@/app/services/api/user';
-import AddNewInterest from '@/components/check/addNewInterest';
 import StyledButton from '@/components/common/styledButton';
 import FieldButton from '@/components/layout/fieldButton';
 import Header from '@/components/layout/header';
@@ -26,9 +25,12 @@ export default function UserPage() {
     isLoading: dataLoading,
     isError: dataError,
   } = useQuery({
-    queryKey: ['user'],
+    queryKey: ['me'],
     queryFn: () => getMyData(),
   });
+  useEffect(() => {
+    if (data) setMyData(data.user);
+  }, [data]);
 
   // NOTE : 내 디테일 데이터
   const {
@@ -36,14 +38,24 @@ export default function UserPage() {
     isLoading: detailDataLoading,
     isError: detailDataError,
   } = useQuery({
-    queryKey: ['userDetail'],
+    queryKey: ['me', 'detail'],
     queryFn: () => getMyDetailData(),
   });
+  useEffect(() => {
+    if (detailData) {
+      setMyDetailData(() => ({
+        ...detailData.data,
+        bio: !detailData.data.bio
+          ? '아직 작성되지 않았습니다. 한 마디 남겨주세요!'
+          : detailData.data.bio,
+      }));
+    }
+  }, [detailData]);
 
   // NOTE : 로그아웃 로직
   const { mutate: logoutMutation } = useMutation({
     mutationFn: () => userLogout(),
-    mutationKey: ['user'],
+    mutationKey: ['me'],
     onSuccess: () => route.push('/login?loggedOut=true'),
     onError: () => console.log('error'),
   });
@@ -52,30 +64,18 @@ export default function UserPage() {
     logoutMutation();
   };
 
-  // NOTE : 내 데이터
-  useEffect(() => {
-    if (data) setMyData(data.user);
-  }, [data]);
-
-  // NOTE : 내 디테일 데이터
-  useEffect(() => {
-    if (detailData) {
-      setMyDetailData(() => ({
-        ...detailData,
-        bio: !detailData.bio
-          ? '아직 작성되지 않았습니다. 한 마디 남겨주세요!'
-          : detailData.bio,
-      }));
-    }
-  }, [detailData]);
-
   if (dataLoading && detailDataLoading) return <div>Loading...</div>;
   if (dataError && detailDataError) return <div>Error</div>;
+
+  // NOTE : 수정 페이지로 이동
+  const onClickEditButton = () => {
+    route.push('/user-page/edit');
+  };
 
   return (
     <>
       <Header />
-      <header className="bg-white shadow-card rounded-lg mx-14 p-6 mt-14 flex gap-8 items-center">
+      <header className="bg-white shadow-card rounded-lg mx-14 p-6 mt-14 flex gap-8 items-center min-w-[800px]">
         {myData && (
           <>
             <Profile
@@ -97,17 +97,17 @@ export default function UserPage() {
                 )}
               </div>
               <div className="flex items-end justify-between w-full">
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col items-start gap-2">
                   {myDetailData.interest &&
                     myDetailData.interest.length > 0 && (
                       <>
                         <span className="text-sm">
                           {myData.username}님이 관심 있어하는 분야
                         </span>
-                        <ul className="flex gap-1">
-                          {myDetailData.interest.map((field, index) => (
-                            <li key={index}>
-                              <FieldButton fieldName={field} />
+                        <ul className="grid grid-cols-6 lg:grid-cols-8 gap-1">
+                          {myDetailData.interest.map((field) => (
+                            <li key={field._id}>
+                              <FieldButton fieldName={field.name} size="md" />
                             </li>
                           ))}
                         </ul>
@@ -115,7 +115,9 @@ export default function UserPage() {
                     )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <StyledButton size={'sm'}>수정</StyledButton>
+                  <StyledButton size={'sm'} onClick={onClickEditButton}>
+                    수정
+                  </StyledButton>
                   <StyledButton
                     color="dark"
                     size={'sm'}
@@ -129,9 +131,7 @@ export default function UserPage() {
           </>
         )}
       </header>
-      <main>
-        <AddNewInterest />
-      </main>
+      <main></main>
     </>
   );
 }

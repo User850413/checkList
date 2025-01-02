@@ -10,6 +10,21 @@ import { useRouter } from 'next/navigation';
 import { Toaster, toaster } from '../ui/toaster';
 import { userLogin } from '@/app/services/api/register';
 
+export const labels = {
+  email: {
+    type: 'email',
+    en: 'email',
+    ko: '이메일',
+    ariaLabel: '이메일 입력',
+  },
+  password: {
+    type: 'password',
+    en: 'password',
+    ko: '비밀번호',
+    ariaLabel: '비밀번호 입력',
+  },
+} as const;
+
 interface LoginFormState {
   email: string;
   password: string;
@@ -109,7 +124,7 @@ export default function LoginForm() {
         noValidate
       >
         <InputBox
-          fieldType="email"
+          label={labels.email}
           setKeyValue={(email) => setKeyValue('email', email)}
           required
           isError={error.email}
@@ -117,7 +132,7 @@ export default function LoginForm() {
           inputValue={inputValue.email}
         />
         <InputBox
-          fieldType="password"
+          label={labels.password}
           setKeyValue={(password) => setKeyValue('password', password)}
           required
           isError={error.password}

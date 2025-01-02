@@ -1,3 +1,5 @@
+import { interest } from './interest';
+
 export interface User {
   username: string;
   createdAt: Date;
@@ -21,5 +23,10 @@ export interface UserInput {
 
 export interface UserDetail {
   bio: string;
-  interest: string[];
+  interest: interest[];
+}
+
+export interface UserDetailRequest {
+  bio: string;
+  interest: { [name: string]: string }[];
 }

@@ -20,7 +20,7 @@ const StyledButton = React.forwardRef<HTMLButtonElement, StyledButtonProps>(
         className={clsx(
           `${className}`,
           {
-            'bg-slate-200': !color || color == 'default',
+            'bg-slate-200 hover:bg-slate-300': !color || color == 'default',
             'bg-red-200 hover:bg-red-300 text-white':
               color == 'red' && !disabled,
             'bg-slate-500 hover:bg-slate-600 text-white': color === 'dark',

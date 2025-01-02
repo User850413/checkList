@@ -4,15 +4,22 @@ import { Input } from '@chakra-ui/react';
 
 type CustomInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '2xs' | 'xs';
+  handleChangedValue?: (selection: string) => void;
 };
 
-function InputWithAutoComplete(props: CustomInputProps) {
+function InputWithAutoComplete({
+  handleChangedValue,
+  ...rest
+}: CustomInputProps) {
   const { selectedOption, setIsBlur } = useAutoComplete();
   const inputRef = useRef<null | HTMLInputElement>(null);
 
   useEffect(() => {
-    if (inputRef.current) inputRef.current.value = selectedOption;
-  }, [selectedOption]);
+    if (inputRef.current) {
+      inputRef.current.value = selectedOption;
+      if (handleChangedValue) handleChangedValue(inputRef.current.value);
+    }
+  }, [selectedOption, handleChangedValue]);
 
   const handleBlur = (e: React.FocusEvent) => {
     const relatedTarget = e.relatedTarget as HTMLElement;
@@ -29,7 +36,7 @@ function InputWithAutoComplete(props: CustomInputProps) {
       ref={inputRef}
       onFocus={() => setIsBlur(false)}
       onBlur={handleBlur}
-      {...props}
+      {...rest}
       id="inputWithAutoComplete"
     />
   );
