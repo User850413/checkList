@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
       const cookies = Object.fromEntries(
         cookieHeader
           .split('; ')
-          .map((cookie) => cookie.split('=').map(decodeURIComponent))
+          .map((cookie) => cookie.split('=').map(decodeURIComponent)),
       );
 
       const refreshToken = cookies['refreshToken'];
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       if (!refreshToken) {
         return NextResponse.json(
           { error: ERROR_MESSAGES.EXPIRED_REFRESH_TOKEN.ko },
-          { status: 403 }
+          { status: 403 },
         );
       }
 
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       if (!REFRESH_SECRET)
         return NextResponse.json(
           { error: ERROR_MESSAGES.REFRESH_SECRET_ERROR.ko },
-          { status: 500 }
+          { status: 500 },
         );
 
       const decoded = jwt.verify(refreshToken, REFRESH_SECRET) as {
@@ -42,13 +42,13 @@ export async function POST(req: NextRequest) {
       if (!user)
         return NextResponse.json(
           { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
-          { status: 403 }
+          { status: 403 },
         );
 
       if (user.refreshToken !== refreshToken) {
         return NextResponse.json(
           { error: ERROR_MESSAGES.INVALID_REFRESH_TOKEN.ko },
-          { status: 403 }
+          { status: 403 },
         );
       }
 
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
       if (!JWT_SECRET)
         return NextResponse.json(
           { error: ERROR_MESSAGES.JWT_SECRET_ERROR.ko },
-          { status: 500 }
+          { status: 500 },
         );
 
       const accessToken = jwt.sign(
@@ -67,12 +67,12 @@ export async function POST(req: NextRequest) {
           iss: 'checkList-app',
         },
         JWT_SECRET,
-        { expiresIn: '15m' }
+        { expiresIn: '15m' },
       );
 
       const response = NextResponse.json(
         { message: '새 토큰이 발행되었습니다' },
-        { status: 200 }
+        { status: 200 },
       );
 
       response.cookies.set('accessToken', accessToken, {
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     } else {
       return NextResponse.json(
         { error: ERROR_MESSAGES.EXPIRED_REFRESH_TOKEN.ko },
-        { status: 403 }
+        { status: 403 },
       );
     }
   } catch (err) {
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       { error: ERROR_MESSAGES.REFRESH_SECRET_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

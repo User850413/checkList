@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.TOKEN_ERROR.ko },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 
       return NextResponse.json(
         { total, page, limit, data: checks },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
     if (data.task === '') {
       return NextResponse.json(
         { error: '내용 입력은 필수사항입니다' },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const newCheck = await createCheck(data);
@@ -96,7 +96,7 @@ export async function PATCH(req: NextRequest) {
   if (!id) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.EMPTY_ID.ko },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -121,7 +121,7 @@ export async function DELETE(req: NextRequest) {
   if (!id) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.EMPTY_ID.ko },
-      { status: 400 }
+      { status: 400 },
     );
   }
   await Check.findByIdAndDelete(id);

@@ -50,7 +50,7 @@ function CheckInput({ tagId }: CheckInputProps) {
     <form onSubmit={onHandleSubmit} className="flex items-center gap-2">
       <input
         type="text"
-        className="border-2 border-slate-200 rounded-md w-full"
+        className="w-full rounded-md border-2 border-slate-200"
         ref={inputRef}
         onChange={onChangeInput}
         value={task}

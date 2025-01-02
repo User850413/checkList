@@ -5,7 +5,6 @@ import { UserDetailRequest } from '@/types/user';
 
 import apiClient from '../token/apiClient';
 
-
 // 전체 유저 정보 불러오기
 export async function getAllUsers() {
   try {

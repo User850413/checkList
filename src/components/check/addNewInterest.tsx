@@ -63,9 +63,9 @@ export default function AddNewInterest({ onSubmit }: AddNewInterestProps) {
 
   return (
     <>
-      <div className="w-full flex gap-2">
+      <div className="flex w-full gap-2">
         <AutoCompleteProvider suggestions={autoCompleteValue}>
-          <div className="w-full relative">
+          <div className="relative w-full">
             <InputWithAutoComplete
               className="bg-slate-100 p-1"
               onChange={onChangeInterestInput}

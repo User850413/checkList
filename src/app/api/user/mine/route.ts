@@ -15,12 +15,12 @@ export async function GET(req: NextRequest) {
     if (!userId) return NextResponse.json({ error }, { status: 403 });
 
     const user = await User.findById(userId).select(
-      'username createdAt updatedAt profileUrl'
+      'username createdAt updatedAt profileUrl',
     );
     if (!user)
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
-        { status: 404 }
+        { status: 404 },
       );
 
     return NextResponse.json({ user }, { status: 200 });
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -48,7 +48,7 @@ export async function PATCH(req: NextRequest) {
     if (data.username === '') {
       return NextResponse.json(
         { error: ERROR_MESSAGES.EMPTY_USERNAME.ko },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -57,13 +57,13 @@ export async function PATCH(req: NextRequest) {
       {
         username: data.username,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedUser)
       return NextResponse.json(
         { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
-        { status: 404 }
+        { status: 404 },
       );
 
     return NextResponse.json(updatedUser, { status: 200 });
@@ -73,7 +73,7 @@ export async function PATCH(req: NextRequest) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

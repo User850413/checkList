@@ -23,23 +23,23 @@ export default function FieldButton({
   return (
     <button
       className={clsx(
-        'flex  items-center gap-2  bg-slate-200 hover:bg-slate-300 rounded-full',
+        'flex items-center gap-2 rounded-full bg-slate-200 hover:bg-slate-300',
         {
-          'text-sm px-3 py-1': size == 'md',
+          'px-3 py-1 text-sm': size == 'md',
         },
         {
-          'text-xs px-3 py-1': size == 'sm',
+          'px-3 py-1 text-xs': size == 'sm',
         },
         {
-          'text-lg px-4 py-2': size == 'lg',
-        }
+          'px-4 py-2 text-lg': size == 'lg',
+        },
       )}
       type="button"
       onClick={deletable ? deleteFn : undefined}
     >
       <span>{fieldName}</span>
       {deletable && (
-        <span className="relative w-5 h-5">
+        <span className="relative h-5 w-5">
           <Image fill objectFit="cover" src={closeButton} alt="삭제" />
         </span>
       )}

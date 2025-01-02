@@ -34,8 +34,8 @@ export const deleteTagAndChecks = async (tagId: string) => {
       error instanceof mongoose.Error.ValidationError
         ? '유효하지 않은 태그 ID입니다.'
         : error instanceof mongoose.Error.CastError
-        ? '잘못된 형식의 태그 ID입니다.'
-        : '태그 삭제 중 문제가 발생했습니다.'
+          ? '잘못된 형식의 태그 ID입니다.'
+          : '태그 삭제 중 문제가 발생했습니다.',
     );
   } finally {
     // 세션 종료

@@ -5,7 +5,6 @@ import { interest } from '@/types/interest';
 
 import apiClient from '../token/apiClient';
 
-
 export async function getAllInterest() {
   try {
     const res = await apiClient.get('/interests');
@@ -17,7 +16,7 @@ export async function getAllInterest() {
 
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -35,7 +34,7 @@ export async function getWordInterest({ word }: { word: string }) {
 
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -56,7 +55,7 @@ export async function postInterest({ name }: Pick<interest, 'name'>) {
 
     return NextResponse.json(
       { error: ERROR_MESSAGES.SERVER_ERROR.ko },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

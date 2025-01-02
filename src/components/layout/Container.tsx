@@ -4,7 +4,7 @@ type ContainerProps = PropsWithChildren;
 
 export default function Container({ children }: ContainerProps) {
   return (
-    <div className="relative pt-16 max-w-[1200px] min-w-[480px] h-screen w-screen mx-auto bg-slate-50 ">
+    <div className="relative mx-auto h-screen w-screen min-w-[480px] max-w-[1200px] bg-slate-50 pt-16">
       {children}
     </div>
   );

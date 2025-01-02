@@ -76,7 +76,7 @@ export default function UserPage() {
   return (
     <>
       <Header />
-      <header className="bg-white shadow-card rounded-lg mx-14 p-6 mt-14 flex gap-8 items-center min-w-[800px]">
+      <header className="mx-14 mt-14 flex min-w-[800px] items-center gap-8 rounded-lg bg-white p-6 shadow-card">
         {myData && (
           <>
             <Profile
@@ -85,19 +85,19 @@ export default function UserPage() {
               editable
               size="large"
             />
-            <div className="flex flex-col items-start gap-4 w-full">
-              <h1 className="font-bold text-xl">
+            <div className="flex w-full flex-col items-start gap-4">
+              <h1 className="text-xl font-bold">
                 {myData.username}님의 페이지입니다.
               </h1>
-              <div className="bg-slate-100 w-full p-4 rounded-md">
-                <h2 className="font-semibold text-base">한 마디 🎤</h2>
+              <div className="w-full rounded-md bg-slate-100 p-4">
+                <h2 className="text-base font-semibold">한 마디 🎤</h2>
                 {myDetailData.bio && (
-                  <span className="text-sm text-pretty">
+                  <span className="text-pretty text-sm">
                     {myDetailData.bio}
                   </span>
                 )}
               </div>
-              <div className="flex items-end justify-between w-full">
+              <div className="flex w-full items-end justify-between">
                 <div className="flex flex-col items-start gap-2">
                   {myDetailData.interest &&
                     myDetailData.interest.length > 0 && (
@@ -105,7 +105,7 @@ export default function UserPage() {
                         <span className="text-sm">
                           {myData.username}님이 관심 있어하는 분야
                         </span>
-                        <ul className="grid grid-cols-6 lg:grid-cols-8 gap-1">
+                        <ul className="grid grid-cols-6 gap-1 lg:grid-cols-8">
                           {myDetailData.interest.map((field) => (
                             <li key={field._id}>
                               <FieldButton fieldName={field.name} size="md" />

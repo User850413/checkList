@@ -62,7 +62,7 @@ export default function UserEditForm() {
   // User 데이터 관리
   const setUserKeyValue = <K extends keyof UserState>(
     key: K,
-    newValue: UserState[K]
+    newValue: UserState[K],
   ) => {
     setUserDataState((prev) => ({ ...prev, [key]: newValue }));
   };
@@ -70,7 +70,7 @@ export default function UserEditForm() {
   // UserDetail 데이터 관리
   const setUserDetailKeyValue = <K extends keyof UserDetailState>(
     key: K,
-    newValue: UserDetailState[K]
+    newValue: UserDetailState[K],
   ) => {
     setUserDetailDataState((prev) => ({ ...prev, [key]: newValue }));
   };
@@ -139,7 +139,7 @@ export default function UserEditForm() {
 
       // NOTE : 중복 삭제 로직
       const newInterest = Array.from(
-        new Map(addNewInterest.map((item) => [item.name, item])).values()
+        new Map(addNewInterest.map((item) => [item.name, item])).values(),
       ) as interest[];
       return { bio: prev.bio, interest: newInterest };
     });
@@ -149,7 +149,7 @@ export default function UserEditForm() {
   const handleDeleteInterest = (name: string) => {
     setUserDetailDataState((prev) => {
       const deletedInterest = prev.interest.filter(
-        (item) => item.name !== name
+        (item) => item.name !== name,
       );
       return { ...prev, interest: deletedInterest };
     });
@@ -179,7 +179,7 @@ export default function UserEditForm() {
 
   return (
     <>
-      <span className="block w-fit mx-auto">
+      <span className="mx-auto block w-fit">
         {myData && (
           <Profile
             profileUrl={myData?.profileUrl}
@@ -191,7 +191,7 @@ export default function UserEditForm() {
         )}
       </span>
       <form
-        className="bg-white w-[800px] px-10 pt-24 pb-5 -mt-16 rounded-lg shadow-card mx-auto flex flex-col gap-5"
+        className="mx-auto -mt-16 flex w-[800px] flex-col gap-5 rounded-lg bg-white px-10 pb-5 pt-24 shadow-card"
         onSubmit={onClickSubmitButton}
       >
         <InputBox
@@ -205,12 +205,12 @@ export default function UserEditForm() {
           label={labels.bio}
           setKeyValue={(bio) => setUserDetailKeyValue('bio', bio)}
         />
-        <div className="flex items-start w-full gap-5">
-          <div className="flex flex-col items-start gap-2 flex-1">
-            <span className="text-sm cursor-default">내 관심사</span>
+        <div className="flex w-full items-start gap-5">
+          <div className="flex flex-1 flex-col items-start gap-2">
+            <span className="cursor-default text-sm">내 관심사</span>
 
             {userDetailDataState && userDetailDataState.interest.length > 0 && (
-              <ul className="flex flex-col items-start gap-2 min-h-12 w-full rounded-lg">
+              <ul className="flex min-h-12 w-full flex-col items-start gap-2 rounded-lg">
                 {userDetailDataState.interest.map((item, index) => (
                   <li key={index}>
                     <FieldButton
@@ -225,17 +225,17 @@ export default function UserEditForm() {
             )}
             {userDetailDataState &&
               userDetailDataState.interest.length === 0 && (
-                <span className="text-xs w-full py-4 text-center cursor-default rounded-lg bg-slate-50">
+                <span className="w-full cursor-default rounded-lg bg-slate-50 py-4 text-center text-xs">
                   추가된 관심사가 없습니다.
                 </span>
               )}
           </div>
-          <div className="flex flex-col gap-2 flex-1">
-            <span className="text-sm cursor-default">새 관심사 추가</span>
+          <div className="flex flex-1 flex-col gap-2">
+            <span className="cursor-default text-sm">새 관심사 추가</span>
             <AddNewInterest onSubmit={handleInterestData} />
           </div>
         </div>
-        <div className="w-fit mx-auto flex gap-2">
+        <div className="mx-auto flex w-fit gap-2">
           <StyledButton type="submit">확인</StyledButton>
           <StyledButton type="button" color="red" onClick={onClickCancelButton}>
             취소

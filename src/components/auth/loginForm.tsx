@@ -12,7 +12,6 @@ import InputBox from './inputBox';
 import StyledButton from '../common/styledButton';
 import { Toaster, toaster } from '../ui/toaster';
 
-
 export const labels = {
   email: {
     type: 'email',
@@ -47,7 +46,7 @@ export default function LoginForm() {
 
   const setKeyValue = <K extends keyof LoginFormState>(
     key: K,
-    newValue: LoginFormState[K]
+    newValue: LoginFormState[K],
   ) => {
     setInputValue((prev) => ({ ...prev, [key]: newValue }));
   };
@@ -119,7 +118,7 @@ export default function LoginForm() {
     <>
       <Toaster />
       <form
-        className="w-[480px] mx-auto bg-white shadow-card rounded-xl p-10 flex flex-col items-center gap-5"
+        className="mx-auto flex w-[480px] flex-col items-center gap-5 rounded-xl bg-white p-10 shadow-card"
         onSubmit={(e: React.FormEvent) => {
           e.preventDefault();
           handleSubmit();

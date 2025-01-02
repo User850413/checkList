@@ -27,7 +27,7 @@ export const createCheck = async (checkData: {
           tagId: tag._id,
         },
       ],
-      { session }
+      { session },
     );
 
     await session.commitTransaction();

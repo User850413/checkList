@@ -6,7 +6,7 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { verifyAuthToken } from './verifyToken';
 
 export const getUserId = (
-  req: NextRequest
+  req: NextRequest,
 ): { userId: string; error?: string } => {
   let userId = '';
 

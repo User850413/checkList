@@ -12,8 +12,6 @@ import CheckInput from './checkInput';
 import CheckListCard from './checkListCard';
 import TagNameInput from './tagNameInput';
 
-
-
 interface CheckListProp {
   tagName: string;
   tagId: string;
@@ -58,8 +56,8 @@ function CheckList({ tagName, tagId }: CheckListProp) {
   if (isError) return <div>Error</div>;
 
   return (
-    <div className="bg-white rounded-lg w-full px-3 h-full py-2">
-      <div className="border-b-slate-200 border-b-2 flex justify-between items-center">
+    <div className="h-full w-full rounded-lg bg-white px-3 py-2">
+      <div className="flex items-center justify-between border-b-2 border-b-slate-200">
         <TagNameInput tagName={tagName} tagId={tagId} />
         <button
           onClick={() => onClickDelete(tagId)}

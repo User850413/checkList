@@ -17,14 +17,14 @@ export default function AddNewTagWrapper() {
     <>
       <div
         className={clsx(
-          'bg-slate-100 px-2 py-4 rounded-lg flex flex-col gap-2',
-          { hidden: !addTag }
+          'flex flex-col gap-2 rounded-lg bg-slate-100 px-2 py-4',
+          { hidden: !addTag },
         )}
       >
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-medium w-fit">새 리스트 추가</h1>
+          <h1 className="w-fit text-lg font-medium">새 리스트 추가</h1>
           <button
-            className="text-sm px-3 py-1 text-red-400"
+            className="px-3 py-1 text-sm text-red-400"
             onClick={onCancelEdit}
             aria-label="태그 추가 취소"
           >
@@ -34,7 +34,7 @@ export default function AddNewTagWrapper() {
         <TagInput Undo={onCancelEdit} />
       </div>
       <StyledButton
-        className={clsx('w-full h-full', { hidden: addTag })}
+        className={clsx('h-full w-full', { hidden: addTag })}
         onClick={() => setAddTag(true)}
         aria-label="새 리스트 추가"
       >

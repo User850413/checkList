@@ -61,9 +61,9 @@ function TagNameInput({ tagName, tagId }: TagNameInputProps) {
       <div
         className={clsx('flex items-center gap-5', { hidden: tagNameEditing })}
       >
-        <h1 className="w-full font-medium text-2xl py-1">{tagName}</h1>
+        <h1 className="w-full py-1 text-2xl font-medium">{tagName}</h1>
         <button
-          className="text-sm shrink-0 cursor-pointer"
+          className="shrink-0 cursor-pointer text-sm"
           onClick={onClickStartEdit}
         >
           수정
