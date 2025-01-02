@@ -24,7 +24,28 @@ export async function GET(req: NextRequest) {
         { status: 404 }
       );
 
-    return NextResponse.json({ data: userDetail }, { status: 200 });
+    const namedInterest = [];
+
+    // NOTE : interest 모델에서 id => name 변경 후 매핑
+    const { interest }: { interest: interest[] } = userDetail;
+    for (const item of interest) {
+      const foundId: interest | null = await Interest.findOne({
+        _id: item._id,
+      });
+
+      if (!foundId)
+        return NextResponse.json(
+          { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
+          { status: 404 }
+        );
+
+      namedInterest.push({ name: foundId.name });
+    }
+
+    const namedUserDetail = { bio: userDetail.bio, interest: namedInterest };
+    console.log(namedUserDetail);
+
+    return NextResponse.json({ data: namedUserDetail }, { status: 200 });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
