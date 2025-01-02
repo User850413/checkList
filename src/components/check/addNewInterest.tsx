@@ -39,7 +39,9 @@ export default function AddNewInterest({ onSubmit }: AddNewInterestProps) {
   });
 
   const submitFunc = () => {
-    onSubmit(inputValue);
+    const trimmedValue = inputValue.trim();
+    if (!trimmedValue) return;
+    onSubmit(trimmedValue);
   };
 
   // NOTE : enter 누를 시 onSubmit function 시행
