@@ -142,7 +142,16 @@ export default function UserEditForm() {
       ) as interest[];
       return { bio: prev.bio, interest: newInterest };
     });
-    console.log(userDetailDataState);
+  };
+
+  // interest 삭제 버튼 클릭 로직
+  const handleDeleteInterest = (name: string) => {
+    setUserDetailDataState((prev) => {
+      const deletedInterest = prev.interest.filter(
+        (item) => item.name !== name
+      );
+      return { ...prev, interest: deletedInterest };
+    });
   };
 
   // NOTE : 확인 버튼 클릭 시
@@ -207,7 +216,12 @@ export default function UserEditForm() {
               <ul className="flex flex-col items-start gap-2 min-h-12 w-full rounded-lg">
                 {userDetailDataState.interest.map((item, index) => (
                   <li key={index}>
-                    <FieldButton fieldName={item.name} size="md" deletable />
+                    <FieldButton
+                      fieldName={item.name}
+                      size="md"
+                      deletable
+                      deleteFn={() => handleDeleteInterest(item.name)}
+                    />
                   </li>
                 ))}
               </ul>
