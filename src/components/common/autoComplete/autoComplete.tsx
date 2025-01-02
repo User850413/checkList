@@ -1,7 +1,8 @@
 'use client';
 
-import { useAutoComplete } from './autoCompleteContext';
 import { useEffect, useState } from 'react';
+
+import { useAutoComplete } from './autoCompleteContext';
 
 export default function AutoComplete(
   props: React.HTMLAttributes<HTMLUListElement>

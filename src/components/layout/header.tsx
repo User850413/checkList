@@ -1,11 +1,13 @@
 'use client';
 
-import { getMyData } from '@/app/services/api/user';
 import { useQuery } from '@tanstack/react-query';
-import Profile from './profile';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
+import { getMyData } from '@/app/services/api/user';
 import { User } from '@/types/user';
+
+import Profile from './profile';
 
 export default function Header() {
   const [myData, setMyData] = useState<User | undefined>();

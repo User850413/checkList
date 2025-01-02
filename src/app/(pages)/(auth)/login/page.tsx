@@ -1,9 +1,10 @@
 'use client';
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import LoginForm from '@/components/auth/loginForm';
 import { Toaster, toaster } from '@/components/ui/toaster';
-import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
 
 export default function Login() {
   const searchParams = useSearchParams();

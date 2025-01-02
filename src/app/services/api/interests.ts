@@ -1,7 +1,10 @@
-import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { NextResponse } from 'next/server';
-import apiClient from '../token/apiClient';
+
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import { interest } from '@/types/interest';
+
+import apiClient from '../token/apiClient';
+
 
 export async function getAllInterest() {
   try {

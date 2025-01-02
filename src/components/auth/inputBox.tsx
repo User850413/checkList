@@ -1,7 +1,9 @@
 import { Input, InputProps } from '@chakra-ui/react';
-import { Field } from '../ui/field';
-import React, { ChangeEvent } from 'react';
 import clsx from 'clsx';
+import React, { ChangeEvent } from 'react';
+
+import { Field } from '../ui/field';
+
 
 export interface LabelProps {
   type: string;

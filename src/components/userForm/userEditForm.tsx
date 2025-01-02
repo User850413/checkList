@@ -1,19 +1,21 @@
-import { useRouter } from 'next/navigation';
-import Profile from '../layout/profile';
-import { useEffect, useState } from 'react';
-import { User, UserDetail } from '@/types/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import {
   getMyData,
   getMyDetailData,
   patchMyData,
   patchMyDetailData,
 } from '@/app/services/api/user';
-import StyledButton from '../common/styledButton';
-import InputBox from '../auth/inputBox';
-import FieldButton from '../layout/fieldButton';
 import { interest } from '@/types/interest';
+import { User, UserDetail } from '@/types/user';
+
+import InputBox from '../auth/inputBox';
 import AddNewInterest from '../check/addNewInterest';
+import StyledButton from '../common/styledButton';
+import FieldButton from '../layout/fieldButton';
+import Profile from '../layout/profile';
 
 const labels = {
   username: {

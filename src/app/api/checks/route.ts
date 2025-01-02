@@ -1,9 +1,10 @@
+import { NextRequest, NextResponse } from 'next/server';
+
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import Check from '@/app/lib/db/models/checks';
 import { createCheck } from '@/app/services/database/createCheck';
 import { verifyAuthToken } from '@/app/services/token/verifyToken';
-import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   // NOTE: 쿼리값 가져오기

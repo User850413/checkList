@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import ERROR_MESSAGES from './app/lib/constants/errorMessages';
 
 export function middleware(req: NextRequest) {

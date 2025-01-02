@@ -1,6 +1,7 @@
-import { InputHTMLAttributes, useEffect, useRef } from 'react';
-import { useAutoComplete } from './autoCompleteContext';
 import { Input } from '@chakra-ui/react';
+import { InputHTMLAttributes, useEffect, useRef } from 'react';
+
+import { useAutoComplete } from './autoCompleteContext';
 
 type CustomInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '2xs' | 'xs';

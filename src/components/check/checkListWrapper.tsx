@@ -1,11 +1,13 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import CheckList from './checkList';
-import { getMyTags } from '@/app/services/api/tags';
-import AddNewTagWrapper from './addNewTagWrapper';
 import { useEffect, useState } from 'react';
+
+import { getMyTags } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
+
+import AddNewTagWrapper from './addNewTagWrapper';
+import CheckList from './checkList';
 
 export default function CheckListWrapper() {
   const [tagList, setTagList] = useState<Tag[]>([]);

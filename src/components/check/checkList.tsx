@@ -1,14 +1,18 @@
 'use client';
 
-import { getChecks } from '@/app/services/api/checks';
-import CheckListCard from './checkListCard';
-import CheckInput from './checkInput';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { deleteTag } from '@/app/services/api/tags';
-import { Tag } from '@/types/tag';
-import TagNameInput from './tagNameInput';
 import React, { useEffect, useState } from 'react';
+
+import { getChecks } from '@/app/services/api/checks';
+import { deleteTag } from '@/app/services/api/tags';
 import { Check } from '@/types/check';
+import { Tag } from '@/types/tag';
+
+import CheckInput from './checkInput';
+import CheckListCard from './checkListCard';
+import TagNameInput from './tagNameInput';
+
+
 
 interface CheckListProp {
   tagName: string;

@@ -1,7 +1,10 @@
-import { Tag } from '@/types/tag';
 import axios from 'axios';
-import apiClient from '../token/apiClient';
+
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
+import { Tag } from '@/types/tag';
+
+import apiClient from '../token/apiClient';
+
 
 export async function getAllTags() {
   const res = await axios.get('/api/tags');

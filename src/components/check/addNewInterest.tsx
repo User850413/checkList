@@ -1,16 +1,18 @@
 'use client';
-import { getWordInterest } from '@/app/services/api/interests';
 import { useMutation } from '@tanstack/react-query';
 import { ChangeEvent, useState } from 'react';
-import StyledButton from '../common/styledButton';
+
+import { getWordInterest } from '@/app/services/api/interests';
+import debounce from '@/app/utils/debounce';
 import { interestResponse } from '@/types/interest';
+
+import AutoComplete from '../common/autoComplete/autoComplete';
 import {
   AutoCompleteProvider,
   OptionsType,
 } from '../common/autoComplete/autoCompleteContext';
 import InputWithAutoComplete from '../common/autoComplete/inputWithAutoComplete';
-import AutoComplete from '../common/autoComplete/autoComplete';
-import debounce from '@/app/utils/debounce';
+import StyledButton from '../common/styledButton';
 
 interface AddNewInterestProps {
   onSubmit: (value: string) => void;

@@ -1,6 +1,7 @@
+import mongoose from 'mongoose';
+
 import { USER_DEFAULT } from '@/app/lib/constants/userDefault';
 import UserDetail from '@/app/lib/db/models/userDetails';
-import mongoose from 'mongoose';
 
 export async function createUserDetail(
   userId: string,

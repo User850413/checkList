@@ -1,8 +1,10 @@
+import jwt from 'jsonwebtoken';
+import { NextResponse } from 'next/server';
+
+import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import User from '@/app/lib/db/models/users';
-import { NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
+
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 if (!JWT_SECRET) throw new Error(ERROR_MESSAGES.JWT_SECRET_ERROR.ko);

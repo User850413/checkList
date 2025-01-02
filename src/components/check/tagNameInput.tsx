@@ -1,11 +1,13 @@
 'use client';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import React, { FormEvent, useRef, useState } from 'react';
-import StyledButton from '../common/styledButton';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { patchTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
+
+import StyledButton from '../common/styledButton';
 
 interface TagNameInputProps {
   tagName: string;

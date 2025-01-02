@@ -1,6 +1,7 @@
+import mongoose from 'mongoose';
+
 import Check from '@/app/lib/db/models/checks';
 import Tag from '@/app/lib/db/models/tags';
-import mongoose from 'mongoose';
 
 export const deleteTagAndChecks = async (tagId: string) => {
   const session = await mongoose.startSession();

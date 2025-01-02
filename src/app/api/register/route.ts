@@ -1,8 +1,9 @@
-import dbConnect from '@/app/lib/db/dbConnect';
-import { NextResponse } from 'next/server';
-import User from '@/app/lib/db/models/users';
 import mongoose from 'mongoose';
+import { NextResponse } from 'next/server';
+
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
+import dbConnect from '@/app/lib/db/dbConnect';
+import User from '@/app/lib/db/models/users';
 import { createUserDetail } from '@/app/services/user/createUserDetail';
 
 export async function POST(req: Request) {
