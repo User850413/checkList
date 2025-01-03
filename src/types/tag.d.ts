@@ -12,9 +12,9 @@ export interface TagRequest {
 }
 
 export interface TagResponse {
-  tags: Tag[];
+  data: Tag[];
   total: number;
   page: number;
   limit: number;
-  pages: number;
+  page: number;
 }

@@ -74,7 +74,7 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
           <span>달성률</span>
         </div>
       </div>
-      <ul className="my-3">
+      <ul className="my-3 flex flex-col gap-2">
         {checkList?.map((check, index) => (
           <li key={check._id || index}>
             <CheckListCard
@@ -86,6 +86,11 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
           </li>
         ))}
       </ul>
+      {checkList.length === 0 && (
+        <span className="mb-5 flex min-h-10 w-full cursor-default items-center justify-center text-sm text-slate-600">
+          아직 작성된 리스트가 없습니다. 항목을 추가해보세요!
+        </span>
+      )}
       <div>
         <CheckInput tagId={tagId} />
       </div>
