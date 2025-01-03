@@ -8,7 +8,7 @@ import { Field } from '../ui/field';
 
 interface AddNewTagNameProps {
   onChange: Dispatch<SetStateAction<TagRequest>>;
-  trigger: boolean;
+  trigger: boolean; // NOTE : 상위 컴포넌트 상태 변경 시 reset trigger
   setTrigger: Dispatch<SetStateAction<boolean>>;
 }
 

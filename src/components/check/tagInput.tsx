@@ -19,6 +19,7 @@ export function TagInput({ Undo }: TagInPutProps) {
     name: '',
     interest: '',
   });
+  // NOTE : 하위 컴포넌트에 전달할 reset trigger
   const [trigger, setTrigger] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
