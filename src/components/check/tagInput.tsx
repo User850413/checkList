@@ -42,7 +42,9 @@ export function TagInput({ Undo }: TagInPutProps) {
           className="w-full border-slate-200 border-2 rounded-md"
         />
       </div> */}
-      <StyledButton type="submit">추가</StyledButton>
+      <StyledButton type="submit" size="md">
+        추가
+      </StyledButton>
     </form>
   );
 }
