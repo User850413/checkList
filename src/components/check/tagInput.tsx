@@ -19,6 +19,8 @@ export function TagInput({ Undo }: TagInPutProps) {
     name: '',
     interest: '',
   });
+  const [trigger, setTrigger] = useState<boolean>(false);
+
   const queryClient = useQueryClient();
 
   // NOTE : post tag 뮤테이션
@@ -36,6 +38,8 @@ export function TagInput({ Undo }: TagInPutProps) {
     e.preventDefault();
     tagMutate(tagData);
     Undo();
+    setTagData({ name: '', interest: '' });
+    setTrigger(true);
   };
 
   return (
@@ -43,8 +47,16 @@ export function TagInput({ Undo }: TagInPutProps) {
       onSubmit={onHandleSubmit}
       className="flex flex-col items-center gap-5 rounded-lg p-2"
     >
-      <AddNewTagName onSubmit={setTagData} />
-      <AddNewTagDetail onSubmit={setTagData} />
+      <AddNewTagName
+        onChange={setTagData}
+        trigger={trigger}
+        setTrigger={setTrigger}
+      />
+      <AddNewTagDetail
+        onChange={setTagData}
+        trigger={trigger}
+        setTrigger={setTrigger}
+      />
       <StyledButton type="submit" size="md">
         추가
       </StyledButton>

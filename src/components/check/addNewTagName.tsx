@@ -7,18 +7,30 @@ import { TagRequest } from '@/types/tag';
 import { Field } from '../ui/field';
 
 interface AddNewTagNameProps {
-  onSubmit: Dispatch<SetStateAction<TagRequest>>;
+  onChange: Dispatch<SetStateAction<TagRequest>>;
+  trigger: boolean;
+  setTrigger: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function AddNewTagName({ onSubmit }: AddNewTagNameProps) {
+export default function AddNewTagName({
+  onChange,
+  trigger,
+  setTrigger,
+}: AddNewTagNameProps) {
   const tagNameRef = useRef<null | HTMLInputElement>(null);
 
   const onChangeInput = () => {
     if (tagNameRef.current && tagNameRef.current !== null) {
       const input = tagNameRef.current;
-      onSubmit((prev) => ({ ...prev, name: input.value }));
+      onChange((prev) => ({ ...prev, name: input.value }));
     }
   };
+
+  useEffect(() => {
+    if (trigger) {
+      if (tagNameRef.current) tagNameRef.current.value = '';
+    }
+  }, [trigger]);
 
   return (
     <div className="w-full">
