@@ -38,7 +38,7 @@ export default function CheckListWrapper() {
         {tagList &&
           tagList.map((tag) => (
             <li key={tag._id}>
-              <CheckList tagName={tag.name} tagId={tag._id} />
+              <CheckList tagName={tag.name} tagId={tag._id} interest="건강" />
             </li>
           ))}
         <li>

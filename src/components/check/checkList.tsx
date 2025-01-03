@@ -11,13 +11,15 @@ import { Tag } from '@/types/tag';
 import CheckInput from './checkInput';
 import CheckListCard from './checkListCard';
 import TagNameInput from './tagNameInput';
+import FieldButton from '../layout/fieldButton';
 
 interface CheckListProp {
   tagName: string;
   tagId: string;
+  interest: string;
 }
 
-function CheckList({ tagName, tagId }: CheckListProp) {
+function CheckList({ tagName, tagId, interest }: CheckListProp) {
   const [checkList, setCheckList] = useState<Check[]>([]);
 
   const queryClient = useQueryClient();
@@ -57,14 +59,20 @@ function CheckList({ tagName, tagId }: CheckListProp) {
 
   return (
     <div className="h-full w-full rounded-lg bg-white px-3 py-2">
-      <div className="flex items-center justify-between border-b-2 border-b-slate-200">
-        <TagNameInput tagName={tagName} tagId={tagId} />
-        <button
-          onClick={() => onClickDelete(tagId)}
-          className="inline-block p-1 text-slate-400"
-        >
-          x
-        </button>
+      <div className="border-b-2 border-b-slate-200">
+        <div className="flex items-center justify-between">
+          <TagNameInput tagName={tagName} tagId={tagId} />
+          <button
+            onClick={() => onClickDelete(tagId)}
+            className="inline-block p-1 text-slate-400"
+          >
+            x
+          </button>
+        </div>
+        <div className="flex w-full items-center gap-2 py-2">
+          <FieldButton fieldName={interest} />
+          <span>달성률</span>
+        </div>
       </div>
       <ul className="my-3">
         {checkList?.map((check, index) => (
