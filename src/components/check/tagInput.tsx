@@ -6,40 +6,61 @@ import AddNewTagDetail from './addNewTagDetail';
 import AddNewTagName from './addNewTagName';
 import StyledButton from '../common/styledButton';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { postTag } from '@/app/services/api/tags';
+import { Tag, TagRequest } from '@/types/tag';
+
 interface TagInPutProps {
-  Undo?: () => void;
+  Undo: () => void;
 }
 
 export function TagInput({ Undo }: TagInPutProps) {
-  const [trigger1, setTrigger1] = useState<boolean>(false);
-  const [trigger2, setTrigger2] = useState<boolean>(false);
+  const [tagData, setTagData] = useState<TagRequest>({
+    name: '',
+    interest: '',
+  });
+  // NOTE : 하위 컴포넌트에 전달할 reset trigger
+  const [trigger, setTrigger] = useState<boolean>(false);
+
+  const queryClient = useQueryClient();
+
+  // NOTE : post tag 뮤테이션
+  const { mutate: tagMutate } = useMutation({
+    mutationFn: ({ name }: Pick<Tag, 'name'>) => postTag({ name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tags'] });
+    },
+    onError: (error) => {
+      console.log(`태그 추가 실패 : ${error.message}`);
+    },
+  });
 
   const onHandleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setTrigger1(true);
-    setTrigger2(true);
+    tagMutate(tagData);
+    Undo();
+    setTagData({ name: '', interest: '' });
+    setTrigger(true);
   };
 
   return (
     <form
       onSubmit={onHandleSubmit}
-      className="flex flex-col items-center gap-5 bg-red-50"
+      className="flex flex-col items-center gap-5 rounded-lg p-2"
     >
       <AddNewTagName
-        trigger={trigger1}
-        onTriggered={() => setTrigger1(false)}
+        onChange={setTagData}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
-      <AddNewTagDetail />
-      {/* <div className="flex items-center w-full">
-        <input
-          type="text"
-          ref={inputRef}
-          value={tagName}
-          onChange={onChangeInput}
-          className="w-full border-slate-200 border-2 rounded-md"
-        />
-      </div> */}
-      <StyledButton type="submit">추가</StyledButton>
+      <AddNewTagDetail
+        onChange={setTagData}
+        trigger={trigger}
+        setTrigger={setTrigger}
+      />
+      <StyledButton type="submit" size="md">
+        추가
+      </StyledButton>
     </form>
   );
 }

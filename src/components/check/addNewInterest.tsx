@@ -16,9 +16,17 @@ import StyledButton from '../common/styledButton';
 
 interface AddNewInterestProps {
   onSubmit: (value: string) => void;
+  isButtoned?: boolean;
+  buttonText?: string;
+  defaultText?: string;
 }
 
-export default function AddNewInterest({ onSubmit }: AddNewInterestProps) {
+export default function AddNewInterest({
+  onSubmit,
+  isButtoned = true,
+  buttonText = '추가',
+  defaultText = '',
+}: AddNewInterestProps) {
   const [inputValue, setInputValue] = useState<string>('');
 
   const [autoCompleteValue, setAutoCompleteValue] = useState<OptionsType[]>([]);
@@ -72,12 +80,16 @@ export default function AddNewInterest({ onSubmit }: AddNewInterestProps) {
               name="inputValue"
               onKeyDown={handleEnterInput}
               handleChangedValue={setInputValue}
+              defaultText={defaultText}
             />
             <AutoComplete />
           </div>
-          <StyledButton type="button" onClick={submitFunc}>
-            추가
-          </StyledButton>
+
+          {isButtoned && (
+            <StyledButton type="button" onClick={submitFunc} size="md">
+              {buttonText}
+            </StyledButton>
+          )}
         </AutoCompleteProvider>
       </div>
     </>

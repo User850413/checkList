@@ -27,7 +27,10 @@ const StyledButton = React.forwardRef<HTMLButtonElement, StyledButtonProps>(
               color == 'red' && !disabled,
             'bg-slate-500 text-white hover:bg-slate-600': color === 'dark',
           },
-          'px-5 py-2',
+          {
+            'px-2 py-1': props.size === 'xs',
+            'px-5 py-2': props.size === 'md',
+          },
         )}
       >
         {children}

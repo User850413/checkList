@@ -3,6 +3,11 @@ export interface Tag {
   name: string;
 }
 
+export interface TagRequest {
+  name: string;
+  interest: string;
+}
+
 export interface TagResponse {
   tags: Tag[];
   total: number;

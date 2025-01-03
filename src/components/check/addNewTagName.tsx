@@ -1,51 +1,36 @@
 'use client';
 import { Input } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
-import { postTag } from '@/app/services/api/tags';
-import { Tag } from '@/types/tag';
+import { TagRequest } from '@/types/tag';
 
 import { Field } from '../ui/field';
 
 interface AddNewTagNameProps {
-  trigger: boolean;
-  onTriggered: () => void;
+  onChange: Dispatch<SetStateAction<TagRequest>>;
+  trigger: boolean; // NOTE : 상위 컴포넌트 상태 변경 시 reset trigger
+  setTrigger: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function AddNewTagName({
+  onChange,
   trigger,
-  onTriggered,
+  setTrigger,
 }: AddNewTagNameProps) {
-  const [tagNameValue, setTagNameValue] = useState<string>('');
   const tagNameRef = useRef<null | HTMLInputElement>(null);
-  const queryClient = useQueryClient();
 
   const onChangeInput = () => {
-    setTagNameValue(tagNameRef.current?.value || '');
+    if (tagNameRef.current && tagNameRef.current !== null) {
+      const input = tagNameRef.current;
+      onChange((prev) => ({ ...prev, name: input.value }));
+    }
   };
-
-  const { mutate: tagMutate } = useMutation({
-    mutationFn: ({ name }: Pick<Tag, 'name'>) => postTag({ name }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tags'] });
-    },
-    onError: (error) => {
-      console.log(`태그 추가 실패 : ${error.message}`);
-    },
-    onSettled: () => onTriggered(),
-  });
 
   useEffect(() => {
     if (trigger) {
-      if (tagNameValue) {
-        tagMutate({ name: tagNameValue });
-        setTagNameValue('');
-      } else {
-        onTriggered();
-      }
+      if (tagNameRef.current) tagNameRef.current.value = '';
     }
-  }, [trigger, tagMutate, tagNameValue, onTriggered]);
+  }, [trigger]);
 
   return (
     <div className="w-full">
@@ -53,9 +38,8 @@ export default function AddNewTagName({
         <Input
           onChange={onChangeInput}
           type="text"
-          className="flex w-full items-center bg-white"
+          className="flex w-full items-center bg-slate-100 px-1"
           ref={tagNameRef}
-          value={tagNameValue}
         />
       </Field>
     </div>

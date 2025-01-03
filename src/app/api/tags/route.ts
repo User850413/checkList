@@ -6,6 +6,7 @@ import Interest from '@/app/lib/db/models/interests';
 import Tag from '@/app/lib/db/models/tags';
 import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
 import { getUserId } from '@/app/services/token/getUserId';
+import { interest } from '@/types/interest';
 
 export async function GET(req: NextRequest) {
   try {
@@ -54,18 +55,23 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
+    let interestId = null;
 
     if (data.interest) {
-      const isExistedInterest = await Interest.findOne({ name: data.interest });
+      const isExistedInterest: interest | null = await Interest.findOne({
+        name: data.interest,
+      });
       if (!isExistedInterest)
-        NextResponse.json(
+        return NextResponse.json(
           { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
           { status: 400 },
         );
+
+      interestId = isExistedInterest._id;
     }
 
     const newTag = await Tag.create([
-      { name: data.name, interest: data.interest, userId },
+      { name: data.name, interest: interestId, userId },
     ]);
     return NextResponse.json(newTag);
   } catch (err) {

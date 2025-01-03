@@ -5,11 +5,13 @@ import { useAutoComplete } from './autoCompleteContext';
 
 type CustomInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '2xs' | 'xs';
+  defaultText?: string;
   handleChangedValue?: (selection: string) => void;
 };
 
 function InputWithAutoComplete({
   handleChangedValue,
+  defaultText = '',
   ...rest
 }: CustomInputProps) {
   const { selectedOption, setIsBlur } = useAutoComplete();
@@ -17,7 +19,7 @@ function InputWithAutoComplete({
 
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.value = selectedOption;
+      inputRef.current.value = !!selectedOption ? selectedOption : defaultText;
       if (handleChangedValue) handleChangedValue(inputRef.current.value);
     }
   }, [selectedOption, handleChangedValue]);
@@ -39,6 +41,7 @@ function InputWithAutoComplete({
       onBlur={handleBlur}
       {...rest}
       id="inputWithAutoComplete"
+      className="flex w-full items-center rounded-lg bg-slate-100 px-1"
     />
   );
 }
