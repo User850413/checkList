@@ -8,7 +8,7 @@ import StyledButton from '../common/styledButton';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postTag } from '@/app/services/api/tags';
-import { Tag, TagRequest } from '@/types/tag';
+import { TagRequest } from '@/types/tag';
 
 interface TagInPutProps {
   Undo: () => void;
