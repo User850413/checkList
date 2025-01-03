@@ -1,17 +1,14 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import AddNewInterest from './addNewInterest';
 import { Field } from '../ui/field';
 import StyledButton from '../common/styledButton';
+import { TagRequest } from '@/types/tag';
 
 interface AddNewTagDetailProps {
-  trigger: boolean;
-  onTriggered: () => void;
+  onSubmit: Dispatch<SetStateAction<TagRequest>>;
 }
 
-export default function AddNewTagDetail({
-  trigger,
-  onTriggered,
-}: AddNewTagDetailProps) {
+export default function AddNewTagDetail({ onSubmit }: AddNewTagDetailProps) {
   const [tagInterest, setTagInterest] = useState<string>('');
   const [isWriting, setIsWriting] = useState<boolean>(true);
 
@@ -19,8 +16,8 @@ export default function AddNewTagDetail({
     if (!value) return;
 
     setTagInterest(value);
+    onSubmit((prev) => ({ ...prev, interest: value }));
     setIsWriting(false);
-    console.log(tagInterest);
   };
 
   return (

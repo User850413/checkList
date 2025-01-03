@@ -1,51 +1,24 @@
 'use client';
 import { Input } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
-import { postTag } from '@/app/services/api/tags';
-import { Tag } from '@/types/tag';
+import { TagRequest } from '@/types/tag';
 
 import { Field } from '../ui/field';
 
 interface AddNewTagNameProps {
-  trigger: boolean;
-  onTriggered: () => void;
+  onSubmit: Dispatch<SetStateAction<TagRequest>>;
 }
 
-export default function AddNewTagName({
-  trigger,
-  onTriggered,
-}: AddNewTagNameProps) {
-  const [tagNameValue, setTagNameValue] = useState<string>('');
+export default function AddNewTagName({ onSubmit }: AddNewTagNameProps) {
   const tagNameRef = useRef<null | HTMLInputElement>(null);
-  const queryClient = useQueryClient();
 
   const onChangeInput = () => {
-    setTagNameValue(tagNameRef.current?.value || '');
-  };
-
-  const { mutate: tagMutate } = useMutation({
-    mutationFn: ({ name }: Pick<Tag, 'name'>) => postTag({ name }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tags'] });
-    },
-    onError: (error) => {
-      console.log(`태그 추가 실패 : ${error.message}`);
-    },
-    onSettled: () => onTriggered(),
-  });
-
-  useEffect(() => {
-    if (trigger) {
-      if (tagNameValue) {
-        tagMutate({ name: tagNameValue });
-        setTagNameValue('');
-      } else {
-        onTriggered();
-      }
+    if (tagNameRef.current && tagNameRef.current !== null) {
+      const input = tagNameRef.current;
+      onSubmit((prev) => ({ ...prev, name: input.value }));
     }
-  }, [trigger, tagMutate, tagNameValue, onTriggered]);
+  };
 
   return (
     <div className="w-full">
@@ -55,7 +28,6 @@ export default function AddNewTagName({
           type="text"
           className="flex w-full items-center bg-slate-100 px-1"
           ref={tagNameRef}
-          value={tagNameValue}
         />
       </Field>
     </div>

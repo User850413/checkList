@@ -6,18 +6,36 @@ import AddNewTagDetail from './addNewTagDetail';
 import AddNewTagName from './addNewTagName';
 import StyledButton from '../common/styledButton';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { postTag } from '@/app/services/api/tags';
+import { Tag, TagRequest } from '@/types/tag';
+
 interface TagInPutProps {
-  Undo?: () => void;
+  Undo: () => void;
 }
 
 export function TagInput({ Undo }: TagInPutProps) {
-  const [trigger1, setTrigger1] = useState<boolean>(false);
-  const [trigger2, setTrigger2] = useState<boolean>(false);
+  const [tagData, setTagData] = useState<TagRequest>({
+    name: '',
+    interest: '',
+  });
+  const queryClient = useQueryClient();
+
+  // NOTE : post tag 뮤테이션
+  const { mutate: tagMutate } = useMutation({
+    mutationFn: ({ name }: Pick<Tag, 'name'>) => postTag({ name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tags'] });
+    },
+    onError: (error) => {
+      console.log(`태그 추가 실패 : ${error.message}`);
+    },
+  });
 
   const onHandleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setTrigger1(true);
-    setTrigger2(true);
+    tagMutate(tagData);
+    Undo();
   };
 
   return (
@@ -25,23 +43,8 @@ export function TagInput({ Undo }: TagInPutProps) {
       onSubmit={onHandleSubmit}
       className="flex flex-col items-center gap-5 rounded-lg p-2"
     >
-      <AddNewTagName
-        trigger={trigger1}
-        onTriggered={() => setTrigger1(false)}
-      />
-      <AddNewTagDetail
-        trigger={trigger2}
-        onTriggered={() => setTrigger2(false)}
-      />
-      {/* <div className="flex items-center w-full">
-        <input
-          type="text"
-          ref={inputRef}
-          value={tagName}
-          onChange={onChangeInput}
-          className="w-full border-slate-200 border-2 rounded-md"
-        />
-      </div> */}
+      <AddNewTagName onSubmit={setTagData} />
+      <AddNewTagDetail onSubmit={setTagData} />
       <StyledButton type="submit" size="md">
         추가
       </StyledButton>
