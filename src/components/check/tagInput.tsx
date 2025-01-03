@@ -26,7 +26,7 @@ export function TagInput({ Undo }: TagInPutProps) {
 
   // NOTE : post tag 뮤테이션
   const { mutate: tagMutate } = useMutation({
-    mutationFn: ({ name }: Pick<Tag, 'name'>) => postTag({ name }),
+    mutationFn: ({ name, interest }: TagRequest) => postTag({ name, interest }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tags'] });
     },
