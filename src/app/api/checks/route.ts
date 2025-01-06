@@ -110,6 +110,12 @@ export async function PATCH(req: NextRequest) {
     new: true,
   });
 
+  if (!updatedCheck)
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.NOT_ROUND_CHECK.ko },
+      { status: 404 },
+    );
+
   return NextResponse.json(updatedCheck);
 }
 
