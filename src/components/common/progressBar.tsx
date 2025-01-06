@@ -9,7 +9,7 @@ interface ProgressBar {
 }
 
 export default function ProgressBar({ full, completed }: ProgressBar) {
-  const rate = Math.floor((completed / full) * 100);
+  const rate = full > 0 ? Math.floor((completed / full) * 100) : 0;
   const [rateBar, setRateBar] = useState<number>(rate);
   useEffect(() => {
     setRateBar(rate);

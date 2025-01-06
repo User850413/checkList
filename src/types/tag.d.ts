@@ -17,5 +17,4 @@ export interface TagResponse {
   total: number;
   page: number;
   limit: number;
-  page: number;
 }
