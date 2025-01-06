@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'motion/react';
 
 interface ProgressBar {
   full: number;
@@ -17,8 +18,9 @@ export default function ProgressBar({ full, completed }: ProgressBar) {
 
   return (
     <div className="relative h-2 w-full rounded-full bg-slate-200">
-      <span
-        style={{ width: `${rateBar}%` }}
+      <motion.span
+        initial={{ width: 0 }}
+        animate={{ width: `${rateBar}%` }}
         className="absolute bottom-0 left-0 top-0 rounded-full bg-blue-300"
       />
     </div>

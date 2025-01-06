@@ -40,7 +40,6 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
   useEffect(() => {
     if (isSuccess) {
       setCheckList(list.data);
-      console.log(checkList);
     }
   }, [list, isSuccess]);
 
@@ -59,7 +58,7 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
     deleteMutate({ _id });
   };
 
-  // NOTE : complete 클릭 시 새로 api 요청 대신 render만 다시
+  // NOTE : complete 클릭 시 새로 tag api 요청 대신 render만 다시
   useEffect(() => {
     if (checkList.length > 0) {
       const totalChecks = checkList.length;
@@ -88,7 +87,10 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
         </div>
         <div className="flex w-full items-center gap-2 py-2">
           <FieldButton fieldName={interest} />
-          <ProgressBar full={100} completed={renderedRate} />
+          <div className="flex w-full flex-col items-start justify-between gap-2">
+            <span className="cursor-default text-xs text-gray-500">진행도</span>
+            <ProgressBar full={100} completed={renderedRate} />
+          </div>
         </div>
       </div>
       <ul className="my-3 flex flex-col gap-2">
