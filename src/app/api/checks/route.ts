@@ -100,7 +100,13 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
-  const updatedCheck = await Check.findByIdAndUpdate(id, body, {
+  const { task, isCompleted } = body;
+  const updatedData = {
+    ...(task !== undefined && { task }),
+    ...(isCompleted !== undefined && { isCompleted }),
+  };
+
+  const updatedCheck = await Check.findByIdAndUpdate(id, updatedData, {
     new: true,
   });
 

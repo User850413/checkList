@@ -1,4 +1,4 @@
-import { Check } from '@/types/check';
+import { Check, CheckRequest } from '@/types/check';
 
 import apiClient from '../token/apiClient';
 
@@ -41,14 +41,15 @@ export async function postChecks({ task, tagId }: Partial<Check>) {
   }
 }
 
-export async function patchChecks({ _id, task }: Partial<Check>) {
+export async function patchChecks(_id: string, data: CheckRequest) {
   if (!_id) throw new Error('id는 필수 입력값입니다');
-  if (!task?.trim()) throw new Error('task는 필수 입력값입니다');
+
+  const { task } = data;
+  if (task !== undefined && task !== null && task.length === 0)
+    throw new Error('task는 0자 이상이어야 합니다');
 
   try {
-    const res = await apiClient.patch(`/checks?id=${_id}`, {
-      task: task.trim(),
-    });
+    const res = await apiClient.patch(`/checks?id=${_id}`, data);
     return res.data;
   } catch (error) {
     console.error(`체크 항목 수정 중 오류 발생 : ${error}`);
