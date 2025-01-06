@@ -41,12 +41,17 @@ export async function postChecks({ task, tagId }: Partial<Check>) {
   }
 }
 
-export async function patchChecks(_id: string, data: CheckRequest) {
+export async function patchChecks(
+  _id: string,
+  data: Pick<CheckRequest, 'isCompleted'> | Pick<CheckRequest, 'task'>,
+) {
   if (!_id) throw new Error('id는 필수 입력값입니다');
 
-  const { task } = data;
-  if (task !== undefined && task !== null && task.length === 0)
-    throw new Error('task는 0자 이상이어야 합니다');
+  if ('task' in data) {
+    const { task } = data;
+    if (task !== undefined && task !== null && task.length === 0)
+      throw new Error('task는 0자 이상이어야 합니다');
+  }
 
   try {
     const res = await apiClient.patch(`/checks?id=${_id}`, data);

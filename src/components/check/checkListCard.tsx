@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
-import { deleteCheck } from '@/app/services/api/checks';
+import { deleteCheck, patchChecks } from '@/app/services/api/checks';
 import { Check } from '@/types/check';
 import StyledButton from '../common/styledButton';
 import Image from 'next/image';
@@ -17,12 +17,12 @@ interface CheckListCardProps {
 
 function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
   const queryClient = useQueryClient();
-  const [checked, setChecked] = useState(isCompleted);
+  const [checked, setChecked] = useState<boolean>(isCompleted);
 
   const closeButton = `${process.env.PUBLIC_URL || ''}/icons/x-round.svg`;
   const checkIcon = `${process.env.PUBLIC_URL || ''}/icons/check-round.svg`;
 
-  // NOTE : 항목 삭제 mutate
+  // NOTE : 항목 삭제 뮤테이션
   const { mutate: deleteMutate } = useMutation({
     mutationFn: ({ _id }: Pick<Check, '_id'>) => deleteCheck({ _id }),
     onSuccess: () => {
@@ -33,8 +33,18 @@ function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
     },
   });
 
+  // NOTE : 항목 complete 뮤테이션
+  const { mutate: completeMutate } = useMutation({
+    mutationFn: () => patchChecks(id, { isCompleted: checked }),
+    mutationKey: ['checks', tagId],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['checks', tagId] });
+    },
+  });
+
   const onClickCard = () => {
     setChecked((prev) => !prev);
+    completeMutate();
   };
 
   const onClickDelete = (_id: string) => {
