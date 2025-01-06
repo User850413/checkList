@@ -10,10 +10,16 @@ export async function getAllTags() {
   return res.data;
 }
 
-export async function getMyTags() {
+export async function getMyTags(params?: { interest?: string }) {
+  const interest = params;
   try {
-    const res = await apiClient.get('/tags/mine');
-    return res.data;
+    if (interest !== undefined) {
+      const res = await apiClient.get(`/tags/mine?interest=${interest}`);
+      return res.data;
+    } else {
+      const res = await apiClient.get('/tags/mine');
+      return res.data;
+    }
   } catch (error) {
     throw error;
   }

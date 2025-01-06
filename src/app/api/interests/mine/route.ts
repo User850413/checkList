@@ -4,6 +4,7 @@ import Interest from '@/app/lib/db/models/interests';
 import Tag from '@/app/lib/db/models/tags';
 import { getUserId } from '@/app/services/token/getUserId';
 import { Tag as TagType } from '@/types/tag';
+import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 // NOTE : 내가 설정한 관심사(userDetail)가 아니라 내가 생성한 리스트의 모든 관심사 불러오기
@@ -27,12 +28,17 @@ export async function GET(req: NextRequest) {
         myInterestIdList.push({ id: tag.interest });
     });
 
-    // 추출한 id값들로 Interest 스키마에서 가져오기
+    // NOTE : 추출한 id값을 objectId로 변환
+    const objectIds = myInterestIdList.map(
+      (interest) => new mongoose.Types.ObjectId(interest.id),
+    );
+
+    // 변환한 id값들로 Interest 스키마에서 가져오기
     const myInterestList = await Interest.find({
-      _id: { $in: myInterestIdList },
+      _id: { $in: objectIds },
     }).select('name');
 
-    return NextResponse.json({ data: myInterestIdList }, { status: 200 });
+    return NextResponse.json({ data: myInterestList }, { status: 200 });
   } catch (err) {
     if (err instanceof Error)
       return NextResponse.json({ error: err.message }, { status: 500 });
