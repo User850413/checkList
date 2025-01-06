@@ -40,7 +40,10 @@ export async function GET(req: NextRequest) {
       .limit(limit);
     const total = await Interest.countDocuments();
 
-    return NextResponse.json({ total, page, limit, data: interestList });
+    return NextResponse.json(
+      { total, page, limit, data: interestList },
+      { status: 200 },
+    );
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
