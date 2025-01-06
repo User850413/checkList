@@ -70,7 +70,7 @@ export default function UserProfile() {
   if (dataError && detailDataError) return <div>Error</div>;
 
   return (
-    <header className="mx-14 mt-14 flex min-w-[800px] items-center gap-8 rounded-lg bg-white p-6 shadow-card">
+    <div className="mx-14 mt-14 flex min-w-[800px] items-center gap-8 rounded-lg bg-white p-6 shadow-card">
       {myData && (
         <>
           <Profile
@@ -118,6 +118,6 @@ export default function UserProfile() {
           </div>
         </>
       )}
-    </header>
+    </div>
   );
 }

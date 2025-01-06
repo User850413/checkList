@@ -9,23 +9,18 @@ import { Tag } from '@/types/tag';
 import AddNewTagWrapper from './addNewTagWrapper';
 import CheckList from './checkList';
 
-export default function CheckListWrapper() {
-  const [tagList, setTagList] = useState<Tag[]>([]);
+interface CheckListWrapperProps {
+  isLoading: boolean;
+  tags: undefined | Tag[];
+  error: Error | null;
+  isSuccess?: boolean;
+}
 
-  const {
-    isLoading,
-    data: tags,
-    error,
-    isSuccess,
-  } = useQuery({
-    queryKey: ['tags', 'mine'],
-    queryFn: () => getMyTags(),
-  });
-
-  useEffect(() => {
-    if (isSuccess) setTagList(tags?.data);
-  }, [tags, isSuccess]);
-
+export default function CheckListWrapper({
+  isLoading,
+  tags,
+  error,
+}: CheckListWrapperProps) {
   if (isLoading) return <div> loading...</div>;
   if (error) {
     console.log(error.message);
@@ -33,22 +28,20 @@ export default function CheckListWrapper() {
   }
 
   return (
-    <div className="w-full px-6 py-10">
-      <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {tagList &&
-          tagList.map((tag) => (
-            <li key={tag._id}>
-              <CheckList
-                tagName={tag.name}
-                tagId={tag._id}
-                interest={tag.interest}
-              />
-            </li>
-          ))}
-        <li>
-          <AddNewTagWrapper />
-        </li>
-      </ul>
-    </div>
+    <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      {tags &&
+        tags.map((tag) => (
+          <li key={tag._id}>
+            <CheckList
+              tagName={tag.name}
+              tagId={tag._id}
+              interest={tag.interest}
+            />
+          </li>
+        ))}
+      <li>
+        <AddNewTagWrapper />
+      </li>
+    </ul>
   );
 }

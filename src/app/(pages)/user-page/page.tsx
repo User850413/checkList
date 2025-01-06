@@ -2,13 +2,18 @@
 
 import Header from '@/components/layout/header';
 import UserProfile from './userProfile';
+import TagBundle from '@/components/tag/tagBundle';
 
 export default function UserPage() {
   return (
     <>
       <Header />
-      <UserProfile />
-      <main></main>
+      <header>
+        <UserProfile />
+      </header>
+      <main>
+        <TagBundle />
+      </main>
     </>
   );
 }
