@@ -7,6 +7,8 @@ import Tag from '@/app/lib/db/models/tags';
 import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
 import { getUserId } from '@/app/services/token/getUserId';
 import { interest } from '@/types/interest';
+import { calculateCompletedRate } from '@/app/services/database/completedRate';
+import { Tag as TagType } from '@/types/tag';
 
 export async function GET(req: NextRequest) {
   try {
@@ -29,10 +31,21 @@ export async function GET(req: NextRequest) {
     const limit = !rawLimit || rawLimit < 1 || rawLimit > 100 ? 10 : rawLimit;
     const skip = (page - 1) * limit;
 
-    const tags = await Tag.find().skip(skip).limit(limit);
+    const tags: TagType[] = await Tag.find()
+      .skip(skip)
+      .limit(limit)
+      .lean<TagType[]>();
     const total = await Tag.countDocuments();
 
-    return NextResponse.json({ total, page, limit, data: tags });
+    // NOTE : tag response에 completedRate 추가
+    const tagsWithRates = await Promise.all(
+      tags.map(async (tag) => {
+        const completedRate = await calculateCompletedRate(tag._id);
+        return { ...tag, completedRate };
+      }),
+    );
+
+    return NextResponse.json({ total, page, limit, data: tagsWithRates });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });

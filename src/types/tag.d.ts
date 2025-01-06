@@ -1,6 +1,10 @@
 export interface Tag {
   _id: string;
   name: string;
+  userId: string;
+  interest: string;
+  completedRate: number;
+  __v: number;
 }
 
 export interface TagRequest {
@@ -9,9 +13,8 @@ export interface TagRequest {
 }
 
 export interface TagResponse {
-  tags: Tag[];
+  data: Tag[];
   total: number;
   page: number;
   limit: number;
-  pages: number;
 }

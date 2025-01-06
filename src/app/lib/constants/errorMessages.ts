@@ -65,6 +65,9 @@ const ERROR_MESSAGES = {
   NOT_FOUND_TAG: {
     ko: '존재하지 않는 태그입니다',
   },
+  NOT_ROUND_CHECK: {
+    ko: '존재하지 않는 항목입니다.',
+  },
   NOT_FOUND_USER: {
     ko: '존재하지 않는 유저입니다',
   },

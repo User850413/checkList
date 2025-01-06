@@ -105,7 +105,7 @@ export default function UserPage() {
                         <span className="text-sm">
                           {myData.username}님이 관심 있어하는 분야
                         </span>
-                        <ul className="grid grid-cols-6 gap-1 lg:grid-cols-8">
+                        <ul className="flex flex-wrap gap-2">
                           {myDetailData.interest.map((field) => (
                             <li key={field._id}>
                               <FieldButton fieldName={field.name} size="md" />

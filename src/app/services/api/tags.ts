@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
-import { Tag } from '@/types/tag';
+import { Tag, TagRequest } from '@/types/tag';
 
 import apiClient from '../token/apiClient';
 
@@ -13,21 +13,23 @@ export async function getAllTags() {
 export async function getMyTags() {
   try {
     const res = await apiClient.get('/tags/mine');
-    console.log(res.data);
     return res.data;
   } catch (error) {
     throw error;
   }
 }
 
-export async function postTag({ name }: Pick<Tag, 'name'>) {
+export async function postTag({ name, interest }: TagRequest) {
   const trimmedName = name.trim();
+  let trimmedInterest = interest.trim();
 
   if (!trimmedName) throw new Error(ERROR_MESSAGES.EMPTY_TAGNAME.ko);
+  if (!trimmedInterest) trimmedInterest = '기타';
 
   try {
     const res = await apiClient.post('/tags', {
       name: trimmedName,
+      interest: trimmedInterest,
     });
     return res.data;
   } catch (error) {

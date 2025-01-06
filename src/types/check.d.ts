@@ -14,3 +14,8 @@ export interface CheckResponse {
   limit: number;
   pages: number;
 }
+
+export interface CheckRequest {
+  task: string;
+  isCompleted: boolean;
+}

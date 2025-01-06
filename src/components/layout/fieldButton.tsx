@@ -23,7 +23,7 @@ export default function FieldButton({
   return (
     <button
       className={clsx(
-        'flex items-center gap-2 rounded-full bg-slate-200 hover:bg-slate-300',
+        'flex shrink-0 items-center gap-2 rounded-full bg-slate-200 hover:bg-slate-300',
         {
           'px-3 py-1 text-sm': size == 'md',
         },

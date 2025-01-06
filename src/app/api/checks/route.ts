@@ -100,9 +100,21 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
-  const updatedCheck = await Check.findByIdAndUpdate(id, body, {
+  const { task, isCompleted } = body;
+  const updatedData = {
+    ...(task !== undefined && { task }),
+    ...(isCompleted !== undefined && { isCompleted }),
+  };
+
+  const updatedCheck = await Check.findByIdAndUpdate(id, updatedData, {
     new: true,
   });
+
+  if (!updatedCheck)
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.NOT_ROUND_CHECK.ko },
+      { status: 404 },
+    );
 
   return NextResponse.json(updatedCheck);
 }
