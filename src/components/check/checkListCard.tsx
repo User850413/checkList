@@ -38,6 +38,7 @@ function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
     mutationFn: () => patchChecks(id, { isCompleted: checked }),
     mutationKey: ['checks', tagId],
     onSuccess: () => {
+      console.log('invalid!');
       queryClient.invalidateQueries({ queryKey: ['checks', tagId] });
     },
   });

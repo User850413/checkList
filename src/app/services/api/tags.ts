@@ -13,7 +13,6 @@ export async function getAllTags() {
 export async function getMyTags() {
   try {
     const res = await apiClient.get('/tags/mine');
-    console.log(res.data);
     return res.data;
   } catch (error) {
     throw error;

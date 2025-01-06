@@ -12,6 +12,7 @@ import CheckInput from './checkInput';
 import CheckListCard from './checkListCard';
 import TagNameInput from './tagNameInput';
 import FieldButton from '../layout/fieldButton';
+import ProgressBar from '../common/progressBar';
 
 interface CheckListProp {
   tagName: string;
@@ -21,9 +22,11 @@ interface CheckListProp {
 
 function CheckList({ tagName, tagId, interest }: CheckListProp) {
   const [checkList, setCheckList] = useState<Check[]>([]);
+  const [renderedRate, setRenderedRate] = useState(0);
 
   const queryClient = useQueryClient();
 
+  // NOTE : checks 불러오는 쿼리
   const {
     isLoading,
     data: list,
@@ -37,9 +40,11 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
   useEffect(() => {
     if (isSuccess) {
       setCheckList(list.data);
+      console.log(checkList);
     }
   }, [list, isSuccess]);
 
+  // NOTE : 삭제 뮤테이션
   const { mutate: deleteMutate } = useMutation({
     mutationFn: ({ _id }: Pick<Tag, '_id'>) => deleteTag({ _id }),
     onSuccess: () => {
@@ -53,6 +58,18 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
   const onClickDelete = (_id: string) => {
     deleteMutate({ _id });
   };
+
+  // NOTE : complete 클릭 시 새로 api 요청 대신 render만 다시
+  useEffect(() => {
+    if (checkList.length > 0) {
+      const totalChecks = checkList.length;
+      const completedChecks = checkList.filter(
+        (check) => check.isCompleted,
+      ).length;
+
+      setRenderedRate(Math.floor((completedChecks / totalChecks) * 100));
+    }
+  }, [checkList]);
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
@@ -71,7 +88,7 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
         </div>
         <div className="flex w-full items-center gap-2 py-2">
           <FieldButton fieldName={interest} />
-          <span>달성률</span>
+          <ProgressBar full={100} completed={renderedRate} />
         </div>
       </div>
       <ul className="my-3 flex flex-col gap-2">
