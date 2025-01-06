@@ -68,7 +68,7 @@ export async function POST(req: Request) {
         iss: 'checkList-app',
       },
       REFRESH_SECRET,
-      { expiresIn: '1d' },
+      { expiresIn: '7d' },
     );
 
     const updateResult = await User.findByIdAndUpdate(user._id, {
