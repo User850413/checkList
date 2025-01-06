@@ -7,6 +7,7 @@ import { getUserId } from '@/app/services/token/getUserId';
 import { Tag as TagType } from '@/types/tag';
 import Interest from '@/app/lib/db/models/interests';
 import { interest } from '@/types/interest';
+import { calculateCompletedRate } from '@/app/services/database/completedRate';
 
 export async function GET(req: NextRequest) {
   try {
@@ -38,9 +39,17 @@ export async function GET(req: NextRequest) {
       .lean<TagType[]>();
     const total = await Tag.find({ userId }).countDocuments();
 
+    // NOTE : tag response에 completedRate 추가
+    const tagsWithRates = await Promise.all(
+      myTags.map(async (tag) => {
+        const completedRate = await calculateCompletedRate(tag._id);
+        return { ...tag, completedRate };
+      }),
+    );
+
     // NOTE : interest 모델로부터 objectId를 통해 name 추출
     let mappedTags: TagType[] = [];
-    for (const tagItem of myTags) {
+    for (const tagItem of tagsWithRates) {
       if (tagItem.interest !== null) {
         const interestId = tagItem.interest.toString();
         const foundedId: interest | null = await Interest.findById(interestId);

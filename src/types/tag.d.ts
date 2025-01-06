@@ -3,6 +3,7 @@ export interface Tag {
   name: string;
   userId: string;
   interest: string;
+  completedRate: number;
   __v: number;
 }
 
