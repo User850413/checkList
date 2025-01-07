@@ -8,6 +8,7 @@ import { patchTag } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
 
 import StyledButton from '../common/styledButton';
+import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 interface TagNameInputProps {
   tagName: string;
@@ -25,7 +26,7 @@ function TagNameInput({ tagName, tagId }: TagNameInputProps) {
   const { mutate } = useMutation({
     mutationFn: ({ _id, name }: Partial<Tag>) => patchTag({ _id, name }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tags'] });
+      queryClient.invalidateQueries({ queryKey: QueryKeys.TAGS });
       setTagNameEditing(false);
     },
     onError: (error) => {

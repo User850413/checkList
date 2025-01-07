@@ -7,6 +7,7 @@ import { Check } from '@/types/check';
 import StyledButton from '../common/styledButton';
 import Image from 'next/image';
 import clsx from 'clsx';
+import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 interface CheckListCardProps {
   id: string;
@@ -26,7 +27,7 @@ function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
   const { mutate: deleteMutate } = useMutation({
     mutationFn: ({ _id }: Pick<Check, '_id'>) => deleteCheck({ _id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['checks', tagId] });
+      queryClient.invalidateQueries({ queryKey: QueryKeys.CHECKS(tagId) });
     },
     onError: (err) => {
       console.log(`항목 삭제 실패 : ${err}`);
@@ -39,7 +40,7 @@ function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
     mutationKey: ['checks', tagId],
     onSuccess: () => {
       console.log('invalid!');
-      queryClient.invalidateQueries({ queryKey: ['checks', tagId] });
+      queryClient.invalidateQueries({ queryKey: QueryKeys.CHECKS(tagId) });
     },
   });
 

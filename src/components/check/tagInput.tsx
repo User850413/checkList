@@ -9,6 +9,7 @@ import StyledButton from '../common/styledButton';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postTag } from '@/app/services/api/tags';
 import { TagRequest } from '@/types/tag';
+import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 interface TagInPutProps {
   Undo: () => void;
@@ -28,8 +29,8 @@ export function TagInput({ Undo }: TagInPutProps) {
   const { mutate: tagMutate } = useMutation({
     mutationFn: ({ name, interest }: TagRequest) => postTag({ name, interest }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tags'] });
-      queryClient.invalidateQueries({ queryKey: ['interests', 'mine'] });
+      queryClient.invalidateQueries({ queryKey: QueryKeys.TAGS });
+      queryClient.invalidateQueries({ queryKey: QueryKeys.MY_INTERESTS });
     },
     onError: (error) => {
       console.log(`태그 추가 실패 : ${error.message}`);

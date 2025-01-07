@@ -8,6 +8,7 @@ import CheckListWrapper from '../check/checkListWrapper';
 import { getMyInterest } from '@/app/services/api/interests';
 import { interest } from '@/types/interest';
 import FieldButton from '../common/fieldButton';
+import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 export default function TagBundle() {
   const queryClient = useQueryClient();
@@ -23,7 +24,7 @@ export default function TagBundle() {
     error: interestsError,
     isSuccess: isInterestsSuccess,
   } = useQuery({
-    queryKey: ['interests', 'mine'],
+    queryKey: QueryKeys.MY_INTERESTS,
     queryFn: () => getMyInterest(),
   });
 
@@ -39,7 +40,7 @@ export default function TagBundle() {
     error: tagsError,
     isSuccess: isTagsSuccess,
   } = useQuery({
-    queryKey: ['tags', 'mine'],
+    queryKey: QueryKeys.MY_TAGS,
     queryFn: () => {
       if (interestFilter) {
         return getMyTags({ interest: interestFilter });
