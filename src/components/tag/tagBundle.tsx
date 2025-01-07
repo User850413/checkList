@@ -5,32 +5,58 @@ import { Tag } from '@/types/tag';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import CheckListWrapper from '../check/checkListWrapper';
+import { getMyInterest } from '@/app/services/api/interests';
+import { interest } from '@/types/interest';
+import FieldButton from '../layout/fieldButton';
 
 export default function TagBundle() {
   const [tagList, setTagList] = useState<Tag[]>([]);
+  const [interestList, setInterestList] = useState<interest[]>([]);
 
+  // NOTE : interest 불러오는 쿼리
   const {
-    isLoading,
+    isLoading: isInterestsLoading,
+    data: interests,
+    error: interestsError,
+    isSuccess: isInterestsSuccess,
+  } = useQuery({
+    queryKey: ['interests', 'mine'],
+    queryFn: () => getMyInterest(),
+  });
+
+  useEffect(() => {
+    if (isInterestsSuccess) setInterestList(interests.data);
+  }, [interests, isInterestsSuccess]);
+
+  // NOTE : tag 불러오는 쿼리
+  const {
+    isLoading: isTagsLoading,
     data: tags,
-    error,
-    isSuccess,
+    error: tagsError,
+    isSuccess: isTagsSuccess,
   } = useQuery({
     queryKey: ['tags', 'mine'],
     queryFn: () => getMyTags(),
   });
 
   useEffect(() => {
-    if (isSuccess) setTagList(tags?.data);
-  }, [tags, isSuccess]);
+    if (isTagsSuccess) setTagList(tags?.data);
+  }, [tags, isTagsSuccess]);
 
   return (
     <div className="w-full px-6 py-10">
-      <ul className="mb-5 flex flex-wrap gap-2">
-        <li>관심사1</li>
-        <li>관심사2</li>
-        <li>관심사3</li>
+      <ul className="mb-5 flex flex-wrap gap-2 rounded-md bg-slate-300 p-2">
+        {interestList.map((interest) => (
+          <li key={interest._id}>
+            <FieldButton fieldName={interest.name} />
+          </li>
+        ))}
       </ul>
-      <CheckListWrapper isLoading={isLoading} tags={tagList} error={error} />
+      <CheckListWrapper
+        isLoading={isTagsLoading}
+        tags={tagList}
+        error={tagsError}
+      />
     </div>
   );
 }

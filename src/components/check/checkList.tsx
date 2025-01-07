@@ -48,6 +48,7 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
     mutationFn: ({ _id }: Pick<Tag, '_id'>) => deleteTag({ _id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tags'] });
+      queryClient.invalidateQueries({ queryKey: ['interests', 'mine'] });
     },
     onError: (err) => {
       console.log(`항목 삭제 실패: ${err}`);
@@ -91,7 +92,7 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
             <span className="cursor-default text-xs text-gray-500">
               {renderedRate === 100 ? '완료!' : '진행도'}
             </span>
-            <ProgressBar full={100} completed={renderedRate} />
+            <ProgressBar completed={renderedRate} />
           </div>
         </div>
       </div>
