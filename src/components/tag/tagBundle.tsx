@@ -15,9 +15,6 @@ export default function TagBundle() {
   const [tagList, setTagList] = useState<Tag[]>([]);
   const [interestList, setInterestList] = useState<interest[]>([]);
   const [interestFilter, setInterestFilter] = useState<string>('');
-  // const [clickedButton, setClickedButton] = useState<{ id: null | string }>({
-  //   id: null,
-  // });
 
   // NOTE : interest 불러오는 쿼리
   const {
@@ -36,6 +33,7 @@ export default function TagBundle() {
 
   // NOTE : tag 불러오는 쿼리
   const {
+    refetch: tagRefetch,
     isLoading: isTagsLoading,
     data: tags,
     error: tagsError,
@@ -44,7 +42,6 @@ export default function TagBundle() {
     queryKey: ['tags', 'mine'],
     queryFn: () => {
       if (interestFilter) {
-        console.log(interestFilter);
         return getMyTags({ interest: interestFilter });
       }
       return getMyTags();
@@ -55,13 +52,21 @@ export default function TagBundle() {
     if (isTagsSuccess) setTagList(tags?.data);
   }, [tags, isTagsSuccess]);
 
-  const onClickInterestButton = (name: string, id: string) => {
-    setInterestFilter(name);
-    console.log(interestFilter);
-    // setClickedButton({ id });
-    // console.log(clickedButton);
-    queryClient.invalidateQueries({ queryKey: ['tags', 'mine'] });
+  const onClickInterestButton = (name: string) => {
+    setInterestFilter((prev) => {
+      if (prev === name) {
+        return '';
+      } else {
+        return name;
+      }
+    });
   };
+
+  // NOTE : interestFilter 변경 때마다 tag refetch
+  useEffect(() => {
+    tagRefetch();
+    console.log(interestFilter);
+  }, [interestFilter]);
 
   return (
     <div className="w-full px-6 py-10">
@@ -71,10 +76,8 @@ export default function TagBundle() {
             <FieldButton
               fieldName={interest.name}
               clickable
-              // isClicked={clickedButton.id === interest._id}
-              onClickFn={() =>
-                onClickInterestButton(interest.name, interest._id)
-              }
+              isClicked={interest.name === interestFilter}
+              onClickFn={() => onClickInterestButton(interest.name)}
             />
           </li>
         ))}

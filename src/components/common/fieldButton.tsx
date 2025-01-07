@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface FieldButtonProps {
   fieldName: string;
@@ -27,8 +27,11 @@ export default function FieldButton({
 
   const onClickButton = () => {
     onClickFn && onClickFn();
-    setClicked((prev) => !prev);
   };
+
+  useEffect(() => {
+    setClicked(isClicked);
+  }, [isClicked]);
 
   return (
     <button
