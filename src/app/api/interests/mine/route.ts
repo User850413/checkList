@@ -18,15 +18,10 @@ export async function GET(req: NextRequest) {
     const myTagList: TagType[] = await Tag.find({ userId });
 
     // NOTE : myTagList에 존재하는 interest들의 id값 추출
-    let myInterestIdList: { id: string }[] = [];
-    myTagList.map((tag) => {
-      if (
-        !myInterestIdList.find(
-          (interest) => interest.id.toString() === tag.interest.toString(),
-        )
-      )
-        myInterestIdList.push({ id: tag.interest });
-    });
+    const uniqueInterests = new Set(
+      myTagList.map((tag) => tag.interest.toString()),
+    );
+    const myInterestIdList = Array.from(uniqueInterests).map((id) => ({ id }));
 
     // NOTE : 추출한 id값을 objectId로 변환
     const objectIds = myInterestIdList.map(
