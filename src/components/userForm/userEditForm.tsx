@@ -115,7 +115,7 @@ export default function UserEditForm() {
   const { mutate: userDataMutate } = useMutation({
     mutationFn: ({ username }: { username: string }) =>
       patchMyData({ username }),
-    mutationKey: ['me'],
+    mutationKey: QueryKeys.USER_ME,
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: QueryKeys.USER_ME }),
   });
@@ -129,7 +129,7 @@ export default function UserEditForm() {
       bio: string;
       interest: Pick<interest, 'name'>[];
     }) => patchMyDetailData({ bio, interest }),
-    mutationKey: ['me', 'detail'],
+    mutationKey: QueryKeys.USER_ME_DETAIL,
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: QueryKeys.USER_ME_DETAIL }),
   });

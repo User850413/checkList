@@ -53,7 +53,7 @@ export default function UserProfile() {
   // NOTE : 로그아웃 로직
   const { mutate: logoutMutation } = useMutation({
     mutationFn: () => userLogout(),
-    mutationKey: ['me'],
+    mutationKey: QueryKeys.USER_ME,
     onSuccess: () => route.push('/login?loggedOut=true'),
     onError: () => console.log('error'),
   });

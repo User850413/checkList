@@ -37,7 +37,7 @@ function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
   // NOTE : 항목 complete 뮤테이션
   const { mutate: completeMutate } = useMutation({
     mutationFn: () => patchChecks(id, { isCompleted: checked }),
-    mutationKey: ['checks', tagId],
+    mutationKey: QueryKeys.CHECKS(tagId),
     onSuccess: () => {
       console.log('invalid!');
       queryClient.invalidateQueries({ queryKey: QueryKeys.CHECKS(tagId) });
