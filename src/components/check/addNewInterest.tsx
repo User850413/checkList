@@ -13,6 +13,7 @@ import {
 } from '../common/autoComplete/autoCompleteContext';
 import InputWithAutoComplete from '../common/autoComplete/inputWithAutoComplete';
 import StyledButton from '../common/styledButton';
+import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 interface AddNewInterestProps {
   onSubmit: (value: string) => void;
@@ -34,7 +35,7 @@ export default function AddNewInterest({
   // NOTE : interest 불러오는 mutation
   const { mutate: getInterestMutate } = useMutation({
     mutationFn: () => getWordInterest({ word: inputValue }),
-    mutationKey: ['interests'],
+    mutationKey: QueryKeys.INTERESTS,
     onError: (err) => console.error(err.message),
     onSuccess: (data: interestResponse) => {
       if (!data) return;

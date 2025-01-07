@@ -7,6 +7,7 @@ import { User, UserDetail } from '@/types/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 export default function UserProfile() {
   const [myData, setMyData] = useState<User | undefined>();
@@ -22,7 +23,7 @@ export default function UserProfile() {
     isLoading: dataLoading,
     isError: dataError,
   } = useQuery({
-    queryKey: ['me'],
+    queryKey: QueryKeys.USER_ME,
     queryFn: () => getMyData(),
   });
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function UserProfile() {
     isLoading: detailDataLoading,
     isError: detailDataError,
   } = useQuery({
-    queryKey: ['me', 'detail'],
+    queryKey: QueryKeys.USER_ME_DETAIL,
     queryFn: () => getMyDetailData(),
   });
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function UserProfile() {
   // NOTE : 로그아웃 로직
   const { mutate: logoutMutation } = useMutation({
     mutationFn: () => userLogout(),
-    mutationKey: ['me'],
+    mutationKey: QueryKeys.USER_ME,
     onSuccess: () => route.push('/login?loggedOut=true'),
     onError: () => console.log('error'),
   });

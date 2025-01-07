@@ -7,6 +7,7 @@ import { postChecks } from '@/app/services/api/checks';
 import { Check } from '@/types/check';
 
 import StyledButton from '../common/styledButton';
+import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 // NOTE: 체크 가능 항목을 신규 추가하는 컴포넌트
 
@@ -22,7 +23,7 @@ function CheckInput({ tagId }: CheckInputProps) {
     mutationFn: ({ task, tagId }: Partial<Check>) =>
       postChecks({ task, tagId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['checks', tagId] });
+      queryClient.invalidateQueries({ queryKey: QueryKeys.CHECKS(tagId) });
     },
     onError: (err) => {
       console.log(`항목 추가 실패 : ${err}`);

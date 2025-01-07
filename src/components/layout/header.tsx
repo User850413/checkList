@@ -8,12 +8,13 @@ import { getMyData } from '@/app/services/api/user';
 import { User } from '@/types/user';
 
 import Profile from './profile';
+import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 export default function Header() {
   const [myData, setMyData] = useState<User | undefined>();
 
   const { data, isLoading, error, isSuccess } = useQuery({
-    queryKey: ['me'],
+    queryKey: QueryKeys.USER_ME,
     queryFn: () => getMyData(),
     retry: false,
   });

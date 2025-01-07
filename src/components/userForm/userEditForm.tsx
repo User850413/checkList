@@ -16,6 +16,7 @@ import AddNewInterest from '../check/addNewInterest';
 import StyledButton from '../common/styledButton';
 import FieldButton from '../common/fieldButton';
 import Profile from '../layout/profile';
+import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 const labels = {
   username: {
@@ -80,7 +81,7 @@ export default function UserEditForm() {
     data,
     isLoading: dataLoading,
     isError: dataError,
-  } = useQuery({ queryKey: ['me'], queryFn: () => getMyData() });
+  } = useQuery({ queryKey: QueryKeys.USER_ME, queryFn: () => getMyData() });
   useEffect(() => {
     if (data) setMyData(data.user);
     if (myData) setUserDataState({ username: myData.username });
@@ -92,7 +93,7 @@ export default function UserEditForm() {
     isLoading: detailLoading,
     isError: detailError,
   } = useQuery({
-    queryKey: ['me', 'detail'],
+    queryKey: QueryKeys.USER_ME_DETAIL,
     queryFn: () => getMyDetailData(),
   });
   useEffect(() => {
@@ -114,8 +115,9 @@ export default function UserEditForm() {
   const { mutate: userDataMutate } = useMutation({
     mutationFn: ({ username }: { username: string }) =>
       patchMyData({ username }),
-    mutationKey: ['me'],
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['me'] }),
+    mutationKey: QueryKeys.USER_ME,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: QueryKeys.USER_ME }),
   });
 
   // NOTE : UserDetail 데이터 업데이트
@@ -127,9 +129,9 @@ export default function UserEditForm() {
       bio: string;
       interest: Pick<interest, 'name'>[];
     }) => patchMyDetailData({ bio, interest }),
-    mutationKey: ['me', 'detail'],
+    mutationKey: QueryKeys.USER_ME_DETAIL,
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['me', 'detail'] }),
+      queryClient.invalidateQueries({ queryKey: QueryKeys.USER_ME_DETAIL }),
   });
 
   // interest 데이터 다루기

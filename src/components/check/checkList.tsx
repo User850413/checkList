@@ -13,6 +13,7 @@ import CheckListCard from './checkListCard';
 import TagNameInput from './tagNameInput';
 import FieldButton from '../common/fieldButton';
 import ProgressBar from '../common/progressBar';
+import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 interface CheckListProp {
   tagName: string;
@@ -47,8 +48,8 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
   const { mutate: deleteMutate } = useMutation({
     mutationFn: ({ _id }: Pick<Tag, '_id'>) => deleteTag({ _id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tags'] });
-      queryClient.invalidateQueries({ queryKey: ['interests', 'mine'] });
+      queryClient.invalidateQueries({ queryKey: QueryKeys.TAGS });
+      queryClient.invalidateQueries({ queryKey: QueryKeys.MY_INTERESTS });
     },
     onError: (err) => {
       console.log(`항목 삭제 실패: ${err}`);
