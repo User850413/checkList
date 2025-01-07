@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface ProgressBarProps {
-  full: number;
+  full?: number;
   completed: number;
 }
 
-export default function ProgressBar({ full, completed }: ProgressBarProps) {
+export default function ProgressBar({
+  full = 100,
+  completed,
+}: ProgressBarProps) {
   const rate = full > 0 ? Math.floor((completed / full) * 100) : 0;
   const [rateBar, setRateBar] = useState<number>(rate);
   useEffect(() => {

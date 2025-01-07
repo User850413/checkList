@@ -14,7 +14,7 @@ import { User, UserDetail } from '@/types/user';
 import InputBox from '../auth/inputBox';
 import AddNewInterest from '../check/addNewInterest';
 import StyledButton from '../common/styledButton';
-import FieldButton from '../layout/fieldButton';
+import FieldButton from '../common/fieldButton';
 import Profile from '../layout/profile';
 
 const labels = {
@@ -217,7 +217,7 @@ export default function UserEditForm() {
                       fieldName={item.name}
                       size="md"
                       deletable
-                      deleteFn={() => handleDeleteInterest(item.name)}
+                      onClickFn={() => handleDeleteInterest(item.name)}
                     />
                   </li>
                 ))}

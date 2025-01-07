@@ -31,11 +31,35 @@ export async function GET(req: NextRequest) {
     const limit = !rawLimit || rawLimit < 1 || rawLimit > 100 ? 10 : rawLimit;
     const skip = (page - 1) * limit;
 
-    const tags: TagType[] = await Tag.find()
-      .skip(skip)
-      .limit(limit)
-      .lean<TagType[]>();
-    const total = await Tag.countDocuments();
+    let tags: TagType[] = [];
+    let total = null;
+
+    // NOTE : interest 필터링
+    const interest = req.nextUrl?.searchParams.get('interest');
+    if (interest) {
+      // NOTE : interest 있는지 검사
+      const isExistedInterest: interest | null = await Interest.findOne({
+        name: interest,
+      });
+      if (!isExistedInterest)
+        return NextResponse.json(
+          { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
+          { status: 400 },
+        );
+
+      // NOTE : interest 필터링
+      tags = await Tag.find({
+        interest: isExistedInterest._id,
+      })
+        .skip(skip)
+        .limit(limit)
+        .lean<TagType[]>();
+
+      total = await Tag.countDocuments({ interest: isExistedInterest._id });
+    } else {
+      tags = await Tag.find().skip(skip).limit(limit).lean<TagType[]>();
+      total = await Tag.countDocuments();
+    }
 
     // NOTE : tag response에 completedRate 추가
     const tagsWithRates = await Promise.all(

@@ -21,6 +21,22 @@ export async function getAllInterest() {
   }
 }
 
+export async function getMyInterest() {
+  try {
+    const res = await apiClient.get('/interests/mine');
+
+    return res.data;
+  } catch (err) {
+    if (err instanceof Error)
+      return NextResponse.json({ error: err.message }, { status: 500 });
+
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
+      { status: 500 },
+    );
+  }
+}
+
 export async function getWordInterest({ word }: { word: string }) {
   try {
     const trimmedWord = word.trim();

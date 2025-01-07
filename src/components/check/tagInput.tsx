@@ -29,6 +29,7 @@ export function TagInput({ Undo }: TagInPutProps) {
     mutationFn: ({ name, interest }: TagRequest) => postTag({ name, interest }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tags'] });
+      queryClient.invalidateQueries({ queryKey: ['interests', 'mine'] });
     },
     onError: (error) => {
       console.log(`태그 추가 실패 : ${error.message}`);
