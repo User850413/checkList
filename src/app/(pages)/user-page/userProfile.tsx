@@ -1,7 +1,7 @@
 import { userLogout } from '@/app/services/api/register';
 import { getMyData, getMyDetailData } from '@/app/services/api/user';
 import StyledButton from '@/components/common/styledButton';
-import FieldButton from '@/components/layout/fieldButton';
+import FieldButton from '@/components/common/fieldButton';
 import Profile from '@/components/layout/profile';
 import { User, UserDetail } from '@/types/user';
 import { useMutation, useQuery } from '@tanstack/react-query';

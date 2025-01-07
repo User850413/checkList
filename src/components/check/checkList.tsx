@@ -11,7 +11,7 @@ import { Tag } from '@/types/tag';
 import CheckInput from './checkInput';
 import CheckListCard from './checkListCard';
 import TagNameInput from './tagNameInput';
-import FieldButton from '../layout/fieldButton';
+import FieldButton from '../common/fieldButton';
 import ProgressBar from '../common/progressBar';
 
 interface CheckListProp {

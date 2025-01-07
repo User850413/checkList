@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import CheckListWrapper from '../check/checkListWrapper';
 import { getMyInterest } from '@/app/services/api/interests';
 import { interest } from '@/types/interest';
-import FieldButton from '../layout/fieldButton';
+import FieldButton from '../common/fieldButton';
 
 export default function TagBundle() {
   const [tagList, setTagList] = useState<Tag[]>([]);
