@@ -51,7 +51,11 @@ export async function GET(req: NextRequest) {
         .skip(skip)
         .limit(limit)
         .lean<TagType[]>();
-      total = await Tag.find({ userId, interest }).countDocuments();
+
+      total = await Tag.find({
+        userId,
+        interest: conversedInterest._id,
+      }).countDocuments();
     }
 
     // NOTE : tag response에 completedRate 추가

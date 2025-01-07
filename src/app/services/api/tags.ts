@@ -11,9 +11,9 @@ export async function getAllTags() {
 }
 
 export async function getMyTags(params?: { interest?: string }) {
-  const interest = params;
   try {
-    if (interest !== undefined) {
+    if (params?.interest !== undefined) {
+      const { interest } = params;
       const res = await apiClient.get(`/tags/mine?interest=${interest}`);
       return res.data;
     } else {

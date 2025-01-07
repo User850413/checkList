@@ -7,6 +7,7 @@ interface FieldButtonProps {
   size?: 'lg' | 'md' | 'sm';
   deletable?: boolean;
   clickable?: boolean;
+  isClicked?: boolean;
   onClickFn?: () => void;
 }
 
@@ -16,8 +17,9 @@ export default function FieldButton({
   deletable = false,
   onClickFn,
   clickable,
+  isClicked = false,
 }: FieldButtonProps) {
-  const [clicked, setClicked] = useState<boolean>(false);
+  const [clicked, setClicked] = useState<boolean>(isClicked);
   const closeButton = `${process.env.PUBLIC_URL || ''}/icons/x-round.svg`;
 
   if (deletable && !onClickFn)
