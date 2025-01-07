@@ -48,7 +48,7 @@ export default function TagBundle() {
       <ul className="mb-5 flex flex-wrap gap-2 rounded-md bg-slate-300 p-2">
         {interestList.map((interest) => (
           <li key={interest._id}>
-            <FieldButton fieldName={interest.name} />
+            <FieldButton fieldName={interest.name} clickable />
           </li>
         ))}
       </ul>

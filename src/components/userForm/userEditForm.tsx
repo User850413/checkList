@@ -217,7 +217,7 @@ export default function UserEditForm() {
                       fieldName={item.name}
                       size="md"
                       deletable
-                      deleteFn={() => handleDeleteInterest(item.name)}
+                      onClickFn={() => handleDeleteInterest(item.name)}
                     />
                   </li>
                 ))}

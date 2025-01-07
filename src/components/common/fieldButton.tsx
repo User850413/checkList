@@ -1,29 +1,37 @@
 import clsx from 'clsx';
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 
 interface FieldButtonProps {
   fieldName: string;
   size?: 'lg' | 'md' | 'sm';
   deletable?: boolean;
-  deleteFn?: () => void;
+  clickable?: boolean;
+  onClickFn?: () => void;
 }
 
 export default function FieldButton({
   fieldName,
   size = 'md',
   deletable = false,
-  deleteFn,
+  onClickFn,
+  clickable,
 }: FieldButtonProps) {
+  const [clicked, setClicked] = useState<boolean>(false);
   const closeButton = `${process.env.PUBLIC_URL || ''}/icons/x-round.svg`;
 
-  if (deletable && !deleteFn)
-    throw new Error('deletable에는 deleteFn이 필요합니다');
+  if (deletable && !onClickFn)
+    throw new Error('deletable에는 onClickFn이 필요합니다');
+
+  const onClickButton = () => {
+    onClickFn && onClickFn();
+    setClicked((prev) => !prev);
+  };
 
   return (
     <button
       className={clsx(
-        'flex shrink-0 items-center gap-2 rounded-full bg-slate-200 hover:bg-slate-300',
+        'flex shrink-0 items-center gap-2 rounded-full',
         {
           'px-3 py-1 text-sm': size == 'md',
         },
@@ -33,9 +41,17 @@ export default function FieldButton({
         {
           'px-4 py-2 text-lg': size == 'lg',
         },
+        {
+          'cursor-default bg-slate-200 text-slate-700': !clickable,
+        },
+        {
+          'bg-slate-200 text-slate-700 hover:bg-slate-400':
+            clickable && !clicked,
+          'bg-slate-700 text-white hover:bg-slate-600': clickable && clicked,
+        },
       )}
       type="button"
-      onClick={deletable ? deleteFn : undefined}
+      onClick={deletable || clickable ? onClickButton : undefined}
     >
       <span>{fieldName}</span>
       {deletable && (

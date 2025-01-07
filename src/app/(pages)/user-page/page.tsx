@@ -11,9 +11,7 @@ export default function UserPage() {
       <header>
         <UserProfile />
       </header>
-      <main>
-        <TagBundle />
-      </main>
+      <main></main>
     </>
   );
 }
