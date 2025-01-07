@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
       if (!isExistedInterest)
         return NextResponse.json(
           { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
-          { status: 404 },
+          { status: 400 },
         );
 
       // NOTE : interest 필터링

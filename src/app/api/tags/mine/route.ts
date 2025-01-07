@@ -47,6 +47,12 @@ export async function GET(req: NextRequest) {
     } else {
       const conversedInterest = await Interest.findOne({ name: interest });
 
+      if (!conversedInterest)
+        return NextResponse.json(
+          { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
+          { status: 400 },
+        );
+
       myTags = await Tag.find({ userId, interest: conversedInterest._id })
         .skip(skip)
         .limit(limit)
