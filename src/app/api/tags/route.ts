@@ -149,26 +149,33 @@ export async function PATCH(req: NextRequest) {
       { status: 403 },
     );
 
-  if (!body.name) {
+  if (body.name.length == 0) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.EMPTY_TAGNAME.ko },
       { status: 400 },
     );
   }
 
-  if (body.interest) {
-    const isExistedInterest = Interest.findOne({ name: body.interest });
-    if (!isExistedInterest)
-      return NextResponse.json(
-        { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
-        { status: 400 },
-      );
+  if (
+    body.isCompleted &&
+    body.isCompleted !== 'true' &&
+    body.isCompleted !== 'false'
+  ) {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
+      { status: 500 },
+    );
   }
 
   try {
     const updatedTag = await Tag.findByIdAndUpdate(
       tagId,
-      { name: body.name, interest: body.interest },
+      {
+        ...(body.name && { name: body.name }),
+        ...(body.isCompleted !== undefined && {
+          isCompleted: body.isCompleted,
+        }),
+      },
       { new: true },
     );
     if (!updatedTag)
