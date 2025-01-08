@@ -114,10 +114,17 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
           </div>
           <div className="flex w-full items-center gap-2 py-2">
             <FieldButton fieldName={interest} />
-            <div className="flex w-full flex-col items-start justify-between gap-2">
-              <span className="cursor-default text-xs text-gray-500">
-                {renderedRate === 100 ? '완료!' : '진행도'}
-              </span>
+            <div className="flex w-full flex-col items-start justify-between gap-1">
+              <div className="flex w-full items-center justify-between">
+                <span className="my-2 cursor-default text-xs text-gray-500">
+                  {renderedRate === 100 ? '완료!' : '진행도'}
+                </span>
+                {renderedRate === 100 && (
+                  <StyledButton color="dark" size={'2xs'}>
+                    끝내기
+                  </StyledButton>
+                )}
+              </div>
               <ProgressBar completed={renderedRate} />
             </div>
           </div>
