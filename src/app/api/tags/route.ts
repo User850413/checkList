@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
       if (isCompleted !== 'true' && isCompleted !== 'false')
         return NextResponse.json(
           { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
-          { status: 500 },
+          { status: 400 },
         );
       filter.isCompleted = isCompleted === 'true';
     }
@@ -159,7 +159,7 @@ export async function PATCH(req: NextRequest) {
   if (body.isCompleted !== undefined && typeof body.isCompleted !== 'boolean') {
     return NextResponse.json(
       { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
-      { status: 500 },
+      { status: 400 },
     );
   }
 

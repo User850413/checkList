@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
       if (isCompleted !== 'true' && isCompleted !== 'false')
         return NextResponse.json(
           { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
-          { status: 500 },
+          { status: 400 },
         );
       filter.isCompleted = isCompleted === 'true';
     }
