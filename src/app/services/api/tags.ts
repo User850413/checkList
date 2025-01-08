@@ -61,6 +61,13 @@ export async function patchTag(props: {
 }) {
   try {
     if (!props._id.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
+    if (props.name !== undefined && props.name.length == 0)
+      throw new Error(ERROR_MESSAGES.EMPTY_TAGNAME.ko);
+    if (
+      props.isCompleted !== undefined &&
+      typeof props.isCompleted !== 'boolean'
+    )
+      throw new Error(ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko);
 
     const filter = {
       ...(props.name && { name: props.name }),
