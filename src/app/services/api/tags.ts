@@ -10,16 +10,26 @@ export async function getAllTags() {
   return res.data;
 }
 
-export async function getMyTags(params?: { interest?: string }) {
+export async function getMyTags(params?: {
+  interest?: string;
+  isCompleted?: string;
+}) {
   try {
-    if (params?.interest !== undefined) {
-      const { interest } = params;
-      const res = await apiClient.get(`/tags/mine?interest=${interest}`);
-      return res.data;
-    } else {
-      const res = await apiClient.get('/tags/mine');
-      return res.data;
+    let query = '';
+    if (params) {
+      const searchParams = new URLSearchParams();
+
+      if (params.interest !== undefined)
+        searchParams.append('interest', params.interest);
+
+      if (params.isCompleted !== undefined)
+        searchParams.append('isCompleted', params.isCompleted);
+
+      query = `?${searchParams}`;
     }
+
+    const res = await apiClient.get(`/tags/mine${query}`);
+    return res.data;
   } catch (error) {
     throw error;
   }
