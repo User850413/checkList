@@ -54,15 +54,25 @@ export async function postTag({ name, interest }: TagRequest) {
   }
 }
 
-export async function patchTag({ _id, name }: Partial<Tag>) {
-  if (!_id?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
-  if (!name?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_TAGNAME.ko);
-
+export async function patchTag(props: {
+  _id: string;
+  name?: string;
+  isCompleted?: boolean;
+}) {
   try {
-    const res = await apiClient.patch(`/tags?id=${_id}`, { name: name.trim() });
+    if (!props._id.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
+
+    const filter = {
+      ...(props.name && { name: props.name }),
+      ...(props.isCompleted !== undefined && {
+        isCompleted: props.isCompleted,
+      }),
+    };
+
+    const res = await apiClient.patch(`/tags?id=${props._id}`, filter);
     return res.data;
   } catch (error) {
-    console.error(`태그 항목 수정 중 오류 발생 : ${error}`);
+    if (error instanceof Error) throw new Error(error.message);
     throw error;
   }
 }

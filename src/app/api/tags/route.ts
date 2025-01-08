@@ -149,18 +149,14 @@ export async function PATCH(req: NextRequest) {
       { status: 403 },
     );
 
-  if (body.name.length == 0) {
+  if (body.name !== undefined && body.name.length == 0) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.EMPTY_TAGNAME.ko },
       { status: 400 },
     );
   }
 
-  if (
-    body.isCompleted &&
-    body.isCompleted !== 'true' &&
-    body.isCompleted !== 'false'
-  ) {
+  if (body.isCompleted !== undefined && typeof body.isCompleted !== 'boolean') {
     return NextResponse.json(
       { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
       { status: 500 },

@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 
 import { getChecks } from '@/app/services/api/checks';
-import { deleteTag } from '@/app/services/api/tags';
+import { deleteTag, patchTag } from '@/app/services/api/tags';
 import { Check } from '@/types/check';
 import { Tag } from '@/types/tag';
 
@@ -21,7 +21,7 @@ import {
   DialogRoot,
   DialogTrigger,
 } from '../ui/dialog';
-import { DialogBody, DialogHeader } from '@chakra-ui/react';
+import { DialogCloseTrigger, DialogHeader } from '@chakra-ui/react';
 import StyledButton from '../common/styledButton';
 
 interface CheckListProp {
@@ -69,6 +69,19 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
     deleteMutate({ _id });
   };
 
+  // NOTE : 끝내기 뮤테이션
+  const { mutate: completeMutate } = useMutation({
+    mutationFn: () => patchTag({ _id: tagId, isCompleted: true }),
+    onError: (err) => console.log(err.message),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QueryKeys.TAGS });
+    },
+  });
+
+  const onClickCompleteButton = () => {
+    completeMutate();
+  };
+
   // NOTE : complete 클릭 시 새로 tag api 요청 대신 render만 다시
   useEffect(() => {
     if (checkList.length > 0) {
@@ -106,7 +119,9 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
                     삭제
                   </StyledButton>
                   <DialogActionTrigger>
-                    <StyledButton>취소</StyledButton>
+                    <span className="rounded-md bg-slate-200 px-3 py-3">
+                      취소
+                    </span>
                   </DialogActionTrigger>
                 </DialogFooter>
               </DialogContent>
@@ -120,9 +135,34 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
                   {renderedRate === 100 ? '완료!' : '진행도'}
                 </span>
                 {renderedRate === 100 && (
-                  <StyledButton color="dark" size={'2xs'}>
-                    끝내기
-                  </StyledButton>
+                  <DialogRoot placement={'center'}>
+                    <DialogTrigger>
+                      <span
+                        className="rounded-md bg-slate-500 px-2 py-1 text-xs text-white hover:bg-slate-600"
+                        role="button"
+                      >
+                        끝내기
+                      </span>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>끝내시겠습니까?</DialogHeader>
+                      <DialogFooter>
+                        <StyledButton
+                          color="dark"
+                          role="button"
+                          size="md"
+                          onClick={onClickCompleteButton}
+                        >
+                          확인
+                        </StyledButton>
+                        <DialogCloseTrigger>
+                          <span className="rounded-md bg-slate-200 px-3 py-3 hover:bg-slate-300">
+                            취소
+                          </span>
+                        </DialogCloseTrigger>
+                      </DialogFooter>
+                    </DialogContent>
+                  </DialogRoot>
                 )}
               </div>
               <ProgressBar completed={renderedRate} />
