@@ -115,6 +115,7 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
                   <StyledButton
                     onClick={() => onClickDelete(tagId)}
                     color="red"
+                    aria-label="삭제 확인"
                   >
                     삭제
                   </StyledButton>
@@ -145,13 +146,14 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
                       </span>
                     </DialogTrigger>
                     <DialogContent>
-                      <DialogHeader>끝내시겠습니까?</DialogHeader>
+                      <DialogHeader>리스트를 끝내시겠습니까?</DialogHeader>
                       <DialogFooter>
                         <StyledButton
                           color="dark"
                           role="button"
                           size="md"
                           onClick={onClickCompleteButton}
+                          aria-label="완료 확인"
                         >
                           확인
                         </StyledButton>
