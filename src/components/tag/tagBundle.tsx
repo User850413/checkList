@@ -43,9 +43,9 @@ export default function TagBundle() {
     queryKey: QueryKeys.MY_TAGS,
     queryFn: () => {
       if (interestFilter) {
-        return getMyTags({ interest: interestFilter });
+        return getMyTags({ interest: interestFilter, isCompleted: 'false' });
       }
-      return getMyTags();
+      return getMyTags({ isCompleted: 'false' });
     },
   });
 
