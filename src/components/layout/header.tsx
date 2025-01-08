@@ -42,7 +42,7 @@ export default function Header() {
     <div className="fixed left-0 right-0 top-0 z-10 flex min-w-[480px] items-center justify-between bg-white px-6 py-3 shadow-card">
       <ul className="flex items-center gap-4 text-sm text-slate-500">
         <li>
-          <button onClick={() => router.push('/')}>메인화면</button>
+          <button onClick={() => router.push('/all-list')}>메인화면</button>
         </li>
         <li>
           <button onClick={() => router.push('/my-list')}>내 리스트</button>
