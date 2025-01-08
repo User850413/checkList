@@ -4,6 +4,7 @@ export interface Tag {
   userId: string;
   interest: string;
   completedRate: number;
+  isCompleted: boolean;
   __v: number;
 }
 
