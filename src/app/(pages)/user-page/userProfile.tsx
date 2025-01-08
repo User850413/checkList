@@ -8,6 +8,14 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { QueryKeys } from '@/app/lib/constants/queryKeys';
+import {
+  DialogActionTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 export default function UserProfile() {
   const [myData, setMyData] = useState<User | undefined>();
@@ -111,9 +119,24 @@ export default function UserProfile() {
                 <StyledButton size={'sm'} onClick={onClickEditButton}>
                   수정
                 </StyledButton>
-                <StyledButton color="dark" size={'sm'} onClick={onClickLogout}>
-                  로그아웃
-                </StyledButton>
+                <DialogRoot placement={'center'}>
+                  <DialogTrigger>
+                    <StyledButton color="dark" size={'sm'}>
+                      로그아웃
+                    </StyledButton>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>정말로 로그아웃 하시겠습니까?</DialogHeader>
+                    <DialogFooter>
+                      <StyledButton color="dark" onClick={onClickLogout}>
+                        로그아웃
+                      </StyledButton>
+                      <DialogActionTrigger>
+                        <StyledButton>취소</StyledButton>
+                      </DialogActionTrigger>
+                    </DialogFooter>
+                  </DialogContent>
+                </DialogRoot>
               </div>
             </div>
           </div>
