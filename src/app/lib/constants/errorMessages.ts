@@ -104,6 +104,9 @@ const ERROR_MESSAGES = {
   FORBIDDEN_NOT_ALLOW: {
     ko: '권한이 없습니다.',
   },
+  TYPE_BOOLEAN_ERROR: {
+    ko: 'true 혹은 false 값이 와야 합니다',
+  },
 };
 
 export default ERROR_MESSAGES;

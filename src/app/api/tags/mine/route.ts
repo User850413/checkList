@@ -36,33 +36,35 @@ export async function GET(req: NextRequest) {
     let myTags: TagType[] = [];
     let total = 0;
 
-    // NOTE : interest 쿼리문으로 필터링
-    const interest = req.nextUrl.searchParams.get('interest');
-    if (!interest) {
-      myTags = await Tag.find({ userId })
-        .skip(skip)
-        .limit(limit)
-        .lean<TagType[]>();
-      total = await Tag.find({ userId }).countDocuments();
-    } else {
-      const conversedInterest = await Interest.findOne({ name: interest });
+    const filter: Record<string, any> = {};
 
+    const isCompleted = req.nextUrl.searchParams.get('isCompleted');
+    const interest = req.nextUrl.searchParams.get('interest');
+
+    if (isCompleted) {
+      if (isCompleted !== 'true' && isCompleted !== 'false')
+        return NextResponse.json(
+          { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
+          { status: 400 },
+        );
+      filter.isCompleted = isCompleted === 'true';
+    }
+    if (interest) {
+      const conversedInterest = await Interest.findOne({ name: interest });
       if (!conversedInterest)
         return NextResponse.json(
           { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
           { status: 400 },
         );
 
-      myTags = await Tag.find({ userId, interest: conversedInterest._id })
-        .skip(skip)
-        .limit(limit)
-        .lean<TagType[]>();
-
-      total = await Tag.find({
-        userId,
-        interest: conversedInterest._id,
-      }).countDocuments();
+      filter.interest = conversedInterest._id;
     }
+
+    myTags = await Tag.find({ userId, ...filter })
+      .skip(skip)
+      .limit(limit)
+      .lean<TagType[]>();
+    total = await Tag.find({ userId, ...filter }).countDocuments();
 
     // NOTE : tag response에 completedRate 추가
     const tagsWithRates = await Promise.all(

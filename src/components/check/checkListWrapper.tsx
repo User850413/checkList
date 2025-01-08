@@ -19,7 +19,6 @@ export default function CheckListWrapper({
 }: CheckListWrapperProps) {
   if (isLoading) return <div> loading...</div>;
   if (error) {
-    console.log(error.message);
     return <div>error</div>;
   }
 

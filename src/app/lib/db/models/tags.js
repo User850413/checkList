@@ -12,6 +12,10 @@ const tagSchema = new mongoose.Schema({
     ref: 'Interest',
     default: null,
   },
+  isCompleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Tag = mongoose.models['Tag'] || mongoose.model('Tag', tagSchema);

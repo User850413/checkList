@@ -34,32 +34,32 @@ export async function GET(req: NextRequest) {
     let tags: TagType[] = [];
     let total = null;
 
-    // NOTE : interest 필터링
-    const interest = req.nextUrl?.searchParams.get('interest');
+    const filter: Record<string, any> = {};
+
+    const isCompleted = req.nextUrl.searchParams.get('isCompleted');
+    const interest = req.nextUrl.searchParams.get('interest');
+
+    if (isCompleted) {
+      if (isCompleted !== 'true' && isCompleted !== 'false')
+        return NextResponse.json(
+          { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
+          { status: 400 },
+        );
+      filter.isCompleted = isCompleted === 'true';
+    }
     if (interest) {
-      // NOTE : interest 있는지 검사
-      const isExistedInterest: interest | null = await Interest.findOne({
-        name: interest,
-      });
-      if (!isExistedInterest)
+      const conversedInterest = await Interest.findOne({ name: interest });
+      if (!conversedInterest)
         return NextResponse.json(
           { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
           { status: 400 },
         );
 
-      // NOTE : interest 필터링
-      tags = await Tag.find({
-        interest: isExistedInterest._id,
-      })
-        .skip(skip)
-        .limit(limit)
-        .lean<TagType[]>();
-
-      total = await Tag.countDocuments({ interest: isExistedInterest._id });
-    } else {
-      tags = await Tag.find().skip(skip).limit(limit).lean<TagType[]>();
-      total = await Tag.countDocuments();
+      filter.interest = conversedInterest._id;
     }
+
+    tags = await Tag.find(filter).skip(skip).limit(limit).lean<TagType[]>();
+    total = await Tag.find(filter).countDocuments();
 
     // NOTE : tag response에 completedRate 추가
     const tagsWithRates = await Promise.all(
@@ -149,26 +149,29 @@ export async function PATCH(req: NextRequest) {
       { status: 403 },
     );
 
-  if (!body.name) {
+  if (body.name !== undefined && body.name.length == 0) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.EMPTY_TAGNAME.ko },
       { status: 400 },
     );
   }
 
-  if (body.interest) {
-    const isExistedInterest = Interest.findOne({ name: body.interest });
-    if (!isExistedInterest)
-      return NextResponse.json(
-        { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
-        { status: 400 },
-      );
+  if (body.isCompleted !== undefined && typeof body.isCompleted !== 'boolean') {
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
+      { status: 400 },
+    );
   }
 
   try {
     const updatedTag = await Tag.findByIdAndUpdate(
       tagId,
-      { name: body.name, interest: body.interest },
+      {
+        ...(body.name && { name: body.name }),
+        ...(body.isCompleted !== undefined && {
+          isCompleted: body.isCompleted,
+        }),
+      },
       { new: true },
     );
     if (!updatedTag)

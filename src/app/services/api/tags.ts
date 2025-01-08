@@ -10,16 +10,26 @@ export async function getAllTags() {
   return res.data;
 }
 
-export async function getMyTags(params?: { interest?: string }) {
+export async function getMyTags(params?: {
+  interest?: string;
+  isCompleted?: string;
+}) {
   try {
-    if (params?.interest !== undefined) {
-      const { interest } = params;
-      const res = await apiClient.get(`/tags/mine?interest=${interest}`);
-      return res.data;
-    } else {
-      const res = await apiClient.get('/tags/mine');
-      return res.data;
+    let query = '';
+    if (params) {
+      const searchParams = new URLSearchParams();
+
+      if (params.interest !== undefined)
+        searchParams.append('interest', params.interest);
+
+      if (params.isCompleted !== undefined)
+        searchParams.append('isCompleted', params.isCompleted);
+
+      query = `?${searchParams}`;
     }
+
+    const res = await apiClient.get(`/tags/mine${query}`);
+    return res.data;
   } catch (error) {
     throw error;
   }
@@ -44,15 +54,32 @@ export async function postTag({ name, interest }: TagRequest) {
   }
 }
 
-export async function patchTag({ _id, name }: Partial<Tag>) {
-  if (!_id?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
-  if (!name?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_TAGNAME.ko);
-
+export async function patchTag(props: {
+  _id: string;
+  name?: string;
+  isCompleted?: boolean;
+}) {
   try {
-    const res = await apiClient.patch(`/tags?id=${_id}`, { name: name.trim() });
+    if (!props._id.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
+    if (props.name !== undefined && props.name.length == 0)
+      throw new Error(ERROR_MESSAGES.EMPTY_TAGNAME.ko);
+    if (
+      props.isCompleted !== undefined &&
+      typeof props.isCompleted !== 'boolean'
+    )
+      throw new Error(ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko);
+
+    const filter = {
+      ...(props.name && { name: props.name }),
+      ...(props.isCompleted !== undefined && {
+        isCompleted: props.isCompleted,
+      }),
+    };
+
+    const res = await apiClient.patch(`/tags?id=${props._id}`, filter);
     return res.data;
   } catch (error) {
-    console.error(`태그 항목 수정 중 오류 발생 : ${error}`);
+    if (error instanceof Error) throw new Error(error.message);
     throw error;
   }
 }
