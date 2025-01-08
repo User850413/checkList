@@ -92,7 +92,9 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
             <TagNameInput tagName={tagName} tagId={tagId} />
             <DialogRoot placement={'center'}>
               <DialogTrigger>
-                <button className="inline-block p-1 text-slate-400">x</button>
+                <span role="button" className="inline-block p-1 text-slate-400">
+                  x
+                </span>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>정말로 삭제하시겠습니까?</DialogHeader>

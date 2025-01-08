@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { getMyData } from '@/app/services/api/user';
@@ -20,17 +20,20 @@ export default function Header() {
   });
 
   const router = useRouter();
+  const pathname = usePathname();
 
   //NOTE: 세션 만료 시 리다이렉션
   useEffect(() => {
     if (error) {
-      console.error(error.message);
-      router.push('/login?sessionExpired=true');
+      router.push('/');
     }
   }, [error, router]);
 
   useEffect(() => {
-    if (isSuccess) setMyData(data.user);
+    if (isSuccess) {
+      setMyData(data.user);
+      if (pathname === '/') router.push('/my-list');
+    }
   }, [isSuccess, data]);
 
   if (isLoading) return <div> loading... </div>;

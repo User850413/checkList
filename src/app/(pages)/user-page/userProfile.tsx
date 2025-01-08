@@ -121,9 +121,12 @@ export default function UserProfile() {
                 </StyledButton>
                 <DialogRoot placement={'center'}>
                   <DialogTrigger>
-                    <StyledButton color="dark" size={'sm'}>
+                    <span
+                      role="button"
+                      className="rounded-md bg-slate-500 px-2 py-2 text-white hover:bg-slate-600"
+                    >
                       로그아웃
-                    </StyledButton>
+                    </span>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>정말로 로그아웃 하시겠습니까?</DialogHeader>
