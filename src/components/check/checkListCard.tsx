@@ -1,7 +1,6 @@
 'use client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
-
 import { deleteCheck, patchChecks } from '@/app/services/api/checks';
 import { Check } from '@/types/check';
 import StyledButton from '../common/styledButton';
@@ -39,7 +38,6 @@ function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
     mutationFn: () => patchChecks(id, { isCompleted: checked }),
     mutationKey: QueryKeys.CHECKS(tagId),
     onSuccess: () => {
-      console.log('invalid!');
       queryClient.invalidateQueries({ queryKey: QueryKeys.CHECKS(tagId) });
     },
   });

@@ -15,7 +15,20 @@ export async function GET(req: NextRequest) {
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 403 });
 
-    const myTagList: TagType[] = await Tag.find({ userId });
+    let myTagList: TagType[];
+
+    // NOTE : isCompleted 필터
+    const isCompleted: string | null =
+      req.nextUrl.searchParams.get('isCompleted');
+
+    if (isCompleted) {
+      myTagList = await Tag.find({
+        userId,
+        isCompleted: isCompleted === 'true',
+      });
+    } else {
+      myTagList = await Tag.find({ userId });
+    }
 
     // NOTE : myTagList에 존재하는 interest들의 id값 추출
     const uniqueInterests = new Set(

@@ -21,9 +21,21 @@ export async function getAllInterest() {
   }
 }
 
-export async function getMyInterest() {
+export async function getMyInterest(params?: { isCompleted?: string }) {
   try {
-    const res = await apiClient.get('/interests/mine');
+    let query = '';
+
+    if (params) {
+      const searchParams = new URLSearchParams();
+
+      if (params.isCompleted !== undefined) {
+        searchParams.append('isCompleted', params.isCompleted);
+      }
+
+      query = `?${searchParams}`;
+    }
+
+    const res = await apiClient.get(`/interests/mine${query}`);
 
     return res.data;
   } catch (err) {

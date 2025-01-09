@@ -2,7 +2,7 @@
 
 import { getMyTags } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import CheckListWrapper from '../check/checkListWrapper';
 import { getMyInterest } from '@/app/services/api/interests';
@@ -11,8 +11,6 @@ import FieldButton from '../common/fieldButton';
 import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 export default function TagBundle() {
-  const queryClient = useQueryClient();
-
   const [tagList, setTagList] = useState<Tag[]>([]);
   const [interestList, setInterestList] = useState<interest[]>([]);
   const [interestFilter, setInterestFilter] = useState<string>('');
@@ -24,8 +22,8 @@ export default function TagBundle() {
     error: interestsError,
     isSuccess: isInterestsSuccess,
   } = useQuery({
-    queryKey: QueryKeys.MY_INTERESTS,
-    queryFn: () => getMyInterest(),
+    queryKey: QueryKeys.MY_INTERESTS_UNCOMPLETED,
+    queryFn: () => getMyInterest({ isCompleted: 'false' }),
   });
 
   useEffect(() => {
@@ -40,7 +38,7 @@ export default function TagBundle() {
     error: tagsError,
     isSuccess: isTagsSuccess,
   } = useQuery({
-    queryKey: QueryKeys.MY_TAGS,
+    queryKey: QueryKeys.MY_TAGS_UNCOMPLETED,
     queryFn: () => {
       if (interestFilter) {
         return getMyTags({ interest: interestFilter, isCompleted: 'false' });
@@ -66,23 +64,24 @@ export default function TagBundle() {
   // NOTE : interestFilter 변경 때마다 tag refetch
   useEffect(() => {
     tagRefetch();
-    console.log(interestFilter);
   }, [interestFilter]);
 
   return (
     <div className="w-full px-6 py-10">
-      <ul className="mb-5 flex flex-wrap gap-2 rounded-md bg-slate-300 p-2">
-        {interestList.map((interest) => (
-          <li key={interest._id}>
-            <FieldButton
-              fieldName={interest.name}
-              clickable
-              isClicked={interest.name === interestFilter}
-              onClickFn={() => onClickInterestButton(interest.name)}
-            />
-          </li>
-        ))}
-      </ul>
+      {interestList.length > 0 && (
+        <ul className="mb-5 flex flex-wrap gap-2 rounded-md bg-slate-300 p-2">
+          {interestList.map((interest) => (
+            <li key={interest._id}>
+              <FieldButton
+                fieldName={interest.name}
+                clickable
+                isClicked={interest.name === interestFilter}
+                onClickFn={() => onClickInterestButton(interest.name)}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
       <CheckListWrapper
         isLoading={isTagsLoading || isInterestsLoading}
         tags={tagList}

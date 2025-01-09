@@ -44,7 +44,6 @@ export async function GET(req: NextRequest) {
     }
 
     const namedUserDetail = { bio: userDetail.bio, interest: namedInterest };
-    console.log(namedUserDetail);
 
     return NextResponse.json({ data: namedUserDetail }, { status: 200 });
   } catch (err) {
