@@ -25,7 +25,7 @@ export default function TagBundle() {
     isSuccess: isInterestsSuccess,
   } = useQuery({
     queryKey: QueryKeys.MY_INTERESTS,
-    queryFn: () => getMyInterest(),
+    queryFn: () => getMyInterest({ isCompleted: 'false' }),
   });
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 {
   "plugins": ["import"],
-  "extends": ["plugin:prettier/recommended","plugin:import/recommended"],
+  "extends": ["plugin:prettier/recommended", "plugin:import/recommended"],
   "settings": {
     "import/resolver": {
       "typescript": {
@@ -23,7 +23,6 @@
           ["sibling", "parent", "index"],
           "unknown"
         ],
-        "newlines-between": "always",
         "alphabetize": { "order": "asc", "caseInsensitive": true }
       }
     ]
