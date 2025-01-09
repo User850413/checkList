@@ -11,8 +11,6 @@ import FieldButton from '../common/fieldButton';
 import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
 export default function TagBundle() {
-  const queryClient = useQueryClient();
-
   const [tagList, setTagList] = useState<Tag[]>([]);
   const [interestList, setInterestList] = useState<interest[]>([]);
   const [interestFilter, setInterestFilter] = useState<string>('');
@@ -71,18 +69,20 @@ export default function TagBundle() {
 
   return (
     <div className="w-full px-6 py-10">
-      <ul className="mb-5 flex flex-wrap gap-2 rounded-md bg-slate-300 p-2">
-        {interestList.map((interest) => (
-          <li key={interest._id}>
-            <FieldButton
-              fieldName={interest.name}
-              clickable
-              isClicked={interest.name === interestFilter}
-              onClickFn={() => onClickInterestButton(interest.name)}
-            />
-          </li>
-        ))}
-      </ul>
+      {interestList.length > 0 && (
+        <ul className="mb-5 flex flex-wrap gap-2 rounded-md bg-slate-300 p-2">
+          {interestList.map((interest) => (
+            <li key={interest._id}>
+              <FieldButton
+                fieldName={interest.name}
+                clickable
+                isClicked={interest.name === interestFilter}
+                onClickFn={() => onClickInterestButton(interest.name)}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
       <CheckListWrapper
         isLoading={isTagsLoading || isInterestsLoading}
         tags={tagList}
