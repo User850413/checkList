@@ -2,7 +2,7 @@
 
 import { getMyTags } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import CheckListWrapper from '../check/checkListWrapper';
 import { getMyInterest } from '@/app/services/api/interests';
@@ -22,7 +22,7 @@ export default function TagBundle() {
     error: interestsError,
     isSuccess: isInterestsSuccess,
   } = useQuery({
-    queryKey: QueryKeys.MY_INTERESTS,
+    queryKey: QueryKeys.MY_INTERESTS_UNCOMPLETED,
     queryFn: () => getMyInterest({ isCompleted: 'false' }),
   });
 
@@ -38,7 +38,7 @@ export default function TagBundle() {
     error: tagsError,
     isSuccess: isTagsSuccess,
   } = useQuery({
-    queryKey: QueryKeys.MY_TAGS,
+    queryKey: QueryKeys.MY_TAGS_UNCOMPLETED,
     queryFn: () => {
       if (interestFilter) {
         return getMyTags({ interest: interestFilter, isCompleted: 'false' });
@@ -64,7 +64,6 @@ export default function TagBundle() {
   // NOTE : interestFilter 변경 때마다 tag refetch
   useEffect(() => {
     tagRefetch();
-    console.log(interestFilter);
   }, [interestFilter]);
 
   return (
