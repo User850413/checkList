@@ -2,7 +2,7 @@
 
 import Header from '@/components/layout/header';
 import UserProfile from './userProfile';
-import TagBundle from '@/components/tag/tagBundle';
+import UserInterestChart from '@/components/user/userInterestChart';
 
 export default function UserPage() {
   return (
@@ -11,7 +11,9 @@ export default function UserPage() {
       <header>
         <UserProfile />
       </header>
-      <main></main>
+      <main>
+        <UserInterestChart />
+      </main>
     </>
   );
 }

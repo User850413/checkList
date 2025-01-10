@@ -1,11 +1,11 @@
 interface DonutChartProps {
-  angles: number[];
-  size: number;
-  innerRadius: number;
+  values?: number[];
+  size?: number;
+  innerRadius?: number;
 }
 
 export default function DonutChart({
-  angles = [90, 120, 30],
+  values = [70, 20, 10],
   size = 100,
   innerRadius = 40,
 }: DonutChartProps) {
@@ -18,8 +18,10 @@ export default function DonutChart({
 
   let currentAngle = -90; // 시작 각도 (위쪽에서 시작)
 
+  const angles: number[] = values.map((value) => (value / 100) * 360);
+
   // 섹션 데이터 미리 계산
-  const sections = angles.map((angle, index) => {
+  const sections = angles.map((angle) => {
     // 시작점 계산
     const startX = Math.cos((currentAngle * Math.PI) / 180) * radius + size / 2;
     const startY = Math.sin((currentAngle * Math.PI) / 180) * radius + size / 2;
@@ -56,7 +58,6 @@ export default function DonutChart({
       innerEndX,
       innerEndY,
       largeArc,
-      color: index % 2 === 0 ? 'tomato' : 'skyblue', // 섹션 색상
     };
   });
 
