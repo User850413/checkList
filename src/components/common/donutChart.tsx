@@ -2,12 +2,14 @@ interface DonutChartProps {
   values?: number[];
   size?: number;
   innerRadius?: number;
+  colors?: string[];
 }
 
 export default function DonutChart({
   values = [70, 20, 10],
   size = 100,
   innerRadius = 40,
+  colors,
 }: DonutChartProps) {
   const radius = size / 2;
 
@@ -61,7 +63,7 @@ export default function DonutChart({
     };
   });
 
-  const sectionColors = [
+  const sectionColors = colors || [
     '#0077B6',
     ' #0096C7',
     ' #00B4D8',

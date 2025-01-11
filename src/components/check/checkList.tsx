@@ -75,6 +75,12 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
     onError: (err) => console.log(err.message),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QueryKeys.TAGS });
+      queryClient.invalidateQueries({
+        queryKey: QueryKeys.MY_INTERESTS_UNCOMPLETED,
+      });
+      queryClient.invalidateQueries({
+        queryKey: QueryKeys.MY_INTERESTS_COMPLETED,
+      });
     },
   });
 

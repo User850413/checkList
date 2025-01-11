@@ -51,12 +51,46 @@ export default function UserInterestChart() {
     setPercentage(sortedCount.map((item) => (count[item] / totalValue) * 100));
   }, [interestList]);
 
+  const colors = [
+    '#0077B6',
+    ' #0096C7',
+    ' #00B4D8',
+    '#48CAE4',
+    '#90E0EF',
+    '#cccccc',
+  ];
+
   return (
     <>
-      {interestList.map((interest, index) => (
-        <span key={index}>{interest}</span>
-      ))}
-      <DonutChart values={percentage} />
+      <div className="mx-14 mt-10 flex min-w-[800px] flex-col items-center justify-between rounded-lg bg-slate-200 px-10 pb-5 pt-3">
+        <span className="mb-5 mr-auto cursor-default font-semibold text-slate-500">
+          어떤 목표를 가장 많이 달성했나요?
+        </span>
+        <div className="flex items-start gap-7">
+          <span>
+            <DonutChart
+              values={percentage}
+              size={160}
+              innerRadius={60}
+              colors={colors}
+            />
+          </span>
+          <ul>
+            {topFive.map((item, index) => (
+              <li
+                key={index}
+                className="relative flex cursor-default items-center gap-2 text-sm text-slate-500"
+              >
+                <span
+                  className="h-3 w-3"
+                  style={{ backgroundColor: colors[index] }}
+                />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </>
   );
 }
