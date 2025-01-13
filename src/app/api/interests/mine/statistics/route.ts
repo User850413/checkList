@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
     if (!myTags) return NextResponse.json({ data: [] }, { status: 200 });
 
     // NOTE : 상위 5개 항목 추출
+    let statistics = [];
     const myInterestsId = myTags.map((tag) => tag.interest);
     const myInterests = await Promise.all(
       myInterestsId.map((interestId) =>
@@ -44,13 +45,25 @@ export async function GET(req: NextRequest) {
       .map(([key]) => key)
       .slice(6);
 
-    let otherCount = 0;
-    otherValues.map((value) => (otherCount += count[value]));
-
     let totalCount = 0;
     sortedValues.map((item) => {
       totalCount += count[item];
     });
+
+    // NOTE : '그 외' 가 없을 시 바로 return
+    if (otherValues.length == 0) {
+      statistics = sortedValues.map((value) => {
+        return { [value]: count[value] };
+      });
+
+      return NextResponse.json(
+        { data: statistics, totalCount },
+        { status: 200 },
+      );
+    }
+
+    let otherCount = 0;
+    otherValues.map((value) => (otherCount += count[value]));
 
     const valuesWithOthers = sortedValues
       .map((value) => {
@@ -58,7 +71,7 @@ export async function GET(req: NextRequest) {
       })
       .concat({ '그 외': otherCount } as { [key: string]: number });
 
-    const statistics = [...valuesWithOthers].sort((a, b) => {
+    statistics = [...valuesWithOthers].sort((a, b) => {
       return Object.values(b)[0] - Object.values(a)[0];
     });
 
@@ -70,7 +83,7 @@ export async function GET(req: NextRequest) {
     // console.log(valuesWithOthers);
     // console.log(statistics);
 
-    return NextResponse.json({ data: statistics }, { status: 200 });
+    return NextResponse.json({ data: statistics, totalCount }, { status: 200 });
   } catch (err) {
     if (err instanceof Error)
       return NextResponse.json({ error: err.message }, { status: 500 });
