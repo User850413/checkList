@@ -67,6 +67,22 @@ export async function getWordInterest({ word }: { word: string }) {
   }
 }
 
+export async function getTopInterest() {
+  try {
+    const res = await apiClient.get('/interests/mine/statistics');
+
+    return res.data;
+  } catch (err) {
+    if (err instanceof Error)
+      return NextResponse.json({ error: err.message }, { status: 500 });
+
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
+      { status: 500 },
+    );
+  }
+}
+
 export async function postInterest({ name }: Pick<interest, 'name'>) {
   try {
     const trimmedName = name.trim();
