@@ -21,6 +21,7 @@ apiClient.interceptors.response.use(
         return apiClient.request(error.config);
       } catch (error) {
         console.error(ERROR_MESSAGES.EXPIRED_REFRESH_TOKEN.ko, error);
+        window.location.href = '/login?loggedOut=true';
       }
     }
     return Promise.reject(error);
