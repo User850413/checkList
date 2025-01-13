@@ -3,53 +3,33 @@
 import { useQuery } from '@tanstack/react-query';
 import DonutChart from '../common/donutChart';
 import { QueryKeys } from '@/app/lib/constants/queryKeys';
-import { getMyTags } from '@/app/services/api/tags';
 import { useEffect, useState } from 'react';
-import { Tag } from '@/types/tag';
+import { getTopInterest } from '@/app/services/api/interests';
 
 export default function UserInterestChart() {
   const [interestList, setInterestList] = useState<string[]>([]);
-  const [topFive, setTopFive] = useState<string[]>([]);
   const [percentage, setPercentage] = useState<number[]>([]);
 
   // NOTE : 완료된 tags 불러오는 쿼리
-  const { data: tagsData } = useQuery({
+  const { data: interestsData } = useQuery({
     queryKey: QueryKeys.MY_TAGS_COMPLETED,
-    queryFn: () => getMyTags({ isCompleted: 'true' }),
+    queryFn: () => getTopInterest(),
   });
   useEffect(() => {
-    let interests: string[] = [];
+    if (interestsData) {
+      setInterestList(interestsData.data);
 
-    tagsData &&
-      tagsData.data.map((tag: Tag) => {
-        interests.push(tag.interest);
+      interestList.map((interest) => {
+        const count = Number(Object.values(interest)[0]);
+        if (interestsData.totalCount !== 0) {
+          setPercentage((prev) => [
+            ...prev,
+            (count / interestsData.totalCount) * 100,
+          ]);
+        }
       });
-    setInterestList(interests);
-  }, [tagsData]);
-
-  // NOTE : interest 개수 추출 후 percentage 반영
-  useEffect(() => {
-    let count: { [key: string]: number } = {};
-    if (interestList.length > 0) {
-      for (let key of interestList) {
-        count[key] = (count[key] || 0) + 1;
-      }
     }
-
-    let sortedCount = Object.entries(count)
-      .sort(([, a], [, b]) => b - a)
-      .map(([key]) => key)
-      .slice(0, 5);
-
-    setTopFive(sortedCount);
-
-    let totalValue = 0;
-    sortedCount.map((item) => {
-      totalValue += count[item];
-    });
-
-    setPercentage(sortedCount.map((item) => (count[item] / totalValue) * 100));
-  }, [interestList]);
+  }, [interestsData, interestList]);
 
   const colors = [
     '#0077B6',
@@ -63,20 +43,20 @@ export default function UserInterestChart() {
   return (
     <>
       <div className="mx-14 mt-10 flex min-w-[800px] flex-col items-center justify-between rounded-lg bg-slate-200 px-10 pb-5 pt-3">
-        <span className="mb-5 mr-auto cursor-default font-semibold text-slate-500">
+        <span className="mb-5 mr-auto w-full cursor-default border-b-2 border-b-slate-300 pb-2 font-semibold text-slate-500">
           어떤 목표를 가장 많이 달성했나요?
         </span>
         <div className="flex items-start gap-7">
           <span>
             <DonutChart
               values={percentage}
-              size={160}
+              size={180}
               innerRadius={60}
               colors={colors}
             />
           </span>
           <ul>
-            {topFive.map((item, index) => (
+            {interestList.map((item, index) => (
               <li
                 key={index}
                 className="relative flex cursor-default items-center gap-2 text-sm text-slate-500"
@@ -85,7 +65,7 @@ export default function UserInterestChart() {
                   className="h-3 w-3"
                   style={{ backgroundColor: colors[index] }}
                 />
-                <span>{item}</span>
+                <span>{Object.keys(item)[0]}</span>
               </li>
             ))}
           </ul>
