@@ -11,15 +11,17 @@ interface FloatingButtonProps extends PropsWithChildren {
 }
 
 export default function FloatingButton({
-  background = '#2563eb',
+  background = '#6395ff',
   onClickFn = () => {},
   children,
   classNames,
 }: FloatingButtonProps) {
   return (
-    <motion.button
+    <motion.span
+      role="button"
+      tabIndex={0}
       className={clsx(
-        'fixed bottom-5 right-5 z-10 aspect-square min-h-12 min-w-12 rounded-full p-2',
+        'fixed bottom-5 right-8 z-10 flex aspect-square min-h-12 min-w-12 items-center justify-center rounded-full',
         classNames,
       )}
       style={{ background }}
@@ -28,6 +30,6 @@ export default function FloatingButton({
       onClick={onClickFn}
     >
       {children}
-    </motion.button>
+    </motion.span>
   );
 }
