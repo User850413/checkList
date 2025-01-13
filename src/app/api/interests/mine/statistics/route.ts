@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
     let otherValues = Object.entries(count)
       .sort(([, a], [, b]) => b - a)
       .map(([key]) => key)
-      .slice(6);
+      .slice(5);
 
     let totalCount = 0;
     sortedValues.map((item) => {
@@ -74,14 +74,6 @@ export async function GET(req: NextRequest) {
     statistics = [...valuesWithOthers].sort((a, b) => {
       return Object.values(b)[0] - Object.values(a)[0];
     });
-
-    // console.log(count);
-    // console.log(otherCount);
-    // console.log(sortedValues);
-    // console.log(otherValues);
-    // console.log(totalCount);
-    // console.log(valuesWithOthers);
-    // console.log(statistics);
 
     return NextResponse.json({ data: statistics, totalCount }, { status: 200 });
   } catch (err) {

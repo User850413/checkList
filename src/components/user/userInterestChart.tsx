@@ -17,15 +17,18 @@ export default function UserInterestChart() {
   });
   useEffect(() => {
     if (interestsData) {
-      setInterestList(interestsData.data);
+      const updatedInterestList = interestsData.data;
+      setInterestList(updatedInterestList);
 
-      interestList.map((interest) => {
-        const count = Number(Object.values(interest)[0]);
+      interestList.map(() => {
         if (interestsData.totalCount !== 0) {
-          setPercentage((prev) => [
-            ...prev,
-            (count / interestsData.totalCount) * 100,
-          ]);
+          const calculatedPercentages = updatedInterestList.map(
+            (interest: { [key: string]: number }) => {
+              const count = Number(Object.values(interest)[0]);
+              return (count / interestsData.totalCount) * 100;
+            },
+          );
+          setPercentage(calculatedPercentages);
         }
       });
     }
@@ -33,8 +36,8 @@ export default function UserInterestChart() {
 
   const colors = [
     '#0077B6',
-    ' #0096C7',
-    ' #00B4D8',
+    '#0096C7',
+    '#00B4D8',
     '#48CAE4',
     '#90E0EF',
     '#cccccc',
