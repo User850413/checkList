@@ -78,7 +78,7 @@ export async function PATCH(req: NextRequest) {
           name: interest.name,
         });
 
-        // NOTE : 없을 시 return
+        // NOTE : 없을 시 create
         if (!isExistedInterest) {
           isExistedInterest = await Interest.create({ name: interest.name });
         }

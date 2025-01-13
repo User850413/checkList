@@ -95,16 +95,13 @@ export async function POST(req: NextRequest) {
     let interestId = null;
 
     if (data.interest) {
-      const isExistedInterest: interest | null = await Interest.findOne({
+      let isExistedInterest: interest | null = await Interest.findOne({
         name: data.interest,
       });
       if (!isExistedInterest)
-        return NextResponse.json(
-          { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
-          { status: 400 },
-        );
+        isExistedInterest = await Interest.create({ name: data.interest });
 
-      interestId = isExistedInterest._id;
+      interestId = isExistedInterest!._id;
     }
 
     const newTag = await Tag.create([
