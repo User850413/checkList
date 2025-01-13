@@ -68,7 +68,7 @@ export default function TagBundle() {
 
   return (
     <div className="w-full px-6 py-10">
-      {interestList.length > 0 && (
+      {interestList && interestList.length > 0 && (
         <ul className="mb-5 flex flex-wrap gap-2 rounded-md bg-slate-300 p-2">
           {interestList.map((interest) => (
             <li key={interest._id}>
