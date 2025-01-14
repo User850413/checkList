@@ -6,15 +6,26 @@ const userTagSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  tagId: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Tag',
-    required: true,
-    default: [],
-  },
+  tags: [
+    {
+      tagId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tag',
+        required: true,
+        default: [],
+      },
+      isCompleted: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
 });
 
 const UserTag =
   mongoose.models['UserTag'] || mongoose.model('UserTag', userTagSchema);
+
+// delete mongoose.models['UserTag'];
+// delete mongoose.modelSchemas['UserTag'];
 
 export default UserTag;

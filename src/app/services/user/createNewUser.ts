@@ -16,9 +16,8 @@ export async function createNewUser(
     });
 
     await userDetail.save({ session });
-    const defaultTags = USER_DEFAULT.TAGS || [];
 
-    const userTag = new UserTag({ userId, tagId: defaultTags });
+    const userTag = new UserTag({ userId });
     await userTag.save({ session });
 
     console.log('사용자 디테일 및 기본 태그 리스트 생성 성공');
