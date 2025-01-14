@@ -145,21 +145,19 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
-  if (body.isCompleted !== undefined && typeof body.isCompleted !== 'boolean') {
-    return NextResponse.json(
-      { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
-      { status: 400 },
-    );
-  }
+  // ALERT : isCompleted는 tags/mine에 옮기기
+  // if (body.isCompleted !== undefined && typeof body.isCompleted !== 'boolean') {
+  //   return NextResponse.json(
+  //     { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
+  //     { status: 400 },
+  //   );
+  // }
 
   try {
     const updatedTag = await Tag.findByIdAndUpdate(
       tagId,
       {
         ...(body.name && { name: body.name }),
-        ...(body.isCompleted !== undefined && {
-          isCompleted: body.isCompleted,
-        }),
       },
       { new: true },
     );
