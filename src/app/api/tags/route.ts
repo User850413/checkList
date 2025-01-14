@@ -89,7 +89,6 @@ export async function POST(req: NextRequest) {
 
       interestId = isExistedInterest!._id;
     }
-
     const newTag = await Tag.create({ name: data.name, interest: interestId });
 
     // NOTE : userTag 모델에 항목 추가

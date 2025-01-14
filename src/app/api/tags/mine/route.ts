@@ -52,68 +52,66 @@ export async function GET(req: NextRequest) {
 
       myTags = myTags.filter(
         (item: { tagId: string; isCompleted: boolean }) =>
-          item.isCompleted === true,
+          item.isCompleted === JSON.parse(isCompleted),
       );
     }
 
-    // console.log(myTags);
+    console.log(myTags);
 
-    return NextResponse.json({});
+    myTags = myTags.map((tag) => tag.tagId);
 
-    // const filter: Record<string, any> = {};
+    // NOTE : 3. interest 필터링
+    const filter: Record<string, any> = {};
+    const interest = req.nextUrl.searchParams.get('interest');
 
-    // const interest = req.nextUrl.searchParams.get('interest');
+    if (interest) {
+      const conversedInterest = await Interest.findOne({ name: interest });
+      if (!conversedInterest)
+        return NextResponse.json(
+          { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
+          { status: 400 },
+        );
 
-    // if (isCompleted) {
-    //   if (isCompleted !== 'true' && isCompleted !== 'false')
-    //     return NextResponse.json(
-    //       { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
-    //       { status: 400 },
-    //     );
-    //   filter.isCompleted = isCompleted === 'true';
-    // }
-    // if (interest) {
-    //   const conversedInterest = await Interest.findOne({ name: interest });
-    //   if (!conversedInterest)
-    //     return NextResponse.json(
-    //       { error: ERROR_MESSAGES.NOT_FOUND_INTEREST.ko },
-    //       { status: 400 },
-    //     );
+      filter.interest = conversedInterest;
+    }
 
-    //   filter.interest = conversedInterest._id;
-    // }
-
-    // myTags = await Tag.find({ userId, ...filter })
-    //   .skip(skip)
-    //   .limit(limit)
-    //   .lean<TagType[]>();
-    // total = await Tag.find({ userId, ...filter }).countDocuments();
+    myTags = await Tag.find({
+      _id: { $in: myTags },
+      ...filter,
+    })
+      .skip(skip)
+      .limit(limit)
+      .lean<TagType[]>();
+    total = await Tag.find({
+      _id: { $in: myTags },
+      ...filter,
+    }).countDocuments();
 
     // NOTE : tag response에 completedRate 추가
-    // const tagsWithRates = await Promise.all(
-    //   myTags.map(async (tag) => {
-    //     const completedRate = await calculateCompletedRate(tag._id);
-    //     return { ...tag, completedRate };
-    //   }),
-    // );
+    const tagsWithRates = await Promise.all(
+      myTags.map(async (tag) => {
+        const completedRate = await calculateCompletedRate(tag._id);
+        return { ...tag, completedRate };
+      }),
+    );
 
     // NOTE : interest 모델로부터 objectId를 통해 name 추출
-    // let mappedTags: TagType[] = [];
-    // for (const tagItem of tagsWithRates) {
-    //   if (tagItem.interest !== null) {
-    //     const interestId = tagItem.interest.toString();
-    //     const foundedId: interest | null = await Interest.findById(interestId);
-    //     if (foundedId) {
-    //       mappedTags.push({ ...tagItem, interest: foundedId.name });
-    //     } else {
-    //       mappedTags = myTags;
-    //     }
-    //   } else {
-    //     mappedTags = myTags;
-    //   }
-    // }
+    let mappedTags: TagType[] = [];
+    for (const tagItem of tagsWithRates) {
+      if (tagItem.interest !== null) {
+        const interestId = tagItem.interest.toString();
+        const foundedId: interest | null = await Interest.findById(interestId);
+        if (foundedId) {
+          mappedTags.push({ ...tagItem, interest: foundedId.name });
+        } else {
+          mappedTags = myTags;
+        }
+      } else {
+        mappedTags = myTags;
+      }
+    }
 
-    // return NextResponse.json({ total, page, limit, data: mappedTags });
+    return NextResponse.json({ total, page, limit, data: mappedTags });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
