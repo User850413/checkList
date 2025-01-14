@@ -9,6 +9,7 @@ import Interest from '@/app/lib/db/models/interests';
 import { interest } from '@/types/interest';
 import { calculateCompletedRate } from '@/app/services/database/completedRate';
 import UserTag from '@/app/lib/db/models/userTags';
+import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
 
 export async function GET(req: NextRequest) {
   try {
@@ -118,6 +119,42 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.TOKEN_ERROR.ko },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const tagId = searchParams.get('id');
+  try {
+    await dbConnect();
+
+    const { userId, error } = getUserId(req);
+    if (!userId) return NextResponse.json({ error }, { status: 403 });
+
+    if (!tagId) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.EMPTY_ID.ko },
+        { status: 400 },
+      );
+    }
+
+    const tag = await Tag.findById(tagId);
+    if (!tag) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
+        { status: 404 },
+      );
+    }
+
+    await deleteTagAndChecks(userId, tagId);
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 },
     );
   }

@@ -144,14 +144,6 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
-  // ALERT : isCompleted는 tags/mine에 옮기기
-  // if (body.isCompleted !== undefined && typeof body.isCompleted !== 'boolean') {
-  //   return NextResponse.json(
-  //     { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
-  //     { status: 400 },
-  //   );
-  // }
-
   try {
     const updatedTag = await Tag.findByIdAndUpdate(
       tagId,
@@ -208,7 +200,7 @@ export async function DELETE(req: NextRequest) {
     );
 
   try {
-    const deletedTag = await deleteTagAndChecks(tagId);
+    const deletedTag = await deleteTagAndChecks(userId, tagId);
     return NextResponse.json(
       {
         message: '삭제되었습니다',
