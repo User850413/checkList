@@ -1,5 +1,8 @@
 'use client';
 
+import apiClient from '@/app/services/token/apiClient';
+import axios from 'axios';
+
 export default function Test() {
   // const [myData, setMyData] = useState([]);
 
@@ -8,5 +11,6 @@ export default function Test() {
   //   queryFn: async () => await getMyDataAgain(),
   // });
 
+  apiClient.get('/tags/mine');
   return <>hello</>;
 }

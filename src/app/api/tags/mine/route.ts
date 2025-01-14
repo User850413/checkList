@@ -56,9 +56,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    console.log('hi');
-
-    console.log(myTags);
+    // console.log(myTags);
 
     return NextResponse.json({});
 

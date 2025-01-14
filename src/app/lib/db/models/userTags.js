@@ -11,8 +11,6 @@ const userTagSchema = new mongoose.Schema({
       tagId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tag',
-        required: true,
-        default: [],
       },
       isCompleted: {
         type: Boolean,
