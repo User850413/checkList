@@ -1,4 +1,4 @@
-const { default: mongoose } = require('mongoose');
+import mongoose from 'mongoose';
 
 const userTagSchema = new mongoose.Schema({
   userId: {
@@ -15,6 +15,6 @@ const userTagSchema = new mongoose.Schema({
 });
 
 const UserTag =
-  mongoose.models['UserTags'] || mongoose.model('UserTags', userTagSchema);
+  mongoose.models['UserTag'] || mongoose.model('UserTag', userTagSchema);
 
 export default UserTag;

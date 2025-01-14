@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import User from '@/app/lib/db/models/users';
-import { createUserDetail } from '@/app/services/user/createUserDetail';
+import { createNewUser } from '@/app/services/user/createNewUser';
 
 export async function POST(req: Request) {
   try {
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
         const newUser = new User({ username, email, password });
         await newUser.save({ session });
 
-        await createUserDetail(newUser._id, session);
+        await createNewUser(newUser._id, session);
 
         return { username, email, id: newUser._id };
       });
