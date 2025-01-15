@@ -10,6 +10,7 @@ import { interest } from '@/types/interest';
 import { calculateCompletedRate } from '@/app/services/database/completedRate';
 import { Tag as TagType } from '@/types/tag';
 import UserTag from '@/app/lib/db/models/userTags';
+import mongoose from 'mongoose';
 
 // NOTE : 전체 tag 가져오기
 export async function GET(req: NextRequest) {
@@ -89,13 +90,23 @@ export async function POST(req: NextRequest) {
 
       interestId = isExistedInterest!._id;
     }
-    const newTag = await Tag.create({ name: data.name, interest: interestId });
 
+    const session = await mongoose.startSession();
+    let newTag;
+    // const newTag = await Tag.create({ name: data.name, interest: interestId });
+    try {
+      await session.withTransaction(async () => {
+        newTag = await Tag.create({ name: data.name, interest: interestId });
+
+        await UserTag.updateOne(
+          { userId },
+          { $push: { tags: { tagId: newTag._id, isCompleted: false } } },
+        );
+      });
+    } finally {
+      await session.endSession();
+    }
     // NOTE : userTag 모델에 항목 추가
-    await UserTag.updateOne(
-      { userId },
-      { $push: { tags: { tagId: newTag._id, isCompleted: false } } },
-    );
 
     return NextResponse.json(newTag);
   } catch (err) {

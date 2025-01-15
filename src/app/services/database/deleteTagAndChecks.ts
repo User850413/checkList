@@ -15,11 +15,11 @@ export const deleteTagAndChecks = async (userId: string, tagId: string) => {
       throw new Error('존재하지 않는 태그입니다.');
     }
 
-    // 관련 Checks 삭제
-    await Check.deleteMany({ tagId }, { session });
-
     // 내 태그 리스트에서 삭제
     await UserTag.updateOne({ userId }, { $pull: { tags: { tagId } } });
+
+    // 관련 Checks 삭제
+    await Check.deleteMany({ tagId }, { session });
 
     // 태그 삭제
     await Tag.findByIdAndDelete(tagId, { session });
