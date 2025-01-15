@@ -57,8 +57,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    console.log(myTags);
-
     myTags = myTags.map((tag) => tag.tagId);
 
     // NOTE : 3. interest 필터링

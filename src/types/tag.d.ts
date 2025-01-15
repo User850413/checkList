@@ -19,3 +19,14 @@ export interface TagResponse {
   page: number;
   limit: number;
 }
+
+export interface UserTagDetail {
+  tagId: string;
+  isCompleted: boolean;
+}
+
+export interface UserTag {
+  _id: string;
+  userId: string;
+  tags: UserTagDetail[];
+}
