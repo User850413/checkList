@@ -41,8 +41,15 @@ export async function GET(req: NextRequest) {
     }
 
     // userTag 데이터로 Tag에서 데이터 찾기
-    const myTagList: TagType[] = await Promise.all(
+    const myTagList: TagType[] = await Promise.allSettled(
       myTagDataList.map((tag) => Tag.findOne({ _id: tag.tagId })),
+    ).then((results) =>
+      results
+        .filter(
+          (result): result is PromiseFulfilledResult<TagType> =>
+            result.status === 'fulfilled' && result.value !== null,
+        )
+        .map((result) => result.value),
     );
 
     // NOTE : 찾은 interest 리스트 중복 제거
