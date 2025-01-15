@@ -149,6 +149,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     await deleteTagAndChecks(userId, tagId);
+    return NextResponse.json({ message: '삭제되었습니다' }, { status: 200 });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
