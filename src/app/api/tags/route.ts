@@ -9,7 +9,10 @@ import { getUserId } from '@/app/services/token/getUserId';
 import { interest } from '@/types/interest';
 import { calculateCompletedRate } from '@/app/services/database/completedRate';
 import { Tag as TagType } from '@/types/tag';
+import UserTag from '@/app/lib/db/models/userTags';
+import mongoose from 'mongoose';
 
+// NOTE : 전체 tag 가져오기
 export async function GET(req: NextRequest) {
   try {
     await dbConnect();
@@ -36,17 +39,8 @@ export async function GET(req: NextRequest) {
 
     const filter: Record<string, any> = {};
 
-    const isCompleted = req.nextUrl.searchParams.get('isCompleted');
     const interest = req.nextUrl.searchParams.get('interest');
 
-    if (isCompleted) {
-      if (isCompleted !== 'true' && isCompleted !== 'false')
-        return NextResponse.json(
-          { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
-          { status: 400 },
-        );
-      filter.isCompleted = isCompleted === 'true';
-    }
     if (interest) {
       const conversedInterest = await Interest.findOne({ name: interest });
       if (!conversedInterest)
@@ -61,15 +55,7 @@ export async function GET(req: NextRequest) {
     tags = await Tag.find(filter).skip(skip).limit(limit).lean<TagType[]>();
     total = await Tag.find(filter).countDocuments();
 
-    // NOTE : tag response에 completedRate 추가
-    const tagsWithRates = await Promise.all(
-      tags.map(async (tag) => {
-        const completedRate = await calculateCompletedRate(tag._id);
-        return { ...tag, completedRate };
-      }),
-    );
-
-    return NextResponse.json({ total, page, limit, data: tagsWithRates });
+    return NextResponse.json({ total, page, limit, data: tags });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
@@ -77,6 +63,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// NOTE : tags 및 userTags에 새 tag 추가
 export async function POST(req: NextRequest) {
   await dbConnect();
 
@@ -104,9 +91,23 @@ export async function POST(req: NextRequest) {
       interestId = isExistedInterest!._id;
     }
 
-    const newTag = await Tag.create([
-      { name: data.name, interest: interestId, userId },
-    ]);
+    const session = await mongoose.startSession();
+    let newTag;
+    // const newTag = await Tag.create({ name: data.name, interest: interestId });
+    try {
+      await session.withTransaction(async () => {
+        newTag = await Tag.create({ name: data.name, interest: interestId });
+
+        await UserTag.updateOne(
+          { userId },
+          { $push: { tags: { tagId: newTag._id, isCompleted: false } } },
+        );
+      });
+    } finally {
+      await session.endSession();
+    }
+    // NOTE : userTag 모델에 항목 추가
+
     return NextResponse.json(newTag);
   } catch (err) {
     if (err instanceof Error) {
@@ -115,6 +116,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// NOTE : tag 모델의 이름 변경
 export async function PATCH(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const body = await req.json();
@@ -153,21 +155,11 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
-  if (body.isCompleted !== undefined && typeof body.isCompleted !== 'boolean') {
-    return NextResponse.json(
-      { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
-      { status: 400 },
-    );
-  }
-
   try {
     const updatedTag = await Tag.findByIdAndUpdate(
       tagId,
       {
         ...(body.name && { name: body.name }),
-        ...(body.isCompleted !== undefined && {
-          isCompleted: body.isCompleted,
-        }),
       },
       { new: true },
     );
@@ -219,7 +211,7 @@ export async function DELETE(req: NextRequest) {
     );
 
   try {
-    const deletedTag = await deleteTagAndChecks(tagId);
+    const deletedTag = await deleteTagAndChecks(userId, tagId);
     return NextResponse.json(
       {
         message: '삭제되었습니다',

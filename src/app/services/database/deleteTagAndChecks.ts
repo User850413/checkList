@@ -2,8 +2,9 @@ import mongoose from 'mongoose';
 
 import Check from '@/app/lib/db/models/checks';
 import Tag from '@/app/lib/db/models/tags';
+import UserTag from '@/app/lib/db/models/userTags';
 
-export const deleteTagAndChecks = async (tagId: string) => {
+export const deleteTagAndChecks = async (userId: string, tagId: string) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -13,6 +14,9 @@ export const deleteTagAndChecks = async (tagId: string) => {
     if (!existingTag) {
       throw new Error('존재하지 않는 태그입니다.');
     }
+
+    // 내 태그 리스트에서 삭제
+    await UserTag.updateOne({ userId }, { $pull: { tags: { tagId } } });
 
     // 관련 Checks 삭제
     await Check.deleteMany({ tagId }, { session });

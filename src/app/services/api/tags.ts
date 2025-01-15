@@ -88,7 +88,7 @@ export async function deleteTag({ _id }: Pick<Tag, '_id'>) {
   if (!_id?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
 
   try {
-    const res = await apiClient.delete(`/tags?id=${_id}`);
+    const res = await apiClient.delete(`/tags/mine?id=${_id}`);
     return res.status;
   } catch (error) {
     throw error;

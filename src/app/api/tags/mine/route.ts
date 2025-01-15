@@ -8,6 +8,8 @@ import { Tag as TagType } from '@/types/tag';
 import Interest from '@/app/lib/db/models/interests';
 import { interest } from '@/types/interest';
 import { calculateCompletedRate } from '@/app/services/database/completedRate';
+import UserTag from '@/app/lib/db/models/userTags';
+import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
 
 export async function GET(req: NextRequest) {
   try {
@@ -33,22 +35,36 @@ export async function GET(req: NextRequest) {
     const limit = !rawLimit || rawLimit < 1 || rawLimit > 100 ? 10 : rawLimit;
     const skip = (page - 1) * limit;
 
-    let myTags: TagType[] = [];
+    let myTags = [];
     let total = 0;
 
-    const filter: Record<string, any> = {};
+    // NOTE : 1. UserTags에서 userId로 필터링
+    myTags = await UserTag.find({ userId }).lean();
+    myTags = myTags.flatMap((tag) => tag.tags);
 
+    // NOTE : 2. isCompleted 필터링
     const isCompleted = req.nextUrl.searchParams.get('isCompleted');
-    const interest = req.nextUrl.searchParams.get('interest');
-
     if (isCompleted) {
       if (isCompleted !== 'true' && isCompleted !== 'false')
         return NextResponse.json(
           { error: ERROR_MESSAGES.TYPE_BOOLEAN_ERROR.ko },
           { status: 400 },
         );
-      filter.isCompleted = isCompleted === 'true';
+
+      myTags = myTags.filter(
+        (item: { tagId: string; isCompleted: boolean }) =>
+          item.isCompleted === JSON.parse(isCompleted),
+      );
     }
+
+    console.log(myTags);
+
+    myTags = myTags.map((tag) => tag.tagId);
+
+    // NOTE : 3. interest 필터링
+    const filter: Record<string, any> = {};
+    const interest = req.nextUrl.searchParams.get('interest');
+
     if (interest) {
       const conversedInterest = await Interest.findOne({ name: interest });
       if (!conversedInterest)
@@ -57,14 +73,20 @@ export async function GET(req: NextRequest) {
           { status: 400 },
         );
 
-      filter.interest = conversedInterest._id;
+      filter.interest = conversedInterest;
     }
 
-    myTags = await Tag.find({ userId, ...filter })
+    myTags = await Tag.find({
+      _id: { $in: myTags },
+      ...filter,
+    })
       .skip(skip)
       .limit(limit)
       .lean<TagType[]>();
-    total = await Tag.find({ userId, ...filter }).countDocuments();
+    total = await Tag.find({
+      _id: { $in: myTags },
+      ...filter,
+    }).countDocuments();
 
     // NOTE : tag response에 completedRate 추가
     const tagsWithRates = await Promise.all(
@@ -97,6 +119,43 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.TOKEN_ERROR.ko },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const tagId = searchParams.get('id');
+  try {
+    await dbConnect();
+
+    const { userId, error } = getUserId(req);
+    if (!userId) return NextResponse.json({ error }, { status: 403 });
+
+    if (!tagId) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.EMPTY_ID.ko },
+        { status: 400 },
+      );
+    }
+
+    const tag = await Tag.findById(tagId);
+    if (!tag) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
+        { status: 404 },
+      );
+    }
+
+    await deleteTagAndChecks(userId, tagId);
+    return NextResponse.json({ message: '삭제되었습니다' }, { status: 200 });
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 },
     );
   }
