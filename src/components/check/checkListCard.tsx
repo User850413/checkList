@@ -52,18 +52,18 @@ function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
   };
 
   return (
-    <div className="flex items-center justify-between gap-5 text-sm">
-      <div className="flex shrink-0 items-center gap-2">
+    <div className="flex w-full items-center justify-between gap-5 text-sm">
+      <div className="flex max-w-fit shrink items-center gap-2">
         <button
           onClick={() => setChecked((prev) => !prev)}
-          className={clsx('relative h-[18px] w-[18px] rounded-full', {
+          className={clsx('relative h-[18px] w-[18px] shrink-0 rounded-full', {
             'border-2 border-gray-300': !checked,
           })}
         >
           {checked && <Image fill src={checkIcon} alt={'완료'} />}
         </button>
         <div
-          className={clsx('cursor-pointer', {
+          className={clsx('cursor-pointer flex-wrap', {
             'text-gray-500 line-through': checked,
           })}
           onClick={onClickCard}
@@ -71,7 +71,7 @@ function CheckListCard({ id, task, isCompleted, tagId }: CheckListCardProps) {
           {task}
         </div>
       </div>
-      <span className="h-0 w-full border-b-2 border-dashed border-b-slate-100" />
+      <span className="h-0 min-w-0 max-w-full flex-1 shrink border-b-2 border-dashed border-b-slate-100" />
       <StyledButton onClick={() => onClickDelete(id)} size="xs" color="default">
         <span className="relative h-4 w-4">
           <Image src={closeButton} alt={`${task} 항목 삭제`} fill />
