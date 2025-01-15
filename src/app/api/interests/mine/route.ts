@@ -2,8 +2,13 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import Interest from '@/app/lib/db/models/interests';
 import Tag from '@/app/lib/db/models/tags';
+import UserTag from '@/app/lib/db/models/userTags';
 import { getUserId } from '@/app/services/token/getUserId';
-import { Tag as TagType } from '@/types/tag';
+import {
+  Tag as TagType,
+  UserTagDetail,
+  UserTag as UserTagType,
+} from '@/types/tag';
 import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -15,28 +20,38 @@ export async function GET(req: NextRequest) {
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 403 });
 
-    let myTagList: TagType[];
+    let myTagData: UserTagType | null;
+
+    // NOTE : UserTag 모델에서 userId 일치하는 데이터 가져오기
+    myTagData = await UserTag.findOne({ userId });
+    if (!myTagData)
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.INVALID_USER.ko },
+        { status: 403 },
+      );
 
     // NOTE : isCompleted 필터
-    const isCompleted: string | null =
-      req.nextUrl.searchParams.get('isCompleted');
+    const isCompleted = req.nextUrl.searchParams.get('isCompleted');
 
+    let myTagDataList: UserTagDetail[] = myTagData.tags;
     if (isCompleted) {
-      myTagList = await Tag.find({
-        userId,
-        isCompleted: isCompleted === 'true',
-      });
-    } else {
-      myTagList = await Tag.find({ userId });
+      myTagDataList = myTagData.tags.filter(
+        (tag) => tag.isCompleted === JSON.parse(isCompleted),
+      );
     }
 
-    // NOTE : myTagList에 존재하는 interest들의 id값 추출
+    // userTag 데이터로 Tag에서 데이터 찾기
+    const myTagList: TagType[] = await Promise.all(
+      myTagDataList.map((tag) => Tag.findOne({ _id: tag.tagId })),
+    );
+
+    // NOTE : 찾은 interest 리스트 중복 제거
     const uniqueInterests = new Set(
       myTagList.map((tag) => tag.interest.toString()),
     );
     const myInterestIdList = Array.from(uniqueInterests).map((id) => ({ id }));
 
-    // NOTE : 추출한 id값을 objectId로 변환
+    // NOTE : id값 추출 후 objectId로 변환
     const objectIds = myInterestIdList.map(
       (interest) => new mongoose.Types.ObjectId(interest.id),
     );
