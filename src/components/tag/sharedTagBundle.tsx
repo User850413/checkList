@@ -5,6 +5,7 @@ import { getSharedTag } from '@/app/services/api/tags';
 import { SharedTag } from '@/types/tag';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import SharedTagCard from './sharedTagCard';
 
 export default function SharedTagBundle() {
   const [tagData, setTagData] = useState<SharedTag[]>([]);
@@ -18,7 +19,6 @@ export default function SharedTagBundle() {
   useEffect(() => {
     if (isSuccess) {
       setTagData(data.data);
-      console.log(data.data);
     }
   }, [data]);
 
@@ -26,18 +26,11 @@ export default function SharedTagBundle() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <ul className="mt-5">
+    <ul className="mt-5 grid grid-cols-1 gap-4 px-5 lg:grid-cols-2">
       {tagData.length !== 0 &&
         tagData.map((tag) => (
           <li key={tag._id}>
-            <div>
-              <div>{tag.name}</div>
-              <ul>
-                {tag.list.map((li, index) => (
-                  <li key={index}>{li}</li>
-                ))}
-              </ul>
-            </div>
+            <SharedTagCard id={tag._id} name={tag.name} list={tag.list} />
           </li>
         ))}
     </ul>
