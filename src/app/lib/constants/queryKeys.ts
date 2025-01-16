@@ -9,6 +9,7 @@ export const QueryKeys = {
   MY_TAGS_COMPLETED: ['tags', 'mine', 'completed'],
   MY_TAGS_UNCOMPLETED: ['tags', 'mine', 'unCompleted'],
   TAGS_FILTERED_BY_INTEREST: (interest: string) => ['tags', interest],
+  SHARED_TAGS: ['tags', 'shared'],
   USERS: ['users'],
   USER_ME: ['user', 'me'],
   USER_ME_DETAIL: ['user', 'me', 'detail'],
