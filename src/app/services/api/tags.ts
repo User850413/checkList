@@ -107,6 +107,8 @@ export async function getSharedTag() {
 }
 
 export async function shareTag({ id }: { id: string }) {
+  if (!id?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
+
   try {
     const res = await apiClient.post(`/tags/share?id=${id}`);
     return res.data;
@@ -117,6 +119,8 @@ export async function shareTag({ id }: { id: string }) {
 }
 
 export async function takeSharedTag({ id }: { id: string }) {
+  if (!id?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
+
   try {
     const res = await apiClient.post(`/tags/take?id=${id}`);
     return res.data;
