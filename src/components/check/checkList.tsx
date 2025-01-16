@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 
 import { getChecks } from '@/app/services/api/checks';
-import { deleteTag, patchTag } from '@/app/services/api/tags';
+import { deleteTag, patchTag, shareTag } from '@/app/services/api/tags';
 import { Check } from '@/types/check';
 import { Tag } from '@/types/tag';
 
@@ -33,6 +33,7 @@ interface CheckListProp {
 function CheckList({ tagName, tagId, interest }: CheckListProp) {
   const [checkList, setCheckList] = useState<Check[]>([]);
   const [renderedRate, setRenderedRate] = useState(0);
+  const [isShared, setIsShared] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
 
@@ -99,6 +100,19 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
       setRenderedRate(Math.floor((completedChecks / totalChecks) * 100));
     }
   }, [checkList]);
+
+  // NOTE : 공유하기 뮤테이션
+  const { mutate: shareMutate } = useMutation({
+    mutationFn: () => shareTag({ id: tagId }),
+    onError: (err) => console.log(err.message),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QueryKeys.SHARED_TAGS });
+    },
+  });
+  const onClickShareButton = () => {
+    shareMutate();
+    setIsShared(true);
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
@@ -173,7 +187,7 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
                   </DialogRoot>
                 )}
 
-                {renderedRate < 100 && checkList.length > 0 && (
+                {renderedRate < 100 && checkList.length > 0 && !isShared && (
                   <DialogRoot placement={'center'}>
                     <DialogTrigger>
                       <span
@@ -191,6 +205,7 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
                           role="button"
                           size="md"
                           aria-label="완료 확인"
+                          onClick={onClickShareButton}
                         >
                           확인
                         </StyledButton>
