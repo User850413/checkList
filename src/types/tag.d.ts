@@ -30,3 +30,9 @@ export interface UserTag {
   userId: string;
   tags: UserTagDetail[];
 }
+
+export interface SharedTag {
+  _id: string;
+  name: string;
+  list: string[];
+}

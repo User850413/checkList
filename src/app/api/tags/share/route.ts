@@ -30,12 +30,10 @@ export async function GET(req: NextRequest) {
     const limit = !rawLimit || rawLimit < 1 || rawLimit > 100 ? 10 : rawLimit;
     const skip = (page - 1) * limit;
 
-    const tagsId = await SharedTag.find().skip(skip).limit(limit).lean();
-    console.log(tagsId);
+    const tagsData = await SharedTag.find().skip(skip).limit(limit).lean();
+    console.log(tagsData);
 
-    const tags = await Tag.find({ _id: { $in: tagsId } });
-
-    return NextResponse.json({ data: tags }, { status: 200 });
+    return NextResponse.json({ data: tagsData }, { status: 200 });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
