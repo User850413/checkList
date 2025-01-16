@@ -4,10 +4,10 @@ const sharedTagSchema = new mongoose.Schema({
   name: {
     type: String,
     ref: 'Tag',
-    require: true,
+    required: true,
     default: null,
   },
-  list: { type: [String], require: true, default: [] },
+  list: { type: [String], required: true, default: [] },
 });
 
 const SharedTag =

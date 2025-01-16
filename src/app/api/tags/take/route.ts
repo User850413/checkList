@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     // NOTE : 가져온 tag Data로 새 tag POST
     const newTag = await Tag.create({ name: tagData.name });
-    Promise.all(
+    await Promise.all(
       tagData.list.map(
         async (data: string) =>
           await Check.create({ tagId: newTag._id, task: data }),
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     // NOTE : 사용자의 userTag에 newTag 추가
     await UserTag.updateOne(
       { userId },
-      { $pull: { tag: { tags: newTag._id } } },
+      { $push: { tag: { tags: newTag._id } } },
     );
 
     return NextResponse.json({ data: newTag }, { status: 200 });

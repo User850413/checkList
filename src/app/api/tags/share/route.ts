@@ -65,6 +65,11 @@ export async function POST(req: NextRequest) {
     }
 
     const tag = await Tag.findOne({ _id: tagId });
+    if (!tag)
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.NOT_FOUND_TAG.ko },
+        { status: 404 },
+      );
 
     const checks = await Check.find({ tagId }).select('task').lean();
     const checksName = checks.map((check) => check.task);
