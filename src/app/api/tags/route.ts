@@ -7,7 +7,6 @@ import Tag from '@/app/lib/db/models/tags';
 import { deleteTagAndChecks } from '@/app/services/database/deleteTagAndChecks';
 import { getUserId } from '@/app/services/token/getUserId';
 import { interest } from '@/types/interest';
-import { calculateCompletedRate } from '@/app/services/database/completedRate';
 import { Tag as TagType } from '@/types/tag';
 import UserTag from '@/app/lib/db/models/userTags';
 import mongoose from 'mongoose';
