@@ -172,6 +172,37 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
                     </DialogContent>
                   </DialogRoot>
                 )}
+
+                {renderedRate < 100 && checkList.length > 0 && (
+                  <DialogRoot placement={'center'}>
+                    <DialogTrigger>
+                      <span
+                        className="rounded-md bg-blue-400 px-2 py-1 text-xs text-white hover:bg-slate-600"
+                        role="button"
+                      >
+                        올리기
+                      </span>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>리스트를 공개하시겠습니까?</DialogHeader>
+                      <DialogFooter>
+                        <StyledButton
+                          color="dark"
+                          role="button"
+                          size="md"
+                          aria-label="완료 확인"
+                        >
+                          확인
+                        </StyledButton>
+                        <DialogCloseTrigger>
+                          <span className="rounded-md bg-slate-200 px-3 py-3 hover:bg-slate-300">
+                            취소
+                          </span>
+                        </DialogCloseTrigger>
+                      </DialogFooter>
+                    </DialogContent>
+                  </DialogRoot>
+                )}
               </div>
               <ProgressBar completed={renderedRate} />
             </div>

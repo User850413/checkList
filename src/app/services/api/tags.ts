@@ -91,6 +91,41 @@ export async function deleteTag({ _id }: Pick<Tag, '_id'>) {
     const res = await apiClient.delete(`/tags/mine?id=${_id}`);
     return res.status;
   } catch (error) {
+    if (error instanceof Error) throw new Error(error.message);
+    throw error;
+  }
+}
+
+export async function getSharedTag() {
+  try {
+    const res = await apiClient.get('/tags/share');
+    return res.data;
+  } catch (error) {
+    if (error instanceof Error) throw new Error(error.message);
+    throw error;
+  }
+}
+
+export async function shareTag({ id }: { id: string }) {
+  if (!id?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
+
+  try {
+    const res = await apiClient.post(`/tags/share?id=${id}`);
+    return res.data;
+  } catch (error) {
+    if (error instanceof Error) throw new Error(error.message);
+    throw error;
+  }
+}
+
+export async function takeSharedTag({ id }: { id: string }) {
+  if (!id?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
+
+  try {
+    const res = await apiClient.post(`/tags/take?id=${id}`);
+    return res.data;
+  } catch (error) {
+    if (error instanceof Error) throw new Error(error.message);
     throw error;
   }
 }
