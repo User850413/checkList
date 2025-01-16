@@ -20,7 +20,10 @@ export async function POST(req: NextRequest) {
     const tagData = await SharedTag.findOne({ _id: tagId });
 
     // NOTE : 가져온 tag Data로 새 tag POST
-    const newTag = await Tag.create({ name: tagData.name });
+    const newTag = await Tag.create({
+      name: tagData.name,
+      interest: tagData.interest,
+    });
     await Promise.all(
       tagData.list.map(
         async (data: string) =>
@@ -29,10 +32,12 @@ export async function POST(req: NextRequest) {
     );
 
     // NOTE : 사용자의 userTag에 newTag 추가
-    await UserTag.updateOne(
+    const test = await UserTag.updateOne(
       { userId },
-      { $push: { tag: { tags: newTag._id } } },
+      { $push: { tags: { tagId: newTag._id, isCompleted: false } } },
     );
+
+    console.log(test);
 
     return NextResponse.json({ data: newTag }, { status: 200 });
   } catch (err) {

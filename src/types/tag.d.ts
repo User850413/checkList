@@ -34,5 +34,6 @@ export interface UserTag {
 export interface SharedTag {
   _id: string;
   name: string;
+  interest: string;
   list: string[];
 }

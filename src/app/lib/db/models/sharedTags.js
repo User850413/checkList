@@ -7,6 +7,11 @@ const sharedTagSchema = new mongoose.Schema({
     required: true,
     default: null,
   },
+  interest: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Interest',
+    default: null,
+  },
   list: { type: [String], required: true, default: [] },
 });
 
