@@ -24,7 +24,8 @@ function TagNameInput({ tagName, tagId }: TagNameInputProps) {
   const InputRef = useRef<HTMLInputElement | null>(null);
 
   const { mutate } = useMutation({
-    mutationFn: ({ _id, name }: Partial<Tag>) => patchTag({ _id, name }),
+    mutationFn: ({ _id, name }: { _id: string; name: string }) =>
+      patchTag({ _id, name }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QueryKeys.TAGS });
       setTagNameEditing(false);
