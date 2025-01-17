@@ -1,8 +1,21 @@
 {
   "route": [
     {
-      "source": "/api/:path",
-      "destination": "https://check-list-qo6axkx3f-soooohs-projects.vercel.app/"
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://check-list-qo6axkx3f-soooohs-projects.vercel.app"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
     }
   ]
 }
