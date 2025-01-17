@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import StyledButton from '../common/styledButton';
 import { takeSharedTag } from '@/app/services/api/tags';
 import { QueryKeys } from '@/app/lib/constants/queryKeys';
@@ -17,10 +17,18 @@ export default function SharedTagCard({
   list,
   interest,
 }: SharedTagCardProps) {
+  const queryClient = useQueryClient();
+
   // NOTE : take 뮤테이션
   const { mutate: takeMutate } = useMutation({
     mutationFn: () => takeSharedTag({ id }),
     mutationKey: QueryKeys.MY_TAGS_UNCOMPLETED,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: QueryKeys.MY_TAGS_UNCOMPLETED,
+      }),
+        queryClient.invalidateQueries({ queryKey: QueryKeys.SHARED_TAGS });
+    },
   });
 
   const onClickTakeButton = () => {
