@@ -30,12 +30,17 @@ export async function GET(req: NextRequest) {
     const limit = !rawLimit || rawLimit < 1 || rawLimit > 100 ? 10 : rawLimit;
     const skip = (page - 1) * limit;
 
-    const tagsId = await SharedTag.find().skip(skip).limit(limit).lean();
-    console.log(tagsId);
+    const tagsData = await SharedTag.find()
+      .skip(skip)
+      .limit(limit)
+      .lean()
+      .populate('interest', 'name');
 
-    const tags = await Tag.find({ _id: { $in: tagsId } });
+    const data = tagsData.map((tag) => {
+      return { ...tag, interest: tag.interest.name };
+    });
 
-    return NextResponse.json({ data: tags }, { status: 200 });
+    return NextResponse.json({ data }, { status: 200 });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ error: err.message }, { status: 500 });
@@ -74,7 +79,11 @@ export async function POST(req: NextRequest) {
     const checks = await Check.find({ tagId }).select('task').lean();
     const checksName = checks.map((check) => check.task);
 
-    const newTag = await SharedTag.create({ name: tag.name, list: checksName });
+    const newTag = await SharedTag.create({
+      name: tag.name,
+      interest: tag.interest,
+      list: checksName,
+    });
     return NextResponse.json({ data: newTag }, { status: 200 });
   } catch (err) {
     if (err instanceof Error) {
