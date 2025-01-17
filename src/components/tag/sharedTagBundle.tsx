@@ -30,7 +30,12 @@ export default function SharedTagBundle() {
       {tagData.length !== 0 &&
         tagData.map((tag) => (
           <li key={tag._id}>
-            <SharedTagCard id={tag._id} name={tag.name} list={tag.list} />
+            <SharedTagCard
+              id={tag._id}
+              name={tag.name}
+              list={tag.list}
+              interest={tag.interest}
+            />
           </li>
         ))}
     </ul>
