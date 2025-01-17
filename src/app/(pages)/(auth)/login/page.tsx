@@ -1,6 +1,6 @@
 'use client';
 import { useSearchParams } from 'next/navigation';
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import LoginForm from '@/components/auth/loginForm';
@@ -35,12 +35,10 @@ export default function Login() {
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Toaster />
-        <div className="flex h-screen items-center">
-          <LoginForm />
-        </div>
-      </Suspense>
+      <Toaster />
+      <div className="flex h-screen items-center">
+        <LoginForm />
+      </div>
     </>
   );
 }
