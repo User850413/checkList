@@ -60,7 +60,7 @@ function CheckInput({ tagId }: CheckInputProps) {
       <StyledButton type="button" onClick={onClickDelete} disabled={isPending}>
         x
       </StyledButton>
-      <StyledButton type="submit" disabled={isPending}>
+      <StyledButton type="submit" color="dark" disabled={isPending}>
         확인
       </StyledButton>
     </form>
