@@ -11,6 +11,9 @@ export default {
       boxShadow: {
         card: '0 2px 12px rgba(0, 20, 100, 0.05)',
       },
+      fontFamily: {
+        KR: ['Pretendard', 'sans-serif'],
+      },
     },
   },
   plugins: [],
