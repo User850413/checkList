@@ -10,6 +10,7 @@ import { UserInput } from '@/types/user';
 
 import InputBox from './inputBox';
 import StyledButton from '../common/styledButton';
+import { useRouter } from 'next/navigation';
 
 export const labels = {
   email: {
@@ -60,6 +61,8 @@ export default function SignupForm() {
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   const setKeyValue = <K extends keyof SignupFormState>(
     key: K,
@@ -161,55 +164,72 @@ export default function SignupForm() {
     });
   };
 
+  const onClickLogin = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push('/login');
+  };
+
   return (
     <>
-      <form
-        className="mx-auto flex w-[480px] flex-col items-center gap-5 rounded-xl bg-white p-10 shadow-card"
-        onSubmit={(e: React.FormEvent) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-        noValidate
-      >
-        <InputBox
-          label={labels.email}
-          setKeyValue={(email) => setKeyValue('email', email)}
-          required
-          isError={error.email}
-          errorText={errorMessage}
-          inputValue={inputValue.email}
-        />
-        <InputBox
-          label={labels.password}
-          setKeyValue={(password) => setKeyValue('password', password)}
-          required
-          isError={error.password}
-          errorText={errorMessage}
-          inputValue={inputValue.password}
-        />
-        <InputBox
-          label={labels.passwordCheck}
-          setKeyValue={(passwordCheck) =>
-            setKeyValue('passwordCheck', passwordCheck)
-          }
-          required
-          isError={error.passwordCheck}
-          errorText={errorMessage}
-          inputValue={inputValue.passwordCheck}
-        />
-        <InputBox
-          label={labels.username}
-          setKeyValue={(username) => setKeyValue('username', username)}
-          required
-          maxLength={10}
-          inputValue={inputValue.username}
-          errorText={errorMessage}
-          isError={error.username}
-        />
-        <StyledButton className="w-full" type="submit" disabled={isLoading}>
-          회원가입
-        </StyledButton>
-      </form>
+      <div className="mx-auto flex w-[480px] flex-col items-center gap-5 rounded-xl bg-white p-10 shadow-card">
+        <form
+          className="flex w-full flex-col items-center gap-5"
+          onSubmit={(e: React.FormEvent) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+          noValidate
+        >
+          <InputBox
+            label={labels.email}
+            setKeyValue={(email) => setKeyValue('email', email)}
+            required
+            isError={error.email}
+            errorText={errorMessage}
+            inputValue={inputValue.email}
+          />
+          <InputBox
+            label={labels.password}
+            setKeyValue={(password) => setKeyValue('password', password)}
+            required
+            isError={error.password}
+            errorText={errorMessage}
+            inputValue={inputValue.password}
+          />
+          <InputBox
+            label={labels.passwordCheck}
+            setKeyValue={(passwordCheck) =>
+              setKeyValue('passwordCheck', passwordCheck)
+            }
+            required
+            isError={error.passwordCheck}
+            errorText={errorMessage}
+            inputValue={inputValue.passwordCheck}
+          />
+          <InputBox
+            label={labels.username}
+            setKeyValue={(username) => setKeyValue('username', username)}
+            required
+            maxLength={10}
+            inputValue={inputValue.username}
+            errorText={errorMessage}
+            isError={error.username}
+          />
+          <StyledButton
+            className="mt-5 w-full"
+            type="submit"
+            disabled={isLoading}
+          >
+            회원가입
+          </StyledButton>
+        </form>
+        <div className="flex gap-2">
+          <p>이미 계정이 있으신가요?</p>
+          <button className="font-bold hover:underline" onClick={onClickLogin}>
+            로그인
+          </button>
+        </div>
+      </div>
     </>
   );
 }
