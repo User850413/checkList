@@ -51,12 +51,20 @@ export default function UserInterestChart() {
         </span>
         <div className="flex items-start gap-7">
           <span>
-            <DonutChart
-              values={percentage}
-              size={180}
-              innerRadius={60}
-              colors={colors}
-            />
+            {percentage.length === 0 ? (
+              <div className="flex min-h-36 cursor-default justify-center font-thin">
+                <p className="my-auto h-fit text-sm">
+                  아직 완료한 리스트가 없어요.
+                </p>
+              </div>
+            ) : (
+              <DonutChart
+                values={percentage}
+                size={180}
+                innerRadius={60}
+                colors={colors}
+              />
+            )}
           </span>
           <ul>
             {interestList.map((item, index) => (
