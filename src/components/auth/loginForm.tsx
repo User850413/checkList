@@ -63,7 +63,7 @@ export default function LoginForm() {
     },
     onSuccess: () => {
       setIsLoading(false);
-      router.push('/');
+      router.push('/my-list');
     },
   });
 
