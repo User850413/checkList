@@ -13,6 +13,12 @@ export default function Home() {
   const onClickLogin = () => {
     router.push('/login');
   };
+
+  const studyImage = `/pics/study.jpg`;
+  const goalImage = `/pics/goal.jpg`;
+  const togetherImage = `/pics/together.jpg`;
+  const memoImage = `/pics/memo.jpg`;
+
   return (
     <>
       <header className="-mt-16 flex h-screen items-center justify-center">
@@ -25,6 +31,8 @@ export default function Home() {
         <ul className="flex w-full flex-col items-center gap-5">
           <li className="w-full">
             <MainSection
+              imageUrl={memoImage}
+              imageAlt=""
               lettering={
                 <p>
                   리스트를 추가하고, <br /> 세부 항목을 추가할 수 있어요
@@ -34,6 +42,8 @@ export default function Home() {
           </li>
           <li className="w-full">
             <MainSection
+              imageUrl={goalImage}
+              imageAlt=""
               textArray="left"
               lettering={
                 <p>
@@ -43,10 +53,16 @@ export default function Home() {
             />
           </li>
           <li className="w-full">
-            <MainSection lettering={<p>만든 리스트를 공유해봐요</p>} />
+            <MainSection
+              imageUrl={togetherImage}
+              lettering={<p>만든 리스트를 공유해봐요</p>}
+              imageAlt=""
+            />
           </li>
           <li className="w-full">
             <MainSection
+              imageUrl={studyImage}
+              imageAlt=""
               textArray="left"
               lettering={
                 <p>
@@ -56,7 +72,7 @@ export default function Home() {
             />
           </li>
         </ul>
-        <div className="flex h-64 items-center justify-center">
+        <div className="flex h-[600px] items-center justify-center">
           <div className="flex flex-col items-center gap-3">
             <StyledButton onClick={onClickSignup} color="dark" size={'2xl'}>
               시작하러 가기
