@@ -131,9 +131,14 @@ export default function UserProfile() {
                   <DialogContent>
                     <DialogHeader>정말로 로그아웃 하시겠습니까?</DialogHeader>
                     <DialogFooter>
-                      <StyledButton color="dark" onClick={onClickLogout}>
+                      <span
+                        role="button"
+                        tabIndex={1}
+                        className="rounded-md bg-slate-500 px-3 py-[10px] text-white duration-100 hover:bg-slate-800"
+                        onClick={onClickLogout}
+                      >
                         로그아웃
-                      </StyledButton>
+                      </span>
                       <DialogActionTrigger>
                         <StyledButton>취소</StyledButton>
                       </DialogActionTrigger>

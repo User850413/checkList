@@ -63,7 +63,7 @@ export default function LoginForm() {
     },
     onSuccess: () => {
       setIsLoading(false);
-      router.push('/');
+      router.push('/my-list');
     },
   });
 
@@ -114,37 +114,54 @@ export default function LoginForm() {
     mutate(inputValue);
   };
 
+  const onClickSignup = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push('/signup');
+  };
+
   return (
     <>
       <Toaster />
-      <form
-        className="mx-auto flex w-[480px] flex-col items-center gap-5 rounded-xl bg-white p-10 shadow-card"
-        onSubmit={(e: React.FormEvent) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-        noValidate
-      >
-        <InputBox
-          label={labels.email}
-          setKeyValue={(email) => setKeyValue('email', email)}
-          required
-          isError={error.email}
-          errorText={emailMessage}
-          inputValue={inputValue.email}
-        />
-        <InputBox
-          label={labels.password}
-          setKeyValue={(password) => setKeyValue('password', password)}
-          required
-          isError={error.password}
-          errorText={pwdMessage}
-          inputValue={inputValue.password}
-        />
-        <StyledButton className="w-full" type="submit" disabled={isLoading}>
-          로그인
-        </StyledButton>
-      </form>
+      <div className="mx-auto flex w-[480px] flex-col items-center gap-5 rounded-xl bg-white p-10 shadow-card">
+        <form
+          className="flex h-full w-full flex-col items-center gap-5"
+          onSubmit={(e: React.FormEvent) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+          noValidate
+        >
+          <InputBox
+            label={labels.email}
+            setKeyValue={(email) => setKeyValue('email', email)}
+            required
+            isError={error.email}
+            errorText={emailMessage}
+            inputValue={inputValue.email}
+          />
+          <InputBox
+            label={labels.password}
+            setKeyValue={(password) => setKeyValue('password', password)}
+            required
+            isError={error.password}
+            errorText={pwdMessage}
+            inputValue={inputValue.password}
+          />
+          <StyledButton
+            className="mt-5 w-full"
+            type="submit"
+            disabled={isLoading}
+          >
+            로그인
+          </StyledButton>
+        </form>
+        <div className="flex w-full cursor-default justify-center gap-2">
+          <p>계정이 없으신가요?</p>
+          <button className="font-bold hover:underline" onClick={onClickSignup}>
+            계정 생성
+          </button>
+        </div>
+      </div>
     </>
   );
 }

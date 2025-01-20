@@ -36,7 +36,7 @@ export default function FieldButton({
   return (
     <button
       className={clsx(
-        'flex shrink-0 items-center gap-2 rounded-full',
+        'flex shrink-0 items-center gap-2 rounded-full border-[1px] border-slate-600',
         {
           'px-3 py-1 text-sm': size == 'md',
         },
@@ -47,11 +47,12 @@ export default function FieldButton({
           'px-4 py-2 text-lg': size == 'lg',
         },
         {
-          'cursor-default bg-slate-200': !clickable && !deletable,
+          'cursor-default bg-slate-200 text-slate-600':
+            !clickable && !deletable,
           'cursor-pointer': clickable || deletable,
         },
         {
-          'bg-slate-200 text-slate-700 hover:bg-slate-400':
+          'bg-slate-200 text-slate-600 hover:bg-slate-400':
             (clickable || deletable) && !clicked,
           'bg-slate-700 text-white hover:bg-slate-600':
             (clickable || deletable) && clicked,
