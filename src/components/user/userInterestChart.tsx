@@ -45,7 +45,7 @@ export default function UserInterestChart() {
 
   return (
     <>
-      <div className="mx-14 mt-10 flex min-w-[800px] flex-col items-center justify-between rounded-lg bg-slate-200 px-10 pb-5 pt-3">
+      <div className="mx-4 mt-10 flex flex-col items-center justify-between rounded-lg bg-slate-200 px-5 pb-5 pt-3 md:mx-14 md:px-10">
         <span className="mb-5 mr-auto w-full cursor-default border-b-2 border-b-slate-300 pb-2 font-semibold text-slate-500">
           어떤 목표를 가장 많이 달성했나요?
         </span>
@@ -53,7 +53,7 @@ export default function UserInterestChart() {
           <span>
             {percentage.length === 0 ? (
               <div className="flex min-h-36 cursor-default justify-center font-thin">
-                <p className="my-auto h-fit text-sm">
+                <p className="my-auto h-fit text-sm text-slate-500">
                   아직 완료한 리스트가 없어요.
                 </p>
               </div>

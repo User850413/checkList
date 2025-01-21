@@ -37,19 +37,21 @@ export default function SharedTagCard({
 
   return (
     <>
-      <div className="rounded-lg bg-white px-5 py-4 shadow-card">
-        <div className="flex w-full cursor-default justify-between border-b-2 border-slate-100 pb-2 text-lg">
-          <span>{name}</span>
-          <FieldButton fieldName={interest} />
+      <div className="flex h-full flex-col justify-between rounded-lg bg-white px-5 py-4 shadow-card">
+        <div>
+          <div className="flex w-full cursor-default justify-between border-b-2 border-slate-100 pb-2 text-lg">
+            <span>{name}</span>
+            <FieldButton fieldName={interest} />
+          </div>
+          <ul className="flex cursor-default flex-col items-start gap-2 pt-4 text-sm">
+            {list.map((li, i) => (
+              <li className="flex items-center gap-2" key={i}>
+                <span className="h-3 w-3 flex-shrink-0 rounded-full bg-slate-200" />
+                <span>{li}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="flex cursor-default flex-col items-start gap-2 pt-4 text-sm">
-          {list.map((li, i) => (
-            <li className="flex items-center gap-2" key={i}>
-              <span className="h-3 w-3 rounded-full bg-slate-200" />
-              <span>{li}</span>
-            </li>
-          ))}
-        </ul>
         <div className="mt-2 flex w-full justify-center">
           <StyledButton size={'sm'} onClick={onClickTakeButton} color="dark">
             가져오기
