@@ -4,7 +4,7 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import Tag from '@/app/lib/db/models/tags';
 import { getUserId } from '@/app/services/token/getUserId';
-import { Tag as TagType, UserTagData } from '@/types/tag';
+import { Tag as TagType, UserTagDetail } from '@/types/tag';
 import Interest from '@/app/lib/db/models/interests';
 import { interest } from '@/types/interest';
 import { calculateCompletedRate } from '@/app/services/database/completedRate';
@@ -133,7 +133,7 @@ export async function PATCH(req: NextRequest) {
     const user = await UserTag.findOne({ userId });
     const existedTags = user.tags;
     let tag = [...user.tags].find(
-      (tag: UserTagData) => tag.tagId.toString() === tagId,
+      (tag: UserTagDetail) => tag.tagId.toString() === tagId,
     );
     tag.isCompleted = true;
 

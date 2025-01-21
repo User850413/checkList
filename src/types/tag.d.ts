@@ -23,18 +23,13 @@ export interface TagResponse {
 export interface UserTagDetail {
   tagId: string;
   isCompleted: boolean;
+  _id: string;
 }
 
 export interface UserTag {
   _id: string;
   userId: string;
   tags: UserTagDetail[];
-}
-
-export interface UserTagData {
-  tagId: string;
-  isCompleted: boolean;
-  _id: string;
 }
 
 export interface SharedTag {

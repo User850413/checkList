@@ -11,6 +11,6 @@ export default function Test() {
   //   queryFn: async () => await getMyDataAgain(),
   // });
 
-  apiClient.get('/tags/mine/statistics');
+  // apiClient.get('/tags/mine/statistics');
   return <>hello</>;
 }

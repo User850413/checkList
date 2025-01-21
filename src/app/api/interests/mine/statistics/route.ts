@@ -4,7 +4,7 @@ import Interest from '@/app/lib/db/models/interests';
 import Tag from '@/app/lib/db/models/tags';
 import UserTag from '@/app/lib/db/models/userTags';
 import { getUserId } from '@/app/services/token/getUserId';
-import { UserTagData } from '@/types/tag';
+import { UserTagDetail } from '@/types/tag';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -20,14 +20,14 @@ export async function GET(req: NextRequest) {
     // const myTags = await Tag.find({ userId, isCompleted: 'true' }).lean();
 
     const filteredTags = allTags.tags.filter(
-      (tag: UserTagData) => tag.isCompleted,
+      (tag: UserTagDetail) => tag.isCompleted,
     );
 
     // NOTE : isCompleted = true인 항목이 없을 때 빈 배열 return
     if (filteredTags.length == 0)
       return NextResponse.json({ data: [] }, { status: 200 });
 
-    const tagIds = filteredTags.map((tag: UserTagData) => tag.tagId);
+    const tagIds = filteredTags.map((tag: UserTagDetail) => tag.tagId);
 
     const myTags = await Tag.find({ _id: { $in: tagIds } });
     console.log(myTags);
