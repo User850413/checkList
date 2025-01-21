@@ -2,12 +2,10 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
-
 import { getChecks } from '@/app/services/api/checks';
-import { deleteTag, patchTag, shareTag } from '@/app/services/api/tags';
+import { completeTag, deleteTag, shareTag } from '@/app/services/api/tags';
 import { Check } from '@/types/check';
 import { Tag } from '@/types/tag';
-
 import CheckInput from './checkInput';
 import CheckListCard from './checkListCard';
 import TagNameInput from './tagNameInput';
@@ -72,7 +70,7 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
 
   // NOTE : 끝내기 뮤테이션
   const { mutate: completeMutate } = useMutation({
-    mutationFn: () => patchTag({ _id: tagId, isCompleted: true }),
+    mutationFn: () => completeTag({ id: tagId }),
     onError: (err) => console.log(err.message),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QueryKeys.TAGS });

@@ -4,7 +4,7 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import Tag from '@/app/lib/db/models/tags';
 import { getUserId } from '@/app/services/token/getUserId';
-import { Tag as TagType } from '@/types/tag';
+import { Tag as TagType, UserTagDetail } from '@/types/tag';
 import Interest from '@/app/lib/db/models/interests';
 import { interest } from '@/types/interest';
 import { calculateCompletedRate } from '@/app/services/database/completedRate';
@@ -52,11 +52,9 @@ export async function GET(req: NextRequest) {
         );
 
       myTags = myTags.filter(
-        (item: { tagId: string; isCompleted: boolean }) =>
-          item.isCompleted === JSON.parse(isCompleted),
+        (tag) => tag.isCompleted === JSON.parse(isCompleted),
       );
     }
-
     myTags = myTags.map((tag) => tag.tagId);
 
     // NOTE : 3. interest 필터링
@@ -117,6 +115,53 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.TOKEN_ERROR.ko },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const tagId = searchParams.get('id');
+  try {
+    if (!tagId) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.EMPTY_ID.ko },
+        { status: 400 },
+      );
+    }
+
+    await dbConnect();
+
+    const { userId, error } = getUserId(req);
+    if (!userId) return NextResponse.json({ error }, { status: 403 });
+
+    const user = await UserTag.findOne({ userId });
+    if (!user) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
+        { status: 404 },
+      );
+    }
+
+    const existedTags = user.tags;
+    let tag = existedTags.find((tag: UserTagDetail) => {
+      return tag.tagId.toString() === tagId;
+    });
+    tag.isCompleted = true;
+
+    const updatedTag = await UserTag.findOneAndUpdate(
+      { userId },
+      { tags: existedTags },
+    );
+
+    return NextResponse.json({ data: updatedTag }, { status: 200 });
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 },
     );
   }

@@ -141,12 +141,6 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
-  if (String(tag.userId) !== userId)
-    return NextResponse.json(
-      { error: ERROR_MESSAGES.FORBIDDEN_NOT_ALLOW.ko },
-      { status: 403 },
-    );
-
   if (body.name !== undefined && body.name.length == 0) {
     return NextResponse.json(
       { error: ERROR_MESSAGES.EMPTY_TAGNAME.ko },

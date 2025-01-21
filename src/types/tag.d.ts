@@ -23,6 +23,7 @@ export interface TagResponse {
 export interface UserTagDetail {
   tagId: string;
   isCompleted: boolean;
+  _id: string;
 }
 
 export interface UserTag {
