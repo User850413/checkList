@@ -52,11 +52,10 @@ export async function GET(req: NextRequest) {
         );
 
       myTags = myTags.filter(
-        (item: { tagId: string; isCompleted: boolean }) =>
-          item.isCompleted === JSON.parse(isCompleted),
+        (tag) => tag.isCompleted === JSON.parse(isCompleted),
       );
     }
-
+    // console.log(myTags);
     myTags = myTags.map((tag) => tag.tagId);
 
     // NOTE : 3. interest 필터링
@@ -133,14 +132,11 @@ export async function PATCH(req: NextRequest) {
 
     const user = await UserTag.findOne({ userId });
     const existedTags = user.tags;
-    // console.log(tagId);
-    // console.log(user.tags);
     let tag = [...user.tags].find(
       (tag: UserTagData) => tag.tagId.toString() === tagId,
     );
     tag.isCompleted = true;
 
-    console.log(existedTags);
     const updatedTag = await UserTag.findOneAndUpdate(
       { userId },
       { tags: existedTags },
