@@ -113,24 +113,27 @@ export default function UserProfile() {
                 <div className="flex flex-col items-start gap-2">
                   {myDetailData.interest &&
                     myDetailData.interest.length > 0 && (
-                      <>
-                        <ul className="flex flex-wrap gap-2">
-                          {myDetailData.interest.map((field) => (
-                            <li key={field._id}>
-                              <FieldButton fieldName={field.name} size="md" />
-                            </li>
-                          ))}
-                        </ul>
-                      </>
+                      <ul className="flex flex-wrap gap-2">
+                        {myDetailData.interest.map((field) => (
+                          <li key={field._id}>
+                            <FieldButton fieldName={field.name} size="md" />
+                          </li>
+                        ))}
+                      </ul>
                     )}
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   <StyledButton size={'sm'} onClick={onClickEditButton}>
                     수정
                   </StyledButton>
-                  <DialogRoot placement={'center'}>
+                  <DialogRoot
+                    placement={'center'}
+                    aria-labelledby="logout-dialog-title"
+                    aria-describedby="logout-dialog-description"
+                  >
                     <DialogTrigger>
                       <span
+                        aria-haspopup="dialog"
                         role="button"
                         className="rounded-md bg-slate-500 px-2 py-2 text-white hover:bg-slate-600"
                       >
@@ -138,7 +141,9 @@ export default function UserProfile() {
                       </span>
                     </DialogTrigger>
                     <DialogContent>
-                      <DialogHeader>정말로 로그아웃 하시겠습니까?</DialogHeader>
+                      <DialogHeader id="logout-dialog-title">
+                        정말로 로그아웃 하시겠습니까?
+                      </DialogHeader>
                       <DialogFooter>
                         <span
                           role="button"

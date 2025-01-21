@@ -47,11 +47,12 @@ export default function FieldButton({
           'px-4 py-2 text-lg': size == 'lg',
         },
         {
-          'cursor-default bg-blue-100 text-slate-600': !clickable && !deletable,
+          'aria-disabled cursor-default bg-blue-100 text-slate-700':
+            !clickable && !deletable,
           'cursor-pointer': clickable || deletable,
         },
         {
-          'bg-blue-100 text-slate-600 hover:bg-blue-200':
+          'bg-blue-100 text-slate-700 hover:bg-blue-200':
             (clickable || deletable) && !clicked,
           'bg-blue-500 text-white hover:bg-blue-600':
             (clickable || deletable) && clicked,
