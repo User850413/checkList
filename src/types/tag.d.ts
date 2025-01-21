@@ -31,6 +31,12 @@ export interface UserTag {
   tags: UserTagDetail[];
 }
 
+export interface UserTagData {
+  tagId: string;
+  isCompleted: boolean;
+  _id: string;
+}
+
 export interface SharedTag {
   _id: string;
   name: string;

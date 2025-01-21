@@ -4,7 +4,7 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import Tag from '@/app/lib/db/models/tags';
 import { getUserId } from '@/app/services/token/getUserId';
-import { Tag as TagType } from '@/types/tag';
+import { Tag as TagType, UserTagData } from '@/types/tag';
 import Interest from '@/app/lib/db/models/interests';
 import { interest } from '@/types/interest';
 import { calculateCompletedRate } from '@/app/services/database/completedRate';
@@ -117,6 +117,42 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json(
       { error: ERROR_MESSAGES.TOKEN_ERROR.ko },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const tagId = searchParams.get('id');
+  try {
+    await dbConnect();
+
+    const { userId, error } = getUserId(req);
+    if (!userId) return NextResponse.json({ error }, { status: 403 });
+
+    const user = await UserTag.findOne({ userId });
+    const existedTags = user.tags;
+    // console.log(tagId);
+    // console.log(user.tags);
+    let tag = [...user.tags].find(
+      (tag: UserTagData) => tag.tagId.toString() === tagId,
+    );
+    tag.isCompleted = true;
+
+    console.log(existedTags);
+    const updatedTag = await UserTag.findOneAndUpdate(
+      { userId },
+      { tags: existedTags },
+    );
+
+    return NextResponse.json({ data: updatedTag }, { status: 200 });
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: ERROR_MESSAGES.SERVER_ERROR.ko },
       { status: 500 },
     );
   }

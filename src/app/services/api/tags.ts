@@ -54,6 +54,7 @@ export async function postTag({ name, interest }: TagRequest) {
   }
 }
 
+// NOTE : 수정하기!!
 export async function patchTag(props: {
   _id: string;
   name?: string;
@@ -77,6 +78,18 @@ export async function patchTag(props: {
     };
 
     const res = await apiClient.patch(`/tags?id=${props._id}`, filter);
+    return res.data;
+  } catch (error) {
+    if (error instanceof Error) throw new Error(error.message);
+    throw error;
+  }
+}
+
+export async function completeTag({ id }: { id: string }) {
+  if (!id?.trim()) throw new Error(ERROR_MESSAGES.EMPTY_ID.ko);
+
+  try {
+    const res = await apiClient.patch(`/tags/mine?id=${id}`);
     return res.data;
   } catch (error) {
     if (error instanceof Error) throw new Error(error.message);
