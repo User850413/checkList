@@ -2,7 +2,9 @@ import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import dbConnect from '@/app/lib/db/dbConnect';
 import Interest from '@/app/lib/db/models/interests';
 import Tag from '@/app/lib/db/models/tags';
+import UserTag from '@/app/lib/db/models/userTags';
 import { getUserId } from '@/app/services/token/getUserId';
+import { UserTagData } from '@/types/tag';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -13,10 +15,22 @@ export async function GET(req: NextRequest) {
     if (!userId) return NextResponse.json({ error }, { status: 403 });
 
     // NOTE : 내 tags에서 isCompleted = true인 항목만 불러오기
-    const myTags = await Tag.find({ userId, isCompleted: 'true' }).lean();
+
+    let allTags = await UserTag.findOne({ userId });
+    // const myTags = await Tag.find({ userId, isCompleted: 'true' }).lean();
+
+    const filteredTags = allTags.tags.filter(
+      (tag: UserTagData) => tag.isCompleted,
+    );
 
     // NOTE : isCompleted = true인 항목이 없을 때 빈 배열 return
-    if (!myTags) return NextResponse.json({ data: [] }, { status: 200 });
+    if (filteredTags.length == 0)
+      return NextResponse.json({ data: [] }, { status: 200 });
+
+    const tagIds = filteredTags.map((tag: UserTagData) => tag.tagId);
+
+    const myTags = await Tag.find({ _id: { $in: tagIds } });
+    console.log(myTags);
 
     // NOTE : 상위 5개 항목 추출
     let statistics = [];
