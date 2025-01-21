@@ -55,7 +55,6 @@ export async function GET(req: NextRequest) {
         (tag) => tag.isCompleted === JSON.parse(isCompleted),
       );
     }
-    // console.log(myTags);
     myTags = myTags.map((tag) => tag.tagId);
 
     // NOTE : 3. interest 필터링
@@ -125,16 +124,30 @@ export async function PATCH(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const tagId = searchParams.get('id');
   try {
+    if (!tagId) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.EMPTY_ID.ko },
+        { status: 400 },
+      );
+    }
+
     await dbConnect();
 
     const { userId, error } = getUserId(req);
     if (!userId) return NextResponse.json({ error }, { status: 403 });
 
     const user = await UserTag.findOne({ userId });
+    if (!user) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.NOT_FOUND_USER.ko },
+        { status: 404 },
+      );
+    }
+
     const existedTags = user.tags;
-    let tag = [...user.tags].find(
-      (tag: UserTagDetail) => tag.tagId.toString() === tagId,
-    );
+    let tag = existedTags.find((tag: UserTagDetail) => {
+      return tag.tagId.toString() === tagId;
+    });
     tag.isCompleted = true;
 
     const updatedTag = await UserTag.findOneAndUpdate(

@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     // NOTE : 내 tags에서 isCompleted = true인 항목만 불러오기
 
     let allTags = await UserTag.findOne({ userId });
-    // const myTags = await Tag.find({ userId, isCompleted: 'true' }).lean();
+    if (!allTags) return NextResponse.json({ data: [] }, { status: 200 });
 
     const filteredTags = allTags.tags.filter(
       (tag: UserTagDetail) => tag.isCompleted,
@@ -30,7 +30,6 @@ export async function GET(req: NextRequest) {
     const tagIds = filteredTags.map((tag: UserTagDetail) => tag.tagId);
 
     const myTags = await Tag.find({ _id: { $in: tagIds } });
-    console.log(myTags);
 
     // NOTE : 상위 5개 항목 추출
     let statistics = [];

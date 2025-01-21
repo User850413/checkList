@@ -37,8 +37,6 @@ export async function POST(req: NextRequest) {
       { $push: { tags: { tagId: newTag._id, isCompleted: false } } },
     );
 
-    console.log(test);
-
     return NextResponse.json({ data: newTag }, { status: 200 });
   } catch (err) {
     if (err instanceof Error) {
