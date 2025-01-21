@@ -79,7 +79,7 @@ export default function UserProfile() {
   if (dataError && detailDataError) return <div>Error</div>;
 
   return (
-    <div className="mx-14 mt-14 grid grid-cols-[auto_1fr] grid-rows-[auto_auto] gap-x-3 gap-y-2 rounded-lg bg-white p-6 shadow-card md:grid-cols-[auto_1fr] md:gap-y-6">
+    <div className="mx-4 mt-14 grid grid-cols-[auto_1fr] grid-rows-[auto_auto] gap-x-3 gap-y-2 rounded-lg bg-white p-6 shadow-card md:mx-14 md:grid-cols-[auto_1fr] md:gap-y-6">
       {myData && (
         <>
           <div className="row-span-1 my-auto aspect-square h-min w-min md:row-span-2">
@@ -124,7 +124,7 @@ export default function UserProfile() {
                       </>
                     )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 items-center gap-2">
                   <StyledButton size={'sm'} onClick={onClickEditButton}>
                     수정
                   </StyledButton>
