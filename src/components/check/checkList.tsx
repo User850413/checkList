@@ -119,127 +119,132 @@ function CheckList({ tagName, tagId, interest }: CheckListProp) {
 
   return (
     <>
-      <div className="h-full w-full rounded-lg bg-white px-3 py-2">
-        <div className="border-b-2 border-b-slate-200">
-          <div className="flex items-center justify-between">
-            <TagNameInput tagName={tagName} tagId={tagId} />
-            <DialogRoot placement={'center'}>
-              <DialogTrigger>
-                <span role="button" className="inline-block p-1 text-slate-400">
-                  x
-                </span>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>정말로 삭제하시겠습니까?</DialogHeader>
-                <DialogFooter>
-                  <StyledButton
-                    onClick={() => onClickDelete(tagId)}
-                    color="red"
-                    aria-label="삭제 확인"
+      <div className="flex h-full w-full flex-col justify-between rounded-lg bg-white px-3 py-2">
+        <div>
+          <div className="border-b-2 border-b-slate-200">
+            <div className="flex items-center justify-between">
+              <TagNameInput tagName={tagName} tagId={tagId} />
+              <DialogRoot placement={'center'}>
+                <DialogTrigger>
+                  <span
+                    role="button"
+                    className="inline-block p-1 text-slate-400"
                   >
-                    삭제
-                  </StyledButton>
-                  <DialogActionTrigger>
-                    <span className="rounded-md bg-slate-200 px-3 py-3">
-                      취소
-                    </span>
-                  </DialogActionTrigger>
-                </DialogFooter>
-              </DialogContent>
-            </DialogRoot>
-          </div>
-          <div className="flex w-full items-center gap-2 py-2">
-            <FieldButton fieldName={interest} />
-            <div className="flex w-full flex-col items-start justify-between gap-1">
-              <div className="flex w-full items-center justify-between">
-                <span className="my-2 cursor-default text-xs text-gray-500">
-                  {renderedRate === 100 ? '완료!' : '진행도'}
-                </span>
-                {renderedRate === 100 && (
-                  <DialogRoot placement={'center'}>
-                    <DialogTrigger>
-                      <span
-                        className="rounded-md bg-slate-500 px-2 py-1 text-xs text-white hover:bg-slate-600"
-                        role="button"
-                      >
-                        끝내기
+                    x
+                  </span>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>정말로 삭제하시겠습니까?</DialogHeader>
+                  <DialogFooter>
+                    <StyledButton
+                      onClick={() => onClickDelete(tagId)}
+                      color="red"
+                      aria-label="삭제 확인"
+                    >
+                      삭제
+                    </StyledButton>
+                    <DialogActionTrigger>
+                      <span className="rounded-md bg-slate-200 px-3 py-3">
+                        취소
                       </span>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>리스트를 끝내시겠습니까?</DialogHeader>
-                      <DialogFooter>
-                        <StyledButton
-                          color="dark"
+                    </DialogActionTrigger>
+                  </DialogFooter>
+                </DialogContent>
+              </DialogRoot>
+            </div>
+            <div className="flex w-full items-center gap-2 py-2">
+              <FieldButton fieldName={interest} />
+              <div className="flex w-full flex-col items-start justify-between gap-1">
+                <div className="flex w-full items-center justify-between">
+                  <span className="my-2 cursor-default text-xs text-gray-500">
+                    {renderedRate === 100 ? '완료!' : '진행도'}
+                  </span>
+                  {renderedRate === 100 && (
+                    <DialogRoot placement={'center'}>
+                      <DialogTrigger>
+                        <span
+                          className="rounded-md bg-slate-500 px-2 py-1 text-xs text-white hover:bg-slate-600"
                           role="button"
-                          size="md"
-                          onClick={onClickCompleteButton}
-                          aria-label="완료 확인"
                         >
-                          확인
-                        </StyledButton>
-                        <DialogCloseTrigger>
-                          <span className="rounded-md bg-slate-200 px-3 py-3 hover:bg-slate-300">
-                            취소
-                          </span>
-                        </DialogCloseTrigger>
-                      </DialogFooter>
-                    </DialogContent>
-                  </DialogRoot>
-                )}
+                          끝내기
+                        </span>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>리스트를 끝내시겠습니까?</DialogHeader>
+                        <DialogFooter>
+                          <StyledButton
+                            color="dark"
+                            role="button"
+                            size="md"
+                            onClick={onClickCompleteButton}
+                            aria-label="완료 확인"
+                          >
+                            확인
+                          </StyledButton>
+                          <DialogCloseTrigger>
+                            <span className="rounded-md bg-slate-200 px-3 py-3 hover:bg-slate-300">
+                              취소
+                            </span>
+                          </DialogCloseTrigger>
+                        </DialogFooter>
+                      </DialogContent>
+                    </DialogRoot>
+                  )}
 
-                {renderedRate < 100 && checkList.length > 0 && !isShared && (
-                  <DialogRoot placement={'center'}>
-                    <DialogTrigger>
-                      <span
-                        className="rounded-md bg-blue-400 px-2 py-1 text-xs text-white hover:bg-slate-600"
-                        role="button"
-                      >
-                        올리기
-                      </span>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>리스트를 공개하시겠습니까?</DialogHeader>
-                      <DialogFooter>
-                        <StyledButton
-                          color="dark"
+                  {renderedRate < 100 && checkList.length > 0 && !isShared && (
+                    <DialogRoot placement={'center'}>
+                      <DialogTrigger>
+                        <span
+                          className="rounded-md bg-blue-400 px-2 py-1 text-xs text-white hover:bg-slate-600"
                           role="button"
-                          size="md"
-                          aria-label="완료 확인"
-                          onClick={onClickShareButton}
                         >
-                          확인
-                        </StyledButton>
-                        <DialogCloseTrigger>
-                          <span className="rounded-md bg-slate-200 px-3 py-3 hover:bg-slate-300">
-                            취소
-                          </span>
-                        </DialogCloseTrigger>
-                      </DialogFooter>
-                    </DialogContent>
-                  </DialogRoot>
-                )}
+                          올리기
+                        </span>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>리스트를 공개하시겠습니까?</DialogHeader>
+                        <DialogFooter>
+                          <StyledButton
+                            color="dark"
+                            role="button"
+                            size="md"
+                            aria-label="완료 확인"
+                            onClick={onClickShareButton}
+                          >
+                            확인
+                          </StyledButton>
+                          <DialogCloseTrigger>
+                            <span className="rounded-md bg-slate-200 px-3 py-3 hover:bg-slate-300">
+                              취소
+                            </span>
+                          </DialogCloseTrigger>
+                        </DialogFooter>
+                      </DialogContent>
+                    </DialogRoot>
+                  )}
+                </div>
+                <ProgressBar completed={renderedRate} />
               </div>
-              <ProgressBar completed={renderedRate} />
             </div>
           </div>
+          <ul className="my-3 flex flex-col gap-2">
+            {checkList?.map((check, index) => (
+              <li key={check._id || index}>
+                <CheckListCard
+                  id={check._id}
+                  task={check.task}
+                  isCompleted={check.isCompleted}
+                  tagId={check.tagId}
+                />
+              </li>
+            ))}
+          </ul>
+          {checkList.length === 0 && (
+            <span className="mb-5 flex min-h-10 w-full cursor-default items-center justify-center text-sm text-slate-600">
+              아직 작성된 리스트가 없습니다. 항목을 추가해보세요!
+            </span>
+          )}
         </div>
-        <ul className="my-3 flex flex-col gap-2">
-          {checkList?.map((check, index) => (
-            <li key={check._id || index}>
-              <CheckListCard
-                id={check._id}
-                task={check.task}
-                isCompleted={check.isCompleted}
-                tagId={check.tagId}
-              />
-            </li>
-          ))}
-        </ul>
-        {checkList.length === 0 && (
-          <span className="mb-5 flex min-h-10 w-full cursor-default items-center justify-center text-sm text-slate-600">
-            아직 작성된 리스트가 없습니다. 항목을 추가해보세요!
-          </span>
-        )}
         <div>
           <CheckInput tagId={tagId} />
         </div>
