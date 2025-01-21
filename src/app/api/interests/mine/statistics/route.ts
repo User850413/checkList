@@ -89,7 +89,10 @@ export async function GET(req: NextRequest) {
       return Object.values(b)[0] - Object.values(a)[0];
     });
 
-    return NextResponse.json({ data: statistics, totalCount }, { status: 200 });
+    return NextResponse.json(
+      { data: statistics, totalCount: totalCount + 1 },
+      { status: 200 },
+    );
   } catch (err) {
     if (err instanceof Error)
       return NextResponse.json({ error: err.message }, { status: 500 });
