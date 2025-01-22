@@ -2,7 +2,6 @@
 
 import { Tag } from '@/types/tag';
 
-import AddNewTagWrapper from './addNewTagWrapper';
 import CheckList from './checkList';
 
 interface CheckListWrapperProps {
