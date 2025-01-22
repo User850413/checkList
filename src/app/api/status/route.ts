@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
   try {
     const { userId } = getUserId(req);
     if (!userId) {
-      return NextResponse.json({ authenticated: false }, { status: 200 });
+      return NextResponse.json({ authenticated: false }, { status: 401 });
     } else {
       return NextResponse.json({ authenticated: true }, { status: 200 });
     }

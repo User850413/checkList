@@ -6,10 +6,8 @@ export async function checkToken() {
     const res = await apiClient.get('/status');
 
     return res.data;
-  } catch (err) {
-    if (err instanceof Error) {
-      throw new Error(err.message);
-    }
-    throw new Error(ERROR_MESSAGES.SERVER_ERROR.ko);
+  } catch {
+    console.error(ERROR_MESSAGES.TOKEN_ERROR.ko);
+    return null;
   }
 }
