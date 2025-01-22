@@ -2,7 +2,6 @@
 
 import { Tag } from '@/types/tag';
 
-import AddNewTagWrapper from './addNewTagWrapper';
 import CheckList from './checkList';
 
 interface CheckListWrapperProps {
@@ -34,9 +33,6 @@ export default function CheckListWrapper({
             />
           </li>
         ))}
-      <li>
-        <AddNewTagWrapper />
-      </li>
     </ul>
   );
 }

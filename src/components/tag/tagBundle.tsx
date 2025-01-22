@@ -67,7 +67,7 @@ export default function TagBundle() {
   }, [interestFilter]);
 
   return (
-    <div className="w-full px-6 py-10">
+    <div className="w-full px-6">
       {interestList && interestList.length > 0 && (
         <ul className="mb-5 flex flex-wrap gap-2 rounded-md bg-blue-200 p-2">
           {interestList.map((interest) => (

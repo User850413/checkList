@@ -11,11 +11,7 @@ import { postTag } from '@/app/services/api/tags';
 import { TagRequest } from '@/types/tag';
 import { QueryKeys } from '@/app/lib/constants/queryKeys';
 
-interface TagInPutProps {
-  Undo: () => void;
-}
-
-export function TagInput({ Undo }: TagInPutProps) {
+export function TagInput() {
   const [tagData, setTagData] = useState<TagRequest>({
     name: '',
     interest: '',
@@ -40,7 +36,6 @@ export function TagInput({ Undo }: TagInPutProps) {
   const onHandleSubmit = (e: FormEvent) => {
     e.preventDefault();
     tagMutate(tagData);
-    Undo();
     setTagData({ name: '', interest: '' });
     setTrigger(true);
   };
