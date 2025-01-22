@@ -10,7 +10,7 @@ import { checkToken } from '@/app/services/api/status';
 export default function Login() {
   // NOTE : 로그인 확인
   useEffect(() => {
-    checkToken();
+    checkToken().catch((error) => console.error(error));
   }, []);
   const searchParams = useSearchParams();
 

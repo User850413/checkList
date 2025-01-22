@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 export default function SignUp() {
   // NOTE : 로그인 확인
   useEffect(() => {
-    checkToken();
+    checkToken().catch((error) => console.error(error));
   }, []);
 
   return (

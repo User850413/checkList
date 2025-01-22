@@ -5,8 +5,8 @@ import { checkToken } from './services/api/status';
 
 export default function Home() {
   useEffect(() => {
-    checkToken();
+    checkToken().catch((error) => console.error(error));
   }, []);
 
-  return <></>;
+  return <>Loading...</>;
 }
