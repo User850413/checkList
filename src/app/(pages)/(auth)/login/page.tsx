@@ -5,8 +5,13 @@ import { useEffect } from 'react';
 import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
 import LoginForm from '@/components/auth/loginForm';
 import { Toaster, toaster } from '@/components/ui/toaster';
+import { checkToken } from '@/app/services/api/status';
 
 export default function Login() {
+  // NOTE : 로그인 확인
+  useEffect(() => {
+    checkToken().catch((error) => console.error(error));
+  }, []);
   const searchParams = useSearchParams();
 
   //NOTE: 세션 만료로 리다이렉션 시

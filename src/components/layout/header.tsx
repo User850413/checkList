@@ -22,13 +22,6 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
 
-  //NOTE: 세션 만료 시 리다이렉션
-  useEffect(() => {
-    if (error) {
-      router.push('/');
-    }
-  }, [error, router]);
-
   useEffect(() => {
     if (isSuccess) {
       setMyData(data.user);
