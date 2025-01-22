@@ -11,14 +11,30 @@ import {
 } from '@/components/ui/dialog';
 
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 export default function MyList() {
+  const [scrolled, setScrolled] = useState(false);
   const PLUS = `${process.env.PUBLIC_URL || ''}/icons/plus.svg`;
   const ARROW_TOP = `${process.env.PUBLIC_URL || ''}/icons/arrow-top.svg`;
 
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  const handleScroll = () => {
+    if (window.scrollY > 0) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
+
   return (
     <>
-      <div className="flex flex-col items-center">
+      {scrolled && (
         <FloatingButton
           classNames="bottom-20"
           onClickFn={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -27,21 +43,22 @@ export default function MyList() {
             <Image src={ARROW_TOP} alt="상단으로" fill />
           </span>
         </FloatingButton>
-        <DialogRoot placement={'center'}>
-          <DialogTrigger>
-            <FloatingButton>
-              <span className="relative h-full w-full">
-                <Image src={PLUS} alt="새 태그 추가" fill />
-              </span>
-            </FloatingButton>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogBody>
-              <TagInput />
-            </DialogBody>
-          </DialogContent>
-        </DialogRoot>
-      </div>
+      )}
+      <DialogRoot placement={'center'}>
+        <DialogTrigger>
+          <FloatingButton>
+            <span className="relative h-full w-full">
+              <Image src={PLUS} alt="새 태그 추가" fill />
+            </span>
+          </FloatingButton>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogBody>
+            <TagInput />
+          </DialogBody>
+        </DialogContent>
+      </DialogRoot>
+
       <main className="pt-6">
         <TagBundle />
       </main>
