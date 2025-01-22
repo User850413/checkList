@@ -32,7 +32,7 @@ export default function Landing() {
           <li className="w-full">
             <MainSection
               imageUrl={memoImage}
-              imageAlt=""
+              imageAlt="리스트 이미지"
               lettering={
                 <p>
                   리스트를 추가하고, <br /> 세부 항목을 추가할 수 있어요
@@ -43,7 +43,7 @@ export default function Landing() {
           <li className="w-full">
             <MainSection
               imageUrl={goalImage}
-              imageAlt=""
+              imageAlt="목표 이미지"
               textArray="left"
               lettering={
                 <p>
@@ -56,13 +56,13 @@ export default function Landing() {
             <MainSection
               imageUrl={togetherImage}
               lettering={<p>만든 리스트를 공유해봐요</p>}
-              imageAlt=""
+              imageAlt="함께하는 이미지"
             />
           </li>
           <li className="w-full">
             <MainSection
               imageUrl={studyImage}
-              imageAlt=""
+              imageAlt="메모 이미지"
               textArray="left"
               lettering={
                 <p>
