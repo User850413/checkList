@@ -14,10 +14,10 @@ export default function Landing() {
     router.push('/login');
   };
 
-  const studyImage = `/pics/study.jpg`;
-  const goalImage = `/pics/goal.jpg`;
-  const togetherImage = `/pics/together.jpg`;
-  const memoImage = `/pics/memo.jpg`;
+  const STUDY = `/pics/study.jpg`;
+  const GOAL = `/pics/goal.jpg`;
+  const TOGETHER = `/pics/together.jpg`;
+  const MEMO = `/pics/memo.jpg`;
 
   return (
     <>
@@ -31,7 +31,7 @@ export default function Landing() {
         <ul className="flex w-full flex-col items-center gap-5">
           <li className="w-full">
             <MainSection
-              imageUrl={memoImage}
+              imageUrl={MEMO}
               imageAlt="리스트 이미지"
               lettering={
                 <p>
@@ -42,7 +42,7 @@ export default function Landing() {
           </li>
           <li className="w-full">
             <MainSection
-              imageUrl={goalImage}
+              imageUrl={GOAL}
               imageAlt="목표 이미지"
               textArray="left"
               lettering={
@@ -54,14 +54,14 @@ export default function Landing() {
           </li>
           <li className="w-full">
             <MainSection
-              imageUrl={togetherImage}
+              imageUrl={TOGETHER}
               lettering={<p>만든 리스트를 공유해봐요</p>}
               imageAlt="함께하는 이미지"
             />
           </li>
           <li className="w-full">
             <MainSection
-              imageUrl={studyImage}
+              imageUrl={STUDY}
               imageAlt="메모 이미지"
               textArray="left"
               lettering={
