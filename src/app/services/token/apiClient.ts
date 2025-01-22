@@ -1,4 +1,5 @@
 import axios from 'axios';
+const redirectionPaths = ['/', '/login', '/signup'];
 
 const apiClient = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_HOST}/api`,
@@ -9,8 +10,6 @@ apiClient.interceptors.response.use(
   (response) => {
     // 토큰 인증 성공 시 리다이렉션
     if (response.status === 200) {
-      const redirectionPaths = ['/', '/login', '/signup'];
-
       if (redirectionPaths.includes(window.location.pathname))
         window.location.href = '/my-list';
     }
@@ -33,7 +32,10 @@ apiClient.interceptors.response.use(
         if (window.location.pathname === '/') {
           window.location.href = '/landing';
         }
-        if (window.location.pathname !== '/') {
+        if (
+          window.location.pathname !== '/' &&
+          !redirectionPaths.includes(window.location.pathname)
+        ) {
           window.location.href = '/';
         }
       }
