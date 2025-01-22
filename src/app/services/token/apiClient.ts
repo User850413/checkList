@@ -1,27 +1,41 @@
 import axios from 'axios';
 
-import ERROR_MESSAGES from '@/app/lib/constants/errorMessages';
-
 const apiClient = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_HOST}/api`,
   withCredentials: true,
 });
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // 토큰 인증 성공 시 리다이렉션
+    if (response.status === 200) {
+      const redirectionPaths = ['/', '/login', '/signup'];
+
+      if (redirectionPaths.includes(window.location.pathname))
+        window.location.href = '/my-list';
+    }
+    return response;
+  },
   async (error) => {
+    // refresh 요청 실패 시 요청 중단
     if (error.config.url.includes('/refresh')) {
       return Promise.reject(error);
     }
 
+    // 토큰 만료 시 refresh 요청
     if (error.response?.status === 401) {
       try {
         await apiClient.post('/refresh');
 
         return apiClient.request(error.config);
       } catch (error) {
-        console.error(ERROR_MESSAGES.EXPIRED_REFRESH_TOKEN.ko, error);
-        window.location.href = '/login?loggedOut=true';
+        // 토큰 인증 실패 시 리다이렉션
+        if (window.location.pathname === '/') {
+          window.location.href = '/landing';
+        }
+        if (window.location.pathname !== '/') {
+          window.location.href = '/';
+        }
       }
     }
     return Promise.reject(error);
