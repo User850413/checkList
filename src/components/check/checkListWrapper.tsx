@@ -34,9 +34,6 @@ export default function CheckListWrapper({
             />
           </li>
         ))}
-      <li>
-        <AddNewTagWrapper />
-      </li>
     </ul>
   );
 }
