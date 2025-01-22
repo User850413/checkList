@@ -38,21 +38,22 @@ export default function MyList() {
         <FloatingButton
           classNames="bottom-20"
           onClickFn={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="페이지 상단으로 이동"
         >
           <span className="relative h-6 w-6">
-            <Image src={ARROW_TOP} alt="상단으로" fill />
+            <Image src={ARROW_TOP} alt="상단으로 이동" fill />
           </span>
         </FloatingButton>
       )}
       <DialogRoot placement={'center'}>
-        <DialogTrigger>
+        <DialogTrigger aria-label="새 태그 추가하기">
           <FloatingButton>
             <span className="relative h-full w-full">
               <Image src={PLUS} alt="새 태그 추가" fill />
             </span>
           </FloatingButton>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent aria-label="태그 입력 폼">
           <DialogBody>
             <TagInput />
           </DialogBody>
