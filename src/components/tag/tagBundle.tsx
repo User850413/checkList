@@ -2,7 +2,7 @@
 
 import { getMyTags } from '@/app/services/api/tags';
 import { Tag } from '@/types/tag';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import CheckListWrapper from '../check/checkListWrapper';
 import { getMyInterest } from '@/app/services/api/interests';
@@ -16,6 +16,7 @@ export default function TagBundle() {
   const [interestList, setInterestList] = useState<interest[]>([]);
   const [interestFilter, setInterestFilter] = useState<string>('');
 
+  // NOTE : 무한스크롤 관련
   const [ref, inView] = useInView();
 
   // NOTE : interest 불러오는 쿼리
@@ -35,24 +36,39 @@ export default function TagBundle() {
 
   // NOTE : tag 불러오는 쿼리
   const {
-    refetch: tagRefetch,
-    isLoading: isTagsLoading,
-    data: tags,
-    error: tagsError,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+    isLoading,
+    data,
+    error,
     isSuccess: isTagsSuccess,
-  } = useQuery({
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: QueryKeys.MY_TAGS_UNCOMPLETED,
-    queryFn: () => {
+    queryFn: ({ pageParam }: { pageParam: number }) => {
       if (interestFilter) {
-        return getMyTags({ interest: interestFilter, isCompleted: 'false' });
+        return getMyTags({
+          interest: interestFilter,
+          isCompleted: 'false',
+          page: pageParam,
+        });
       }
-      return getMyTags({ isCompleted: 'false' });
+      return getMyTags({ isCompleted: 'false', page: pageParam });
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { page, total, limit } = lastPage;
+      return page * limit < total ? page + 1 : null;
     },
   });
 
   useEffect(() => {
-    if (isTagsSuccess) setTagList(tags?.data);
-  }, [tags, isTagsSuccess]);
+    if (data) {
+      const allTags = data.pages.flatMap((page) => page.data);
+      setTagList(allTags);
+    }
+  }, [data]);
 
   const onClickInterestButton = (name: string) => {
     setInterestFilter((prev) => {
@@ -66,16 +82,18 @@ export default function TagBundle() {
 
   // NOTE : interestFilter 변경 때마다 tag refetch
   useEffect(() => {
-    tagRefetch();
+    refetch();
   }, [interestFilter]);
 
   // NOTE : view 감지
   useEffect(() => {
-    if (inView) console.log('inViewed!');
-  }, [inView]);
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
 
   return (
-    <div className="w-full px-6">
+    <div className="mb-10 w-full px-6">
       {interestList && interestList.length > 0 && (
         <ul className="mb-5 flex flex-wrap gap-2 rounded-md bg-blue-200 p-2">
           {interestList.map((interest) => (
@@ -91,13 +109,16 @@ export default function TagBundle() {
         </ul>
       )}
       <CheckListWrapper
-        isLoading={isTagsLoading || isInterestsLoading}
+        isLoading={isLoading || isInterestsLoading}
         tags={tagList}
-        error={tagsError || interestsError}
+        error={error || interestsError}
       />
-      <div className="flex h-24 w-full items-center justify-center" ref={ref}>
-        더 불러오기
-      </div>
+      {tagList.length > 0 && hasNextPage && (
+        <div
+          className="absolute -bottom-24 flex h-24 w-full items-center justify-center"
+          ref={ref}
+        />
+      )}
     </div>
   );
 }
