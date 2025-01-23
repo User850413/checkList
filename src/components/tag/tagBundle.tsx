@@ -9,11 +9,14 @@ import { getMyInterest } from '@/app/services/api/interests';
 import { interest } from '@/types/interest';
 import FieldButton from '../common/fieldButton';
 import { QueryKeys } from '@/app/lib/constants/queryKeys';
+import { useInView } from 'react-intersection-observer';
 
 export default function TagBundle() {
   const [tagList, setTagList] = useState<Tag[]>([]);
   const [interestList, setInterestList] = useState<interest[]>([]);
   const [interestFilter, setInterestFilter] = useState<string>('');
+
+  const [ref, inView] = useInView();
 
   // NOTE : interest 불러오는 쿼리
   const {
@@ -66,6 +69,11 @@ export default function TagBundle() {
     tagRefetch();
   }, [interestFilter]);
 
+  // NOTE : view 감지
+  useEffect(() => {
+    if (inView) console.log('inViewed!');
+  }, [inView]);
+
   return (
     <div className="w-full px-6">
       {interestList && interestList.length > 0 && (
@@ -87,6 +95,9 @@ export default function TagBundle() {
         tags={tagList}
         error={tagsError || interestsError}
       />
+      <div className="flex h-24 w-full items-center justify-center" ref={ref}>
+        더 불러오기
+      </div>
     </div>
   );
 }
