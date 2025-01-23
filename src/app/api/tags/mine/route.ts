@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
       filter.interest = conversedInterest;
     }
 
-    myTags = await Tag.find({
+    const myLimitedTags = await Tag.find({
       _id: { $in: myTags },
       ...filter,
     })
@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
 
     // NOTE : tag response에 completedRate 추가
     const tagsWithRates = await Promise.all(
-      myTags.map(async (tag) => {
+      myLimitedTags.map(async (tag) => {
         const completedRate = await calculateCompletedRate(tag._id);
         return { ...tag, completedRate };
       }),
@@ -101,10 +101,10 @@ export async function GET(req: NextRequest) {
         if (foundedId) {
           mappedTags.push({ ...tagItem, interest: foundedId.name });
         } else {
-          mappedTags = myTags;
+          mappedTags = myLimitedTags;
         }
       } else {
-        mappedTags = myTags;
+        mappedTags = myLimitedTags;
       }
     }
 
