@@ -13,6 +13,8 @@ export async function getAllTags() {
 export async function getMyTags(params?: {
   interest?: string;
   isCompleted?: string;
+  limit?: number;
+  page?: number;
 }) {
   try {
     let query = '';
@@ -24,6 +26,12 @@ export async function getMyTags(params?: {
 
       if (params.isCompleted !== undefined)
         searchParams.append('isCompleted', params.isCompleted);
+
+      if (params.limit !== undefined)
+        searchParams.append('limit', params.limit.toString());
+
+      if (params.page !== undefined)
+        searchParams.append('page', params.page.toString());
 
       query = `?${searchParams}`;
     }
