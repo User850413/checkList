@@ -36,7 +36,7 @@ export default function MyList() {
     <>
       {scrolled && (
         <FloatingButton
-          classNames="bottom-20"
+          classNames="bottom-[76px]"
           onClickFn={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           aria-label="페이지 상단으로 이동"
         >
