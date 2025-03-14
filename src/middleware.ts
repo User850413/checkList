@@ -23,12 +23,14 @@ export function middleware(req: NextRequest) {
       response.headers.set('Authorization', decodedValue);
 
       return response;
+    } else if (!accessToken && req.nextUrl.pathname === '/api/status') {
+      return NextResponse.json({ authentication: false }, { status: 200 });
+    } else {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.INVALID_TOKEN.ko },
+        { status: 401 },
+      );
     }
-
-    return NextResponse.json(
-      { error: ERROR_MESSAGES.INVALID_TOKEN.ko },
-      { status: 401 },
-    );
   } else {
     return NextResponse.next();
   }

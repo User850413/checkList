@@ -10,7 +10,10 @@ apiClient.interceptors.response.use(
   (response) => {
     // 토큰 인증 성공 시 리다이렉션
     if (response.status === 200) {
-      if (redirectionPaths.includes(window.location.pathname))
+      if (
+        redirectionPaths.includes(window.location.pathname) &&
+        !response.config.url?.includes('status')
+      )
         window.location.href = '/my-list';
     }
     return response;
